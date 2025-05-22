@@ -18,7 +18,8 @@ it('should be able to register a user', function () {
         ->set('password', 'password')
         ->set('password_confirmation', 'password')
         ->call('submit')
-        ->assertHasNoErrors();
+        ->assertHasNoErrors()
+        ->assertRedirectToRoute('welcome');
 
     assertDatabaseHas('users', [
         'name'  => 'John Doe',

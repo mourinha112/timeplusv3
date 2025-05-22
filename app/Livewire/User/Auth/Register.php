@@ -32,6 +32,8 @@ class Register extends Component
         ]);
 
         Auth::login($user);
+
+        $this->redirectRoute('welcome');
     }
 
     public function render(): View
