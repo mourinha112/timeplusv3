@@ -5,15 +5,16 @@ namespace App\Livewire\User\Auth;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Rule;
+use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
+#[Layout('components.layouts.guest')]
 class Register extends Component
 {
     #[Rule(['required', 'max:255'])]
     public ?string $name = null;
 
-    #[Rule(['required', 'max:255', 'email'])]
+    #[Rule(['required', 'max:255', 'email', 'unique:users,email'])]
     public ?string $email = null;
 
     #[Rule(['required', 'min:8', 'max:255', 'confirmed'])]

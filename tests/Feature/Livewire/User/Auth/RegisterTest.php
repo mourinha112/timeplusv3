@@ -37,6 +37,10 @@ it('should be able to register a user', function () {
 });
 
 it('fields must validated', function ($f) {
+    if (property_exists($f, 'before')) {
+        ($f->before)();
+    }
+
     $test = Livewire::test(Register::class)
         ->set($f->field, $f->value);
 
@@ -53,6 +57,7 @@ it('fields must validated', function ($f) {
     'email::required' => (object)['field' => 'email', 'value' => '', 'rule' => 'required'],
     'email::max:255'  => (object)['field' => 'email', 'value' => str_repeat('*', 256), 'rule' => 'max'],
     'email::email'    => (object)['field' => 'email', 'value' => 'not-an-email', 'rule' => 'email'],
+    'email::unique'   => (object)['field' => 'email', 'value' => 'existing@example.com', 'rule' => 'unique', 'before' => fn () => User::factory()->create(['email' => 'existing@example.com'])],
 
     'password::required'  => (object)['field' => 'password', 'value' => '', 'rule' => 'required'],
     'password::max:255'   => (object)['field' => 'password', 'value' => str_repeat('*', 256), 'rule' => 'max'],
