@@ -1,3 +1,5 @@
 <div>
-    {{-- Success is as dangerous as failure. --}}
+    @error('invalidCredentials')
+        <span>{{ $message }}</span>
+    @enderror
 </div>

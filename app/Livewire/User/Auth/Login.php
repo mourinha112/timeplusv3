@@ -14,6 +14,8 @@ class Login extends Component
     public function submit()
     {
         if (!Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
+            $this->addError('invalidCredentials', trans('auth.failed'));
+
             return;
         }
 
