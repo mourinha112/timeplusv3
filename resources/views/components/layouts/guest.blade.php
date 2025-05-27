@@ -7,6 +7,9 @@
     <title>{{ env('APP_NAME') }} | {{ $title ?? 'Page Title' }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Alpine Plugins -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="h-screen w-screen overflow-hidden">
     <div class="flex h-full">
