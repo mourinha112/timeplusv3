@@ -14,7 +14,7 @@
 
         <x-form-group>
             <x-label required>Senha</x-label>
-            <x-input wire:model="password" type="password" placeholder="Digite seu endereço de e-mail" />
+            <x-input wire:model="password" type="password" placeholder="Digite sua senha" />
         </x-form-group>
 
         <x-link href="{{ route('user.auth.register') }}">Esqueceu sua senha?</x-link>

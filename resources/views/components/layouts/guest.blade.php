@@ -11,11 +11,23 @@
 <body class="h-screen w-screen overflow-hidden">
     <div class="flex h-full">
 
-        <div class="w-full md:w-1/2 h-full flex justify-center bg-gray-100">
+        <div class="w-full md:w-1/2 h-full flex flex-col justify-between items-center bg-gray-100">
             <div class="w-full max-w-md px-5 py-10">
-                <x-logotipo  class="mb-8"/>
+                <x-logotipo class="mb-8" />
 
                 {{ $slot }}
+            </div>
+
+            <div class="p-6 text-center flex flex-col gap-3 text-gray-500">
+                <small>
+                    <x-link class="text-xs">Temos e Condições</x-link>
+                    e
+                    <x-link class="text-xs">Politica de Privacidade</x-link>
+                </small>
+
+                <small>
+                    ©2025 {{ env('APP_NAME') }}
+                </small>
             </div>
         </div>
 

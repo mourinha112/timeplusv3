@@ -1,6 +1,6 @@
 @props(['required' => false])
 
-<label class="text-sm">
+<label class="text-xs text-gray-700">
     {{ $slot }}:
 
     @if($required)
