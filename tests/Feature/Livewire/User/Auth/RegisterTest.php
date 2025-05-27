@@ -68,7 +68,7 @@ it('fields must validated', function ($f) {
 
     'password::required'  => (object)['field' => 'password', 'value' => '', 'rule' => 'required'],
     'password::max:255'   => (object)['field' => 'password', 'value' => str_repeat('*', 256), 'rule' => 'max'],
-    'password::min:255'   => (object)['field' => 'password', 'value' => str_repeat('*', 7), 'rule' => 'min'],
+    'password::min:8'     => (object)['field' => 'password', 'value' => str_repeat('*', 7), 'rule' => 'min'],
     'password::confirmed' => (object)['field' => 'password', 'value' => 'secret123', 'confirmation' => 'different123', 'rule' => 'confirmed'],
 ]);
 
