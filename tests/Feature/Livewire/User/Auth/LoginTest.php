@@ -2,6 +2,7 @@
 
 use App\Livewire\User\Auth\Login;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Livewire;
 
 it('renders successfully', function () {
@@ -22,8 +23,8 @@ it('should be able to user login', function () {
         ->assertHasNoErrors()
         ->assertRedirectToRoute('welcome');
 
-    expect(auth()->check())->toBeTrue()
-        ->and(auth()->user())->id->toBe($user->id);
+    expect(Auth::check())->toBeTrue()
+        ->and(Auth::user())->id->toBe($user->id);
 });
 
 it('should make sure to inform the user an error when email and password doesnt work', function () {

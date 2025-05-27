@@ -4,9 +4,10 @@ namespace App\Livewire\User\Auth;
 
 use Illuminate\Support\Facades\{Auth, RateLimiter};
 use Illuminate\Support\Str;
-use Livewire\Attributes\Rule;
+use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
+#[Layout('components.layouts.guest')]
 class Login extends Component
 {
     #[Rule(['required', 'email', 'max:255'])]

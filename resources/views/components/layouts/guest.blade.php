@@ -1,15 +1,26 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <title>{{ env('APP_NAME') }} | {{ $title ?? 'Page Title' }}</title>
+    <title>{{ env('APP_NAME') }} | {{ $title ?? 'Page Title' }}</title>
 
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body>
-        (GUEST)
-        {{ $slot }}
-    </body>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="h-screen w-screen overflow-hidden">
+    <div class="flex h-full">
+
+        <div class="w-full md:w-1/2 h-full flex justify-center bg-gray-100">
+            <div class="w-full max-w-md px-5 py-10">
+                <x-logotipo  class="mb-8"/>
+
+                {{ $slot }}
+            </div>
+        </div>
+
+        <div class="hidden md:block md:w-1/2 h-full bg-yellow-500"></div>
+
+    </div>
+</body>
 </html>
