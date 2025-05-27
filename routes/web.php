@@ -5,7 +5,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', Welcome::class)->name('welcome');
 
-Route::get('/login', User\Auth\Login::class)->name('user.auth.login')->middleware('guest');
-Route::get('/register', User\Auth\Register::class)->name('user.auth.register')->middleware('guest');
+Route::group(['middleware' => 'guest'], function () {
+    Route::get('login', User\Auth\Login::class)->name('user.auth.login');
+    Route::get('register', User\Auth\Register::class)->name('user.auth.register');
+});
 
-Route::get('/logout', fn () => auth()->logout())->name('user.auth.logout');
+Route::group(['middleware' => 'auth:user'], function () {
+    Route::get('dashboard', User\Dashboard\Show::class)->name('user.dashboard.show');
+});

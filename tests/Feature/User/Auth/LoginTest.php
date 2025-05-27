@@ -21,7 +21,7 @@ it('should be able to user login', function () {
         ->set('password', 'password')
         ->call('submit')
         ->assertHasNoErrors()
-        ->assertRedirectToRoute('welcome');
+        ->assertRedirectToRoute('user.dashboard.show');
 
     expect(Auth::check())->toBeTrue()
         ->and(Auth::user())->id->toBe($user->id);

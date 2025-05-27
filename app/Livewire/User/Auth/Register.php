@@ -43,7 +43,7 @@ class Register extends Component
 
         $user->notify(new WelcomeNotification());
 
-        $this->redirectRoute('welcome');
+        $this->redirectRoute('user.dashboard.show');
     }
 
     public function render(): View

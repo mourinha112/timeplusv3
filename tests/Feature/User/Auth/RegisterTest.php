@@ -3,6 +3,7 @@
 use App\Livewire\User\Auth\Register;
 use App\Models\User;
 use App\Notifications\User\WelcomeNotification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 
@@ -22,7 +23,7 @@ it('should be able to register a user', function () {
         ->set('password', 'password')
         ->call('submit')
         ->assertHasNoErrors()
-        ->assertRedirectToRoute('welcome');
+        ->assertRedirectToRoute('user.dashboard.show');
 
     assertDatabaseHas('users', [
         'name'         => 'John Doe',
@@ -33,11 +34,11 @@ it('should be able to register a user', function () {
 
     assertDatabaseCount('users', 1);
 
-    expect(auth()->check())->toBeTrue();
-    expect(auth()->user()->id)->toBe(User::first()->id);
+    expect(Auth::check())->toBeTrue();
+    expect(Auth::user()->id)->toBe(User::first()->id);
 
-    // expect(auth()->check())
-    //     ->and(auth()->user())
+    // expect(Auth::check())
+    //     ->and(Auth::user())
     //     ->id->toBe(User::first()->id);
 });
 
