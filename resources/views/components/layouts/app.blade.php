@@ -20,7 +20,7 @@
             </div>
             <div class="flex gap-3">
                 <a href="{{ route('user.dashboard.show') }}" class="{{ !Route::is('user.dashboard.show') ?: 'bg-yellow-600' }}">Início</a>
-                <a href="#">Especialistas</a>
+                <a href="{{ route('user.specialist.index') }}" class="{{ !Route::is('user.specialist.index') ?: 'bg-yellow-600' }}">Especialistas</a>
                 <a href="#">Sessões</a>
                 <livewire:user.auth.logout />
             </div>

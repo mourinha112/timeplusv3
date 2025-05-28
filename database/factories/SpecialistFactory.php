@@ -2,10 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\{Gender, Specialty};
+use App\Models\{Gender, Reason, Specialist, Specialty};
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class SpecialistFactory extends Factory
 {
@@ -22,9 +21,10 @@ class SpecialistFactory extends Factory
             'password'            => static::$password ??= Hash::make('password'),
             'year_started_acting' => fake()->year(),
             'crp'                 => fake()->numerify('######'),
+            'summary'             => fake()->paragraph(),
+            'description'         => fake()->paragraph(),
             'gender_id'           => Gender::inRandomOrder()->first()->id,
             'specialty_id'        => Specialty::inRandomOrder()->first()->id,
-            'remember_token'      => Str::random(10),
         ];
     }
 
@@ -33,5 +33,12 @@ class SpecialistFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Specialist $specialist) {
+            $specialist->reasons()->attach(Reason::inRandomOrder()->take(3)->pluck('id'));
+        });
     }
 }

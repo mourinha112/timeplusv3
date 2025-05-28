@@ -16,7 +16,9 @@ return new class () extends Migration {
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->year('year_started_acting');
-            $table->string('crp');
+            $table->string('crp')->nullable();
+            $table->text('summary')->nullable();
+            $table->text('description')->nullable();
             $table->foreignId('gender_id')->constrained('genders');
             $table->foreignId('specialty_id')->constrained('specialties');
             $table->rememberToken();

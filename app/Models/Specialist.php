@@ -21,6 +21,8 @@ class Specialist extends Authenticatable
         'password',
         'year_started_acting',
         'crp',
+        'summary',
+        'description',
         'gender_id',
         'specialty_id',
     ];
@@ -45,7 +47,7 @@ class Specialist extends Authenticatable
 
     public function specialty()
     {
-        return $this->belongsToMany(Specialty::class);
+        return $this->belongsTo(Specialty::class);
     }
 
     public function reasons()

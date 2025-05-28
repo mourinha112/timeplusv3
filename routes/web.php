@@ -12,4 +12,5 @@ Route::group(['middleware' => 'guest'], function () {
 
 Route::group(['middleware' => 'auth:user'], function () {
     Route::get('dashboard', User\Dashboard\Show::class)->name('user.dashboard.show');
+    Route::get('specialists', User\Specialist\Index::class)->name('user.specialist.index');
 });
