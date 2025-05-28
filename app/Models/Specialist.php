@@ -47,4 +47,9 @@ class Specialist extends Authenticatable
     {
         return $this->belongsToMany(Specialty::class);
     }
+
+    public function reasons()
+    {
+        return $this->belongsToMany(Reason::class, 'reason_specialists')->withTimestamps();
+    }
 }
