@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             GenderSeeder::class,
             SpecialtySeeder::class,
+            ReasonSeeder::class,
         ]);
     }
 }
