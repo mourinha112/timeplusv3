@@ -10,6 +10,12 @@
 
     <!-- Alpine Plugins -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
 </head>
 <body class="bg-gray-100 w-screen h-full">
 
@@ -28,7 +34,7 @@
     </div>
 
     <div class="py-5 w-full flex justify-center">
-        <div class="w-3/5">
+        <div class="w-5/6 md:w-3/5">
             {{ $slot }}
         </div>
     </div>

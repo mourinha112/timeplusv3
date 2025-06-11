@@ -20,7 +20,7 @@ class Logout extends Component
     public function render(): string
     {
         return <<<BLADE
-            <button wire:click="logout">Logout</button>
+            <button class="cursor-pointer" wire:click="logout">Logout</button>
         BLADE;
     }
 }
