@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
 </head>
-<body class="bg-gray-100 w-screen h-full">
+<body class="bg-gray-100/40 w-screen h-full">
 
     <div class="w-full h-16 bg-yellow-500 flex justify-center">
         <div class="w-3/5 h-16 flex justify-between items-center">
