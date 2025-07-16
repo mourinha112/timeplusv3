@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Livewire\User\Auth;
+namespace App\Livewire\Specialist\Auth;
 
-use App\Models\User;
-use App\Notifications\User\WelcomeNotification;
+use App\Models\Specialist;
+use App\Notifications\Specialist\WelcomeNotification;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\{Layout, Rule};
@@ -15,13 +15,13 @@ class Register extends Component
     #[Rule(['required', 'max:255'])]
     public ?string $name = null;
 
-    #[Rule(['required', 'max:14', 'unique:users,cpf', 'regex:/^\d{3}\.\d{3}\.\d{3}-\d{2}$/'])]
+    #[Rule(['required', 'max:14', 'unique:specialists,cpf', 'regex:/^\d{3}\.\d{3}\.\d{3}-\d{2}$/'])]
     public ?string $cpf = null;
 
     #[Rule(['required', 'max:20', 'regex:/^\(\d{2}\) \d{5}-\d{4}$/'])]
     public ?string $phone_number = null;
 
-    #[Rule(['required', 'max:255', 'email', 'unique:users,email'])]
+    #[Rule(['required', 'max:255', 'email', 'unique:specialists,email'])]
     public ?string $email = null;
 
     #[Rule(['required', 'min:8', 'max:255'])]
@@ -31,7 +31,7 @@ class Register extends Component
     {
         $this->validate();
 
-        $user = User::query()->create([
+        $specialist = Specialist::query()->create([
             'name'         => $this->name,
             'email'        => $this->email,
             'cpf'          => $this->cpf,
@@ -39,15 +39,15 @@ class Register extends Component
             'password'     => bcrypt($this->password),
         ]);
 
-        Auth::login($user, true);
+        Auth::guard('specialist')->login($specialist, true);
 
-        $user->notify(new WelcomeNotification());
+        $specialist->notify(new WelcomeNotification());
 
-        $this->redirectRoute('user.dashboard.show');
+        $this->redirectRoute('specialist.dashboard.show');
     }
 
     public function render(): View
     {
-        return view('livewire.user.auth.register');
+        return view('livewire.specialist.auth.register');
     }
 }

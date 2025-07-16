@@ -17,30 +17,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body class="h-screen w-screen overflow-hidden">
-    <div class="flex h-full">
+    <div class="w-full h-full flex flex-col justify-between items-center bg-gray-100">
+        <div class="w-full h-full max-w-md px-5 py-10">
+            <x-logotipo class="mb-8" />
 
-        <div class="w-full md:w-1/2 h-full flex flex-col justify-between items-center bg-gray-100">
-            <div class="w-full max-w-md px-5 py-10">
-                <x-logotipo class="mb-8" />
-
-                {{ $slot }}
-            </div>
-
-            <div class="p-6 text-center flex flex-col gap-3 text-gray-500">
-                <small>
-                    <x-link class="text-xs">Temos e Condições</x-link>
-                    e
-                    <x-link class="text-xs">Politica de Privacidade</x-link>
-                </small>
-
-                <small>
-                    ©2025 {{ env('APP_NAME') }}
-                </small>
-            </div>
+            {{ $slot }}
         </div>
 
-        <div class="hidden md:block md:w-1/2 h-full bg-yellow-500"></div>
+        <div class="p-6 text-center flex flex-col gap-3 text-gray-500">
+            <small>
+                <x-link class="text-xs">Temos e Condições</x-link>
+                e
+                <x-link class="text-xs">Politica de Privacidade</x-link>
+            </small>
 
+            <small>
+                ©2025 {{ env('APP_NAME') }}
+            </small>
+        </div>
     </div>
 </body>
 </html>

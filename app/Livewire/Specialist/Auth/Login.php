@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\User\Auth;
+namespace App\Livewire\Specialist\Auth;
 
 use Illuminate\Support\Facades\{Auth, RateLimiter};
 use Illuminate\Support\Str;
@@ -28,7 +28,7 @@ class Login extends Component
             return;
         }
 
-        if (!Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
+        if (!Auth::guard('specialist')->attempt(['email' => $this->email, 'password' => $this->password])) {
             RateLimiter::hit($this->throttleKey());
 
             $this->addError('invalidCredentials', trans('auth.failed'));
@@ -46,6 +46,6 @@ class Login extends Component
 
     public function render()
     {
-        return view('livewire.user.auth.login');
+        return view('livewire.specialist.auth.login');
     }
 }
