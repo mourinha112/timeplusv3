@@ -1,4 +1,11 @@
 <div class="p-6 bg-transparent">
+    @if ($errors->any())
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li class="text-danger">{{ $error }}</li>
+        @endforeach
+    </ul>
+    @endif
     <div class="grid grid-cols-5 gap-4 w-full">
         @foreach($dates as $date)
         <button wire:click="selectDate('{{ $date['full'] }}')" class="w-full px-3 py-2 rounded-lg text-center border border-gray-300

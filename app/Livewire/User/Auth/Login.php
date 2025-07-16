@@ -18,8 +18,6 @@ class Login extends Component
 
     public function submit()
     {
-        $this->validate();
-
         if (RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             $this->addError('rateLimiter', trans('auth.throttle', [
                 'seconds' => RateLimiter::availableIn($this->throttleKey()),

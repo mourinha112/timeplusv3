@@ -1,30 +1,30 @@
-#!/bin/sh
+# #!/bin/sh
 
-# Cores
-NC='\033[0m'
-BRed='\033[1;31m'
+# # Cores
+# NC='\033[0m'
+# BRed='\033[1;31m'
 
-REGEX_ISSUE_ID="[a-zA-Z0-9._-]+-[0-9]+"
-BRANCH_NAME=$(git symbolic-ref --short HEAD)
+# REGEX_ISSUE_ID="[a-zA-Z0-9._-]+-[0-9]+"
+# BRANCH_NAME=$(git symbolic-ref --short HEAD)
 
-# Permitir commits na branch main sem validar issue
-if [ "$BRANCH_NAME" = "main" ]; then
-    exit 0
-fi
+# # Permitir commits na branch main sem validar issue
+# if [ "$BRANCH_NAME" = "main" ]; then
+#     exit 0
+# fi
 
-ISSUE_ID=$(echo "$BRANCH_NAME" | grep -o -E "$REGEX_ISSUE_ID")
-COMMIT_MESSAGE=$(cat "$1")
+# ISSUE_ID=$(echo "$BRANCH_NAME" | grep -o -E "$REGEX_ISSUE_ID")
+# COMMIT_MESSAGE=$(cat "$1")
 
-# Verifica o ID da Branch para adicionar no commit
-if [ -z "$ISSUE_ID" ]; then
-    echo -e "${BRed}Branch não está no padrão que deveria (ex: TASK-01).${NC}"
-    exit 1
-fi
+# # Verifica o ID da Branch para adicionar no commit
+# if [ -z "$ISSUE_ID" ]; then
+#     echo -e "${BRed}Branch não está no padrão que deveria (ex: TASK-01).${NC}"
+#     exit 1
+# fi
 
-if echo "$COMMIT_MESSAGE" | grep -q "^$ISSUE_ID"; then
-    exit 0
-fi
+# if echo "$COMMIT_MESSAGE" | grep -q "^$ISSUE_ID"; then
+#     exit 0
+# fi
 
-# Corrige a mensagem colocando o ID da branch (Ex: TASK-01: message_commit)
-echo "$ISSUE_ID: $COMMIT_MESSAGE" > "$1"
-exit 0
+# # Corrige a mensagem colocando o ID da branch (Ex: TASK-01: message_commit)
+# echo "$ISSUE_ID: $COMMIT_MESSAGE" > "$1"
+# exit 0

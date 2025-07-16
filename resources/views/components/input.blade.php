@@ -4,7 +4,7 @@
 @endphp
 
 <div>
-    <input name="{{ $attributes->get('wire:model') }}" {{ $attributes->merge(['class' => "{$formatting} {$color}"]) }} />
+    <input id="{{ $attributes->get('wire:model') }}" name="{{ $attributes->get('wire:model') }}" {{ $attributes->merge(['class' => "{$formatting} {$color}"]) }} />
 
     @error($attributes->get('wire:model'))
         <small class="text-red-600 text-xs">{{ $message }}</small>
