@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth'  => \App\Http\Middleware\Authenticate::class,
             'guest' => \App\Http\Middleware\Guest::class,
+            'onboarding' => \App\Http\Middleware\Onboarding::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

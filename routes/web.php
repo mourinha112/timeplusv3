@@ -15,7 +15,7 @@ Route::get('/', Welcome::class)->name('welcome');
 /**
  * Authentication Routes
  */
-Route::group(['middleware' => 'guest'], function () {
+Route::group(['middleware' => 'guest:user'], function () {
     /* Login */
     Route::get('login', User\Auth\Login::class)->name('user.auth.login');
 
@@ -44,7 +44,7 @@ Route::group(['middleware' => 'auth:user'], function () {
 /**
  * Authentication Routes
  */
-Route::group(['middleware' => 'guest'], function () {
+Route::group(['middleware' => 'guest:specialist'], function () {
     /* Login */
     Route::get('specialist/login', Specialist\Auth\Login::class)->name('specialist.auth.login');
 
@@ -55,13 +55,15 @@ Route::group(['middleware' => 'guest'], function () {
 /**
  * Onboarding Routes
  */
-Route::group(['middleware' => ['auth:specialist', 'onboarding:driver']], function () {
-    //
+Route::group(['middleware' => ['auth:specialist', 'onboarding:specialist']], function () {
+    Route::get('specialist/onboarding', Specialist\Onboarding\PersonalDetail::class)->name('specialist.onboarding.personal-details');
 });
 
 /**
  * Application Routes
  */
-Route::group(['middleware' => ['auth:specialist', 'onboarding:driver']], function () {
-    // Route::get('dashboard', Specialist\Dashboard\Show::class)->name('specialist.dashboard.show');
+Route::group(['middleware' => ['auth:specialist', 'onboarding:specialist']], function () {
+    Route::get('specialist/dashboard', function () {
+        return 'Welcome to the Specialist Dashboard';
+    })->name('specialist.dashboard.show');
 });

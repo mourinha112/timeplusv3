@@ -11,8 +11,6 @@ return new class () extends Migration {
             $table->foreignId('reason_id')->constrained()->onDelete('cascade');
             $table->foreignId('specialist_id')->constrained()->onDelete('cascade');
 
-            $table->timestamps();
-
             $table->unique(['reason_id', 'specialist_id'], 'unique_reason_specialist');
         });
     }

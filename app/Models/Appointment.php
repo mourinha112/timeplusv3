@@ -14,11 +14,6 @@ class Appointment extends Model
         'status',
     ];
 
-    protected $casts = [
-        // 'appointment_date' => 'date',
-        // 'appointment_time' => 'time',
-    ];
-
     public function user()
     {
         return $this->belongsTo(User::class);

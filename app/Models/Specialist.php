@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -14,17 +14,21 @@ class Specialist extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
+        'gender_id',
+        'specialty_id',
         'name',
         'cpf',
         'phone_number',
         'email',
         'password',
-        'year_started_acting',
         'crp',
         'summary',
         'description',
-        'gender_id',
-        'specialty_id',
+        'year_started_acting',
+        'onboarding_step',
+        'is_active',
+        'email_verified_at',
+        'remember_token',
     ];
 
     protected $hidden = [
@@ -40,18 +44,21 @@ class Specialist extends Authenticatable
         ];
     }
 
-    public function gender()
+    /**
+     * Relationships
+     */
+    public function gender(): BelongsTo
     {
         return $this->belongsTo(Gender::class);
     }
 
-    public function specialty()
+    public function specialty(): BelongsTo
     {
         return $this->belongsTo(Specialty::class);
     }
 
-    public function reasons()
+    public function reasons(): BelongsToMany
     {
-        return $this->belongsToMany(Reason::class, 'reason_specialists')->withTimestamps();
+        return $this->belongsToMany(Reason::class, 'reason_specialists');
     }
 }
