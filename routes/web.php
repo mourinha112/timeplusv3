@@ -53,17 +53,15 @@ Route::group(['middleware' => 'guest:specialist'], function () {
 });
 
 /**
- * Onboarding Routes
- */
-Route::group(['middleware' => ['auth:specialist', 'onboarding:specialist']], function () {
-    Route::get('specialist/onboarding', Specialist\Onboarding\PersonalDetail::class)->name('specialist.onboarding.personal-details');
-});
-
-/**
  * Application Routes
  */
 Route::group(['middleware' => ['auth:specialist', 'onboarding:specialist']], function () {
-    Route::get('specialist/dashboard', function () {
-        return 'Welcome to the Specialist Dashboard';
-    })->name('specialist.dashboard.show');
+    /* Onboarding */
+    Route::get('specialist/onboarding', Specialist\Onboarding\PersonalDetail::class)->name('specialist.onboarding.personal-details');
+
+    /* Appointments */
+    Route::get('specialist/appointments', Specialist\Appointment\Index::class)->name('specialist.appointment.index');
+
+    /* Availabilities */
+    Route::get('specialist/availabilities', Specialist\Availability\Index::class)->name('specialist.availability.index');
 });

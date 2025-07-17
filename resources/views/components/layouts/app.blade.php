@@ -25,9 +25,16 @@
                 <x-logotipo />
             </div>
             <div class="flex gap-3">
+                @auth('user')
                 <a href="{{ route('user.dashboard.show') }}" class="{{ !Route::is('user.dashboard.show') ?: 'bg-yellow-600' }}">Início</a>
                 <a href="{{ route('user.specialist.index') }}" class="{{ !Route::is('user.specialist.index') ?: 'bg-yellow-600' }}">Especialistas</a>
                 <a href="{{ route('user.appointment.index') }}" class="{{ !Route::is('user.appointment.index') ?: 'bg-yellow-600' }}">Sessões</a>
+                @endauth
+
+                @auth('specialist')
+                <a href="{{ route('specialist.appointment.index') }}" class="{{ !Route::is('specialist.appointment.index') ?: 'bg-yellow-600' }}">Agenda</a>
+                <a href="{{ route('specialist.availability.index') }}" class="{{ !Route::is('specialist.availability.index') ?: 'bg-yellow-600' }}">Disponibilidade</a>
+                @endauth
                 <livewire:user.auth.logout />
             </div>
         </div>
