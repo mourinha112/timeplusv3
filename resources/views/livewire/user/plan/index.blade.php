@@ -29,15 +29,15 @@
                 </div>
                 <ul class="mt-6 flex flex-col gap-6 text-xs">
                     <li class="flex gap-2">
-                        <x-carbon-checkmark class="w-4 h-4 text-success" />
+                        <x-carbon-checkmark class="w-4 h-4 text-info" />
                         Acesso completo à biblioteca de conteúdos Timeplus
                     </li>
                     <li class="flex gap-2">
-                        <x-carbon-checkmark class="w-4 h-4 text-success" />
+                        <x-carbon-checkmark class="w-6 h-6 text-info" />
                         Fácil acesso a toda comunidade de psicólogos, psicanalistas, terapeutas e coaches
                     </li>
                     <li class="flex gap-2">
-                        <x-carbon-checkmark class="w-4 h-4 text-success" />
+                        <x-carbon-checkmark class="w-4 h-4 text-info" />
                         Atendimento prioritário pela nossa equipe de suporte
                     </li>
                 </ul>

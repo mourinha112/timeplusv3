@@ -1,50 +1,53 @@
 <div>
+    <ul class="menu menu-vertical lg:menu-horizontal bg-base-100 rounded-box w-full mb-6">
+        <li><a class="{{ !Route::is('user.subscribe.show') ?: 'font-bold bg-base-200'}}" href="{{ route('user.subscribe.show') }}">Plano atual</a></li>
+        <li><a class="{{ !Route::is('user.subscribe.history') ?: 'font-bold bg-base-200'}}" href="{{ route('user.subscribe.history') }}">Histórico</a></li>
+    </ul>
+
+    <div class="space-y-3 mb-8">
+        <x-title>Plano atual</x-title>
+        <x-subtitle>Veja os detalhes do seu plano atual.</x-subtitle>
+    </div>
+
+    @if(session()->has('success'))
+    <div role="alert" class="alert alert-success">
+        <x-carbon-checkmark class="w-6 h-6" />
+        <span>{{ session('success') }}</span>
+    </div>
+    @endif
+
     @if($subscribe)
-    <div>
-        <div class="space-y-3 mb-8">
-            <x-title>Meu plano</x-title>
-            <x-subtitle>Veja os detalhes do seu plano atual.</x-subtitle>
-        </div>
-
-        @if(session()->has('success'))
-        <div role="alert" class="alert alert-success">
-            <x-carbon-checkmark class="w-6 h-6" />
-            <span>{{ session('success') }}</span>
-        </div>
-        @endif
-
-        <div class="card bg-base-100 shadow-sm mt-4">
-            <div class="card-body">
-                <div class="flex justify-between">
-                    <span class="badge badge-xs badge-info">Plano finaliza em {{ \Carbon\Carbon::parse($subscribe->end_date)->format('d/m/Y') }}</span>
-                    <span class="text-xl"><span class="text-sm text-base-content/70">R$</span> {{ number_format($subscribe->plan->price, 2, ',', '.') }}</span>
-                </div>
-                <div class="flex justify-between">
-                    <h2 class="text-3xl font-bold">{{ $subscribe->plan->name }}</h2>
-                    @if(!$subscribe->cancelled_date && $subscribe->end_date > now())
-                    <button class="btn btn-xs btn-error" wire:click="cancel({{ $subscribe->id }})">
-                        <x-carbon-close class="w-4 h-4" />
-                        Cancelar
-                    </button>
-                    @else
-                    <span class="badge badge-xs badge-error">Assinatura cancelada</span>
-                    @endif
-                </div>
-                <ul class="mt-6 flex flex-col gap-6 text-xs">
-                    <li class="flex gap-2">
-                        <x-carbon-checkmark class="w-4 h-4 text-success" />
-                        Acesso completo à biblioteca de conteúdos Timeplus
-                    </li>
-                    <li class="flex gap-2">
-                        <x-carbon-checkmark class="w-4 h-4 text-success" />
-                        Fácil acesso a toda comunidade de psicólogos, psicanalistas, terapeutas e coaches
-                    </li>
-                    <li class="flex gap-2">
-                        <x-carbon-checkmark class="w-4 h-4 text-success" />
-                        Atendimento prioritário pela nossa equipe de suporte
-                    </li>
-                </ul>
+    <div class="card bg-base-100 shadow-sm mt-4">
+        <div class="card-body">
+            <div class="flex justify-between">
+                <span class="badge badge-xs badge-info">Plano finaliza em {{ \Carbon\Carbon::parse($subscribe->end_date)->format('d/m/Y') }}</span>
+                <span class="text-xl"><span class="text-sm text-base-content/70">R$</span> {{ number_format($subscribe->plan->price, 2, ',', '.') }}</span>
             </div>
+            <div class="flex justify-between">
+                <h2 class="text-3xl font-bold">{{ $subscribe->plan->name }}</h2>
+                @if(!$subscribe->cancelled_date && $subscribe->end_date > now())
+                <button class="btn btn-xs btn-error" wire:click="cancel({{ $subscribe->id }})">
+                    <x-carbon-close class="w-4 h-4" />
+                    Cancelar
+                </button>
+                @else
+                <span class="badge badge-xs badge-error">Assinatura cancelada</span>
+                @endif
+            </div>
+            <ul class="mt-6 flex flex-col gap-6 text-xs">
+                <li class="flex gap-2">
+                    <x-carbon-checkmark class="w-4 h-4 text-info" />
+                    Acesso completo à biblioteca de conteúdos Timeplus
+                </li>
+                <li class="flex gap-2">
+                    <x-carbon-checkmark class="w-4 h-4 text-info" />
+                    Fácil acesso a toda comunidade de psicólogos, psicanalistas, terapeutas e coaches
+                </li>
+                <li class="flex gap-2">
+                    <x-carbon-checkmark class="w-4 h-4 text-info" />
+                    Atendimento prioritário pela nossa equipe de suporte
+                </li>
+            </ul>
         </div>
     </div>
     @else
