@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Appointment extends Model
+class Subscribe extends Model
 {
     protected $fillable = [
         'user_id',
-        'invoice_id',
-        'specialist_id',
-        'appointment_date',
-        'appointment_time',
+        'plan_id',
+        'start_date',
+        'end_date',
+        'cancelled_date',
     ];
 
     public function user()
@@ -19,8 +19,8 @@ class Appointment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function specialist()
+    public function plan()
     {
-        return $this->belongsTo(Specialist::class);
+        return $this->belongsTo(Plan::class);
     }
 }

@@ -38,6 +38,10 @@ Route::group(['middleware' => 'auth:user'], function () {
 
     /* Plans */
     Route::get('plans', User\Plan\Index::class)->name('user.plan.index');
+
+    /* Subscribes */
+    Route::get('subscribes', User\Subscribe\Show::class)->name('user.subscribe.show');
+    Route::get('subscribes/history', User\Subscribe\History::class)->name('user.subscribe.history');
 });
 
 /* ----------------- */

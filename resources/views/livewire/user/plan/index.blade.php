@@ -1,11 +1,24 @@
 <div>
-
     <div class="space-y-3 mb-8">
         <x-title>Planos</x-title>
         <x-subtitle>Escolha o plano que melhor se adapta às suas necessidades.</x-subtitle>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+    @if(session()->has('success'))
+    <div role="alert" class="alert alert-success">
+        <x-carbon-checkmark class="w-6 h-6" />
+        <span>{{ session('success') }}</span>
+    </div>
+    @endif
+
+    @if(session()->has('error'))
+    <div role="alert" class="alert alert-error">
+        <x-carbon-warning class="w-6 h-6" />
+        <span>{{ session('error') }}</span>
+    </div>
+    @endif
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
         @foreach($this->plans as $plan)
         <div class="card bg-base-100 shadow-sm">
             <div class="card-body">
