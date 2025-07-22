@@ -1,10 +1,5 @@
-@php
-    $formatting = "w-full px-4 py-3 border rounded-sm text-sm transition-all duration-300 ease-in-out focus:ring-2 focus:outline-none";
-    $color = "text-gray-700 placeholder:text-gray-400 border-gray-200 hover:border-yellow-400 focus:border-yellow-600 focus:ring-yellow-400";
-@endphp
-
 <div>
-    <input id="{{ $attributes->get('wire:model') }}" name="{{ $attributes->get('wire:model') }}" {{ $attributes->merge(['class' => "{$formatting} {$color}"]) }} />
+    <input id="{{ $attributes->get('wire:model') }}" name="{{ $attributes->get('wire:model') }}" {{ $attributes->merge(['class' => "input w-full"]) }} />
 
     @error($attributes->get('wire:model'))
         <small class="text-red-600 text-xs">{{ $message }}</small>

@@ -16,25 +16,28 @@
         </div>
     </div>
 
-    @if($specialist->reasons->isNotEmpty())
+    @if(!empty($specialist->reasons))
     <div class="flex flex-wrap gap-2 mb-6">
         @foreach($specialist->reasons as $reason)
-        <x-badge>{{ $reason->name }}</x-badge>
+        <span class="badge badge-info badge-outline">{{ $reason->name }}</span>
         @endforeach
     </div>
     @endif
 
-    <x-text class="h-[100px]">
+    {{-- ini:Descrição --}}
+    <p class="text-base-content/70">
         {{ $specialist->description }}
-    </x-text>
+        jifsijfjiajifjisa
+    </p>
+    {{-- end:Descrição --}}
 
     <div class="flex gap-6 mt-5">
-    <span class="text-gray-500 text-xs"><strong>5</strong> (12 comentários)</span>
-    <span class="text-gray-500 text-xs"><strong>129</strong> atendimentos</span>
+        <span class="text-gray-500 text-xs"><strong>5</strong> (12 comentários)</span>
+        <span class="text-gray-500 text-xs"><strong>129</strong> atendimentos</span>
     </div>
     <hr class="my-6 text-gray-100">
     <div class="flex justify-between items-center">
-    <x-text>Sessão 40 min</x-text>
-    <x-badge>R$ 100,00</x-badge>
+        <x-text>Sessão 40 min</x-text>
+        {{-- <x-badge>R$ 100,00</x-badge> --}}
     </div>
 </x-card>

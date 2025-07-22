@@ -5,11 +5,11 @@
     </div>
 
     @error('invalidCredentials')
-        <span class="text-red-600">{{ $message }}</span>
+    <span class="text-red-600">{{ $message }}</span>
     @enderror
 
     @error('rateLimiter')
-        <span class="text-red-600">-message:{{ $message }} -seconds: {{ $seconds }}</span>
+    <span class="text-red-600">-message:{{ $message }} -seconds: {{ $seconds }}</span>
     @enderror
 
     <x-form wire:submit="submit">
@@ -21,9 +21,8 @@
         <x-form-group>
             <x-label id="password" required>Senha</x-label>
             <x-input wire:model="password" type="password" placeholder="Digite sua senha" />
+            <x-link class="text-right" href="{{ route('user.auth.register') }}">Esqueceu sua senha?</x-link>
         </x-form-group>
-
-        <x-link href="{{ route('user.auth.register') }}">Esqueceu sua senha?</x-link>
 
         <x-button type="submit">Entrar</x-button>
     </x-form>

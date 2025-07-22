@@ -7,6 +7,10 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+ @plugin "daisyui" {
+   themes: light --default, dark --prefersdark;
+ }
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @source '../../app/Livewire/*Table.php';
@@ -24,5 +28,5 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-@plugin "@tailwindcss/typography";
-@plugin "@tailwindcss/forms";
+/* @plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms"; */
