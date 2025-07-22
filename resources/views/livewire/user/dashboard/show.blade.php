@@ -23,7 +23,7 @@
                 <p class="text-base-content/70">Descubra o melhor plano para aprimorar sua experiência.</p>
             </div>
             <!-- TODO:: Implementar a rota de planos -->
-            <a href="#" class="btn btn-info btn-block mt-2 sm:btn-wide sm:mt-0">
+            <a href="{{ route('user.plan.index') }}" class="btn btn-info btn-block mt-2 sm:btn-wide sm:mt-0">
                 Conhecer os planos
             </a>
         </div>

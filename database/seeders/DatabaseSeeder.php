@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             GenderSeeder::class,
             SpecialtySeeder::class,
             ReasonSeeder::class,
+            PlanSeeder::class,
         ]);
     }
 }

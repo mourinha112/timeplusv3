@@ -35,6 +35,9 @@ Route::group(['middleware' => 'auth:user'], function () {
 
     /* Appointments */
     Route::get('appointments', User\Appointment\Index::class)->name('user.appointment.index');
+
+    /* Plans */
+    Route::get('plans', User\Plan\Index::class)->name('user.plan.index');
 });
 
 /* ----------------- */
