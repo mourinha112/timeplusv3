@@ -16,28 +16,42 @@
         </div>
     </div>
 
+    {{-- ini:Motivos --}}
     @if(!empty($specialist->reasons))
-    <div class="flex flex-wrap gap-2 mb-6">
-        @foreach($specialist->reasons as $reason)
-        <span class="badge badge-info badge-outline">{{ $reason->name }}</span>
-        @endforeach
-    </div>
+        <div class="flex flex-wrap gap-2 mb-6">
+            @foreach($specialist->reasons as $reason)
+                <span class="badge badge-info badge-outline">{{ $reason->name }}</span>
+            @endforeach
+        </div>
     @endif
+    {{-- end:Motivos --}}
 
     {{-- ini:Descrição --}}
     <p class="text-base-content/70">
         {{ $specialist->description }}
-        jifsijfjiajifjisa
     </p>
     {{-- end:Descrição --}}
 
-    <div class="flex gap-6 mt-5">
-        <span class="text-gray-500 text-xs"><strong>5</strong> (12 comentários)</span>
-        <span class="text-gray-500 text-xs"><strong>129</strong> atendimentos</span>
+    {{-- ini:Avaliações & Atendimentos --}}
+    <div class="flex gap-6 mt-5 items-end">
+        <div class="flex flex-col text-base-content/70 text-xs gap-2 items-center">
+            <div class="rating rating-xs">
+                <input type="radio" name="rating-1" class="mask mask-star" aria-label="1 star" disabled/>
+                <input type="radio" name="rating-1" class="mask mask-star" aria-label="2 star" checked="checked" disabled/>
+                <input type="radio" name="rating-1" class="mask mask-star" aria-label="3 star" disabled/>
+                <input type="radio" name="rating-1" class="mask mask-star" aria-label="4 star" disabled/>
+                <input type="radio" name="rating-1" class="mask mask-star" aria-label="5 star" disabled/>
+            </div>
+            <span>2,0 (12 comentários)</span>
+        </div>
+        <span class="text-base-content/70 text-xs">129 atendimentos</span>
     </div>
+    {{-- end:Avaliações & Atendimentos --}}
+
     <hr class="my-6 text-gray-100">
+
     <div class="flex justify-between items-center">
-        <x-text>Sessão 40 min</x-text>
-        {{-- <x-badge>R$ 100,00</x-badge> --}}
+        <p class="text-base-content/70 text-sm">Sessão 40 min</p>
+        <span class="text-base-content text-lg font-bold">R$ 100,00</span>
     </div>
 </x-card>

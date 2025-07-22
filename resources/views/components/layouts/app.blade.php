@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
 </head>
-<body class="min-h-screen flex flex-col bg-gray-100">
+<body class="min-h-screen flex flex-col bg-base-200">
 
     <div class="flex flex-col min-h-screen">
         @props([
@@ -218,7 +218,7 @@
         <main class="flex-1 py-8">
             <div class="max-w-7xl mx-auto">
 
-                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 ">
+                <div class="max-w-7xl mx-auto px-5">
                     {{ $slot }}
                 </div>
             </div>

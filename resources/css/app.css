@@ -30,3 +30,8 @@
 
 /* @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/forms"; */
+
+@utility card {
+  @apply bg-base-100 shadow-md;
+}
+

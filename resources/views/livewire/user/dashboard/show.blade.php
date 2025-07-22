@@ -1,25 +1,31 @@
-<div>
-    <div class="mb-3">
-        <x-subtitle>Dê o primeiro passo agora! 👋🏻</x-subtitle>
+<div class="space-y-4">
+    <h2 class="text-base-content/70">
+        Dê o primeiro passo agora! 👋🏻
+    </h2>
+
+    <div class="card">
+        <div class="card-body flex flex-col justify-between sm:items-center sm:flex-row">
+            <div class="space-y-3">
+                <h2 class="card-title">Garanta sua sessão hoje</h2>
+                <p class="text-base-content/70">Busque e encontre os especialistas ideais para você.</p>
+            </div>
+            <!-- TODO:: Implementar a rota de especialistas -->
+            <a href="#" class="btn btn-info btn-block mt-2 sm:btn-wide sm:mt-0">
+                Encontrar especialista
+            </a>
+        </div>
     </div>
 
-    <div class="card bg-white rounded-lg shadow-md mb-6 px-6 py-5 flex flex-col sm:flex-row gap-4">
-        <div class="flex-1">
-            <h1 class="text-lg font-semibold">Garanta sua sessão hoje</h1>
-            <x-text>Busque e encontre os especialistas ideais para você.</x-text>
+    <div class="card">
+        <div class="card-body flex flex-col justify-between sm:items-center sm:flex-row">
+            <div class="space-y-3">
+                <h2 class="card-title">Eleve sua experiência</h2>
+                <p class="text-base-content/70">Descubra o melhor plano para aprimorar sua experiência.</p>
+            </div>
+            <!-- TODO:: Implementar a rota de planos -->
+            <a href="#" class="btn btn-info btn-block mt-2 sm:btn-wide sm:mt-0">
+                Conhecer os planos
+            </a>
         </div>
-        <x-button class="btn-wide">
-            Encontrar especialista
-        </x-button>
-    </div>
-
-    <div class="card bg-white rounded-lg shadow-md mb-6 px-6 py-5 flex flex-col sm:flex-row gap-4">
-        <div class="flex-1">
-            <h1 class="text-lg font-semibold">Eleve sua experiência</h1>
-            <x-text>Descubra o melhor plano para aprimorar sua experiência.</x-text>
-        </div>
-        <x-button class="btn-wide">
-            Conhecer os planos
-        </x-button>
     </div>
 </div>
