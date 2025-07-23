@@ -24,7 +24,7 @@ class Schedule extends Component
         $this->dates = collect(range(0, 4))->map(function ($i) {
             $date = now()->addDays($i);
             return [
-                'label' => strtoupper($date->locale('pt_BR')->isoFormat('ddd')) . ' ' . $date->format('d'),
+                'label' => strtoupper($date->locale('pt_BR')->isoFormat('ddd')),
                 'full' => $date->format('Y-m-d'),
                 'times' => $this->getAvailableTimes($date),
             ];

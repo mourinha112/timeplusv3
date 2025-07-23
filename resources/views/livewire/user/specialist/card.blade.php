@@ -1,57 +1,80 @@
-<x-card class="!p-6">
-    <div class="flex flex-col gap-4 md:flex-row md:justify-between md:items-start mb-4">
-        <div class="flex gap-4 items-center">
-            <img src="https://avatar.iran.liara.run/public/{{ random_int(1, 30) }}" alt="{{ $specialist->name }}" class="w-20 h-20 rounded-full shrink-0">
+<!-- Coluna 1: Card do Especialista -->
+<div class="card bg-base-100 shadow-lg border border-gray-200 rounded-xl relative p-6">
 
+    <!-- Botão de Favorito (Ainda n necessário)-->
+    <div class="absolute top-4 right-4">
+        <button class="btn btn-circle btn-xs bg-transparent border-none transition-all" wire:click="favorite">
+            @if($favorited)
+            <x-carbon-favorite-filled class="w-5 h-5 text-error" />
+            @else
+            <x-carbon-favorite class="w-5 h-5 text-error" />
+            @endif
+        </button>
+    </div>
+
+    <div class="flex items-start space-x-3 mb-4">
+        <!-- Avatar -->
+        <div class="avatar">
+            <div class="w-22 rounded-full">
+                <img src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" alt="João da silva" />
+            </div>
+        </div>
+
+        <!-- Conteúdo -->
+        <div class="flex flex-col space-y-2">
+            <!-- Header Info -->
             <div class="space-y-1">
-                <h3 class="text-xl font-bold">{{ $specialist->name }}</h3>
-                <x-text>{{ $specialist->specialty->name }}</x-text>
+                <h3 class="text-xl font-extrabold text-base-content">{{ $specialist->name }}</h3>
+                <p class="text-xs text-base-content/80">{{ $specialist->specialty->name }}</p>
+                <p class="text-xs text-base-content/50">{{ now()->year - $specialist->year_started_acting }} anos de experiência</p>
+                <p class="text-xs text-base-content/50">CRM: {{ $specialist->crp }}</p>
 
-                @if($specialist->crp)
-                <x-text>CRP: {{ $specialist->crp }}</x-text>
-                @endif
-
-                <x-text>{{ now()->year - $specialist->year_started_acting }} anos de experiência</x-text>
+                <a href="#" class="btn btn-sm btn-dash mt-2">
+                    Mais sobre
+                    <x-carbon-add-filled class="w-5" />
+                </a>
             </div>
         </div>
     </div>
 
-    {{-- ini:Motivos --}}
-    @if(!empty($specialist->reasons))
-        <div class="flex flex-wrap gap-2 mb-6">
-            @foreach($specialist->reasons as $reason)
-                <span class="badge badge-info badge-outline">{{ $reason->name }}</span>
-            @endforeach
-        </div>
-    @endif
-    {{-- end:Motivos --}}
-
-    {{-- ini:Descrição --}}
-    <p class="text-base-content/70">
-        {{ $specialist->description }}
-    </p>
-    {{-- end:Descrição --}}
-
-    {{-- ini:Avaliações & Atendimentos --}}
-    <div class="flex gap-6 mt-5 items-end">
-        <div class="flex flex-col text-base-content/70 text-xs gap-2 items-center">
-            <div class="rating rating-xs">
-                <input type="radio" name="rating-1" class="mask mask-star" aria-label="1 star" disabled/>
-                <input type="radio" name="rating-1" class="mask mask-star" aria-label="2 star" checked="checked" disabled/>
-                <input type="radio" name="rating-1" class="mask mask-star" aria-label="3 star" disabled/>
-                <input type="radio" name="rating-1" class="mask mask-star" aria-label="4 star" disabled/>
-                <input type="radio" name="rating-1" class="mask mask-star" aria-label="5 star" disabled/>
-            </div>
-            <span>2,0 (12 comentários)</span>
-        </div>
-        <span class="text-base-content/70 text-xs">129 atendimentos</span>
+    <!-- Tags de Especialidades -->
+    <div class="flex flex-wrap gap-2 mb-4">
+        @if(!empty($specialist->reasons))
+        @foreach($specialist->reasons as $reason)
+        <div class="badge badge-soft badge-sm badge-info">{{ $reason->name }}</div>
+        @endforeach
+        @endif
     </div>
-    {{-- end:Avaliações & Atendimentos --}}
 
-    <hr class="my-6 text-gray-100">
-
-    <div class="flex justify-between items-center">
-        <p class="text-base-content/70 text-sm">Sessão 40 min</p>
-        <span class="text-base-content text-lg font-bold">R$ 100,00</span>
+    <!-- Descrição -->
+    <div class="mb-6">
+        <p class="text-xs text-base-content/70">
+            {{ $specialist->description }}
+        </p>
     </div>
-</x-card>
+
+    <!-- Informações de Avaliação e Atendimentos -->
+    <div class="flex items-center gap-6 mb-1">
+        <div class="flex items-center justify-center gap-1">
+            <x-carbon-star-filled class="w-5 text-info" />
+            <span class="text-xs font-extrabold text-base-content/70">4.5</span>
+            <span class="text-xs text-base-content/70">(10 comentários)</span>
+        </div>
+        <div class="flex items-center justify-center gap-1">
+            <x-carbon-user-feedback class="w-5 text-info" />
+            <span class="text-xs font-extrabold text-base-content/70">20</span>
+            <span class="text-xs font-base text-base-content/70">atendimentos</span>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Footer com Sessão e Preço -->
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <x-carbon-time class="w-5 text-base-content/70" />
+            <span class="text-xs text-base-content/70">Sessão 50 min</span>
+        </div>
+        <div class="badge badge-info badge-soft font-bold">R$ 100</div>
+    </div>
+</div>

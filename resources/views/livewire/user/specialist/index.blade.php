@@ -1,5 +1,7 @@
-<section>
-    <h3 class="text-xl">Encontramos <strong>{{ $this->specialists->count() }} especialistas</strong> disponíveis para você.</h3>
+<section class="px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-row space-x-2 mb-4">
+        <h2 class="text-base-content">Encontramos <strong>{{ $this->specialists->count() }}</strong> especialistas disponíveis para você.</h2>
+    </div>
 
     @foreach($this->specialists as $specialist)
 
@@ -11,7 +13,7 @@
     </ul>
     @endif
 
-    <div class="bg-gray-300/10 grid grid-cols-1 md:grid-cols-2 rounded-lg my-5">
+     <div class="grid md:grid-cols-2 grid-cols-1 gap-4 mb-3">
         <livewire:user.specialist.card :specialist="$specialist" />
         <livewire:user.specialist.schedule :specialist="$specialist" />
     </div>
