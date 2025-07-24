@@ -54,9 +54,9 @@
         </div>
     </div>
 
-    @if (session()->has('success_profile_password'))
+    @if (session()->has('success_update_profile'))
     <div class="alert alert-success">
-        <span>{{ session('success_profile_password') }}</span>
+        <span>{{ session('success_update_profile') }}</span>
     </div>
     @endif
 
