@@ -67,7 +67,7 @@
                     </div>
                     <ul tabindex="0" class="menu menu-sm dropdown-content bg-white rounded-box z-1 mt-3 w-52 p-2 shadow">
                         <li>
-                            <a href="/users/perfil" class="profile-dropdown-item justify-between flex items-center gap-3">
+                            <a href="{{ route('user.profile.update') }}" class="profile-dropdown-item justify-between flex items-center gap-3">
                                 <div class="flex items-center gap-3">
                                     <x-carbon-user class="w-4 h-4" />
                                     <span>Perfil</span>

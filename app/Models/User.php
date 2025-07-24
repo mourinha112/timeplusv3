@@ -15,6 +15,7 @@ class User extends Authenticatable
         'name',
         'cpf',
         'phone_number',
+        'birth_date',
         'email',
         'password',
         'is_active',
@@ -33,6 +34,25 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
         ];
+    }
+
+    public function setBirthDateAttribute($value)
+    {
+        if ($value) {
+            // Converte DD/MM/AAAA para AAAA-MM-DD
+            $date                           = \Carbon\Carbon::createFromFormat('d/m/Y', $value);
+            $this->attributes['birth_date'] = $date->format('Y-m-d');
+        }
+    }
+
+    public function getBirthDateAttribute($value)
+    {
+        if ($value) {
+            // Converte AAAA-MM-DD para DD/MM/AAAA para exibição
+            return \Carbon\Carbon::parse($value)->format('d/m/Y');
+        }
+
+        return $value;
     }
 
     public function subscribes()

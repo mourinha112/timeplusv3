@@ -10,9 +10,11 @@ return new class() extends Migration {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
 
+            $table->text('avatar')->nullable();
             $table->string('name');
             $table->string('cpf')->unique();
             $table->string('phone_number');
+            $table->string('birth_date');
             $table->string('email')->unique();
             $table->string('password');
             $table->boolean('is_active')->default(true);

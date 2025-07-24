@@ -42,6 +42,9 @@ Route::group(['middleware' => 'auth:user'], function () {
     /* Subscribes */
     Route::get('subscribes', User\Subscribe\Show::class)->name('user.subscribe.show');
     Route::get('subscribes/history', User\Subscribe\History::class)->name('user.subscribe.history');
+
+    /* Profile */
+    Route::get('profile', User\Profile\Update::class)->name('user.profile.update');
 });
 
 /* ----------------- */

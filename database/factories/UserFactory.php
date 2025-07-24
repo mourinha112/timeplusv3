@@ -16,6 +16,7 @@ class UserFactory extends Factory
             'email'             => fake()->unique()->safeEmail(),
             'cpf'               => preg_replace('/[^0-9]/', '', fake()->numerify('###.###.###-##')),
             'phone_number'      => preg_replace('/[^0-9]/', '', fake()->numerify('(##) #####-####')),
+            'birth_date'        => fake()->dateTimeBetween('-50 years', '-18 years')->format('d/m/Y'),
             'email_verified_at' => now(),
             'password'          => static::$password ??= Hash::make('password'),
         ];
