@@ -4,8 +4,10 @@ namespace App\Livewire\User\Plan;
 
 use App\Models\Plan;
 use Illuminate\Support\Facades\Auth;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Livewire\Livewire;
 
 class Index extends Component
 {
@@ -21,8 +23,12 @@ class Index extends Component
 
         $subscribe = Auth::user()->subscribes()->where('end_date', '>', now())->first();
 
-        if($subscribe) {
-            return session()->flash('error', 'Você já possui uma assinatura ativa.');
+        if ($subscribe) {
+            LivewireAlert::title('Erro!')
+                ->text('Você já possui uma assinatura ativa.')
+                ->error()
+                ->show();
+            return;
         }
 
         Auth::user()->subscribes()->create([
@@ -31,7 +37,11 @@ class Index extends Component
             'end_date' => now()->addDays($plan->duration_days),
         ]);
 
-        return session()->flash('success', 'Assinatura realizada com sucesso!');
+        LivewireAlert::title('Sucesso!')
+            ->text('Assinatura realizada com sucesso!')
+            ->success()
+            ->show();
+        return;
     }
 
     public function render()

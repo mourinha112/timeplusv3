@@ -4,6 +4,7 @@ namespace App\Livewire\User\Specialist;
 
 use App\Models\Favorite;
 use Illuminate\Support\Facades\Auth;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Component;
 
 class Card extends Component
@@ -26,6 +27,10 @@ class Card extends Component
                 ->delete();
 
             $this->favorited = false;
+            LivewireAlert::title('Sucesso!')
+                ->text('Especialista removido dos favoritos com sucesso!')
+                ->success()
+                ->show();
             return;
         } else {
             Favorite::create([
@@ -33,6 +38,10 @@ class Card extends Component
                 'specialist_id' => $this->specialist->id,
             ]);
             $this->favorited = true;
+            LivewireAlert::title('Sucesso!')
+                ->text('Especialista adicionado aos favoritos com sucesso!')
+                ->success()
+                ->show();
             return;
         }
     }

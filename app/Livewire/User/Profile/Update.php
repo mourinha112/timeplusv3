@@ -4,6 +4,7 @@ namespace App\Livewire\User\Profile;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
@@ -58,7 +59,10 @@ class Update extends Component
 
         $this->reset(['password', 'password_confirmation']);
 
-        session()->flash('success_update_password', 'Senha atualizada com sucesso!');
+        LivewireAlert::title('Sucesso!')
+            ->text('Senha atualizada com sucesso!')
+            ->success()
+            ->show();
     }
 
     public function render()
