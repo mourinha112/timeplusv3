@@ -42,7 +42,8 @@ class Index extends Component
             ->text('Assinatura realizada com sucesso!')
             ->success()
             ->show();
-        return;
+
+        return $this->redirect(route('user.subscribe.show'));
     }
 
     public function render()
