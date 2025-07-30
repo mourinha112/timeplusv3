@@ -6,10 +6,8 @@ use App\Models\Appointment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
-use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
-use Livewire\Livewire;
 
 #[Layout('components.layouts.app', ['title' => 'Agendamentos', 'guard' => 'specialist'])]
 class Index extends Component
@@ -23,6 +21,16 @@ class Index extends Component
         $this->currentWeekStart = Carbon::now()->startOfWeek();
         $this->loadWeekData();
         $this->loadAppointments();
+    }
+
+    public function getFirstDayOfWeek()
+    {
+        return $this->currentWeekStart->format('d/m/Y');
+    }
+
+    public function getLastDayOfWeek()
+    {
+        return $this->currentWeekStart->copy()->addDays(6)->format('d/m/Y');
     }
 
     public function loadWeekData()
@@ -115,9 +123,18 @@ class Index extends Component
     private function getMonthAbbr($month)
     {
         $months = [
-            '01' => 'JAN', '02' => 'FEV', '03' => 'MAR', '04' => 'ABR',
-            '05' => 'MAI', '06' => 'JUN', '07' => 'JUL', '08' => 'AGO',
-            '09' => 'SET', '10' => 'OUT', '11' => 'NOV', '12' => 'DEZ'
+            '01' => 'JAN',
+            '02' => 'FEV',
+            '03' => 'MAR',
+            '04' => 'ABR',
+            '05' => 'MAI',
+            '06' => 'JUN',
+            '07' => 'JUL',
+            '08' => 'AGO',
+            '09' => 'SET',
+            '10' => 'OUT',
+            '11' => 'NOV',
+            '12' => 'DEZ'
         ];
 
         return $months[$month];
@@ -125,9 +142,11 @@ class Index extends Component
 
     public function render()
     {
-        return view('livewire.specialist.appointment.index',[
+        return view('livewire.specialist.appointment.index', [
             'timeSlots' => $this->getTimeSlots(),
-            'totalAppointments' => $this->appointments->flatten()->count()
+            'totalAppointments' => $this->appointments->flatten()->count(),
+            'firstDayOfWeek' => $this->getFirstDayOfWeek(),
+            'lastDayOfWeek' => $this->getLastDayOfWeek(),
         ]);
     }
 }

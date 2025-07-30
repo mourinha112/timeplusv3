@@ -9,8 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('availabilities', function (Blueprint $table) {
-            $table->id();
-
             $table->foreignId('specialist_id')->constrained('specialists');
 
             $table->date('available_date');
