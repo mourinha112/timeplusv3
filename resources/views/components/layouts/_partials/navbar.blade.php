@@ -112,7 +112,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('user.appointment.index') }}" class="{{ !Route::is('user.appointment.index') ?: 'border bg-base-200 font-semibold' }}">
+                            <a href="{{ route('specialist.client.index') }}" class="{{ !Route::is('specialist.client.index') ?: 'border bg-base-200 font-semibold' }}">
                                 <x-carbon-user-feedback class="w-4 h-4" />
                                 Clientes
                             </a>
@@ -136,7 +136,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('user.appointment.index') }}" class="{{ !Route::is('user.appointment.index') ?: 'border bg-base-200 font-semibold' }}">
+                        <a href="{{ route('specialist.client.index') }}" class="{{ !Route::is('specialist.client.index') ?: 'border bg-base-200 font-semibold' }}">
                             <x-carbon-user-feedback class="w-5 h-5" />
                             Clientes
                         </a>

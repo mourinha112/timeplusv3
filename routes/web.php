@@ -74,4 +74,7 @@ Route::group(['middleware' => ['auth:specialist', 'onboarding:specialist']], fun
 
     /* Availabilities */
     Route::get('specialist/availabilities', Specialist\Availability\Index::class)->name('specialist.availability.index');
+
+    /* Clients */
+    Route::get('specialist/clients', Specialist\Client\Index::class)->name('specialist.client.index');
 });
