@@ -2,8 +2,7 @@
 
 namespace App\Livewire\Specialist\Availability;
 
-use App\Models\Appointment;
-use App\Models\Availability;
+use App\Models\{Appointment, Availability};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -14,7 +13,9 @@ use Livewire\Component;
 class Index extends Component
 {
     public $currentWeekStart;
+
     public $availabilities;
+
     public $weekDays = [];
 
     public function mount()
@@ -39,13 +40,13 @@ class Index extends Component
         $this->weekDays = [];
 
         for ($i = 0; $i < 7; $i++) {
-            $date = $this->currentWeekStart->copy()->addDays($i);
+            $date             = $this->currentWeekStart->copy()->addDays($i);
             $this->weekDays[] = [
-                'date' => $date,
+                'date'      => $date,
                 'dayOfWeek' => $this->getDayOfWeekAbbr($date->dayOfWeek),
-                'day' => $date->format('d'),
-                'month' => $this->getMonthAbbr($date->format('m')),
-                'full_date' => $date->format('Y-m-d')
+                'day'       => $date->format('d'),
+                'month'     => $this->getMonthAbbr($date->format('m')),
+                'full_date' => $date->format('Y-m-d'),
             ];
         }
     }
@@ -53,7 +54,7 @@ class Index extends Component
     public function loadAvailabilities()
     {
         $startDate = $this->currentWeekStart->format('Y-m-d');
-        $endDate = $this->currentWeekStart->copy()->addDays(6)->format('Y-m-d');
+        $endDate   = $this->currentWeekStart->copy()->addDays(6)->format('Y-m-d');
 
         $this->availabilities = Availability::whereBetween('available_date', [$startDate, $endDate])
             ->where('specialist_id', Auth::id()) // Filtra por especialista autenticado
@@ -94,6 +95,7 @@ class Index extends Component
                     ->text('Não é possível remover a disponibilidade, pois já existe um agendamento para este horário.')
                     ->error()
                     ->show();
+
                 return;
             }
 
@@ -103,7 +105,7 @@ class Index extends Component
             Availability::create([
                 'available_date' => $date,
                 'available_time' => $time . ':00',
-                'specialist_id' => auth()->id(),
+                'specialist_id'  => auth()->id(),
             ]);
         }
 
@@ -113,9 +115,11 @@ class Index extends Component
     public function getTimeSlots()
     {
         $slots = [];
+
         for ($hour = 0; $hour < 24; $hour++) {
             $slots[] = sprintf('%02d:00', $hour);
         }
+
         return $slots;
     }
 
@@ -128,7 +132,7 @@ class Index extends Component
             3 => 'QUA', // Wednesday
             4 => 'QUI', // Thursday
             5 => 'SEX', // Friday
-            6 => 'SAB'  // Saturday
+            6 => 'SAB',  // Saturday
         ];
 
         return $days[$dayOfWeek];
@@ -148,7 +152,7 @@ class Index extends Component
             '09' => 'SET',
             '10' => 'OUT',
             '11' => 'NOV',
-            '12' => 'DEZ'
+            '12' => 'DEZ',
         ];
 
         return $months[$month];
@@ -157,10 +161,10 @@ class Index extends Component
     public function render()
     {
         return view('livewire.specialist.availability.index', [
-            'timeSlots' => $this->getTimeSlots(),
+            'timeSlots'           => $this->getTimeSlots(),
             'totalAvailabilities' => $this->availabilities->flatten()->count(),
-            'firstDayOfWeek' => $this->getFirstDayOfWeek(),
-            'lastDayOfWeek' => $this->getLastDayOfWeek(),
+            'firstDayOfWeek'      => $this->getFirstDayOfWeek(),
+            'lastDayOfWeek'       => $this->getLastDayOfWeek(),
         ]);
     }
 }

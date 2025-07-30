@@ -3,8 +3,7 @@
 namespace App\Livewire\Specialist\Client;
 
 use App\Models\User;
-use Livewire\Attributes\Computed;
-use Livewire\Attributes\Layout;
+use Livewire\Attributes\{Computed, Layout};
 use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Clientes', 'guard' => 'specialist'])]

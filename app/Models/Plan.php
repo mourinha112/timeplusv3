@@ -9,6 +9,6 @@ class Plan extends Model
     protected $fillable = [
         'name',
         'price',
-        'duration_days'
+        'duration_days',
     ];
 }

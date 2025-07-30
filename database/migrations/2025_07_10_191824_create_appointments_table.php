@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     public function up(): void
     {
         Schema::create('appointments', function (Blueprint $table) {
@@ -23,7 +22,7 @@ return new class extends Migration
 
             $table->enum('status', ['scheduled', 'confirmed', 'cancelled', 'completed'])->default('scheduled');
 
-             // Índices para melhor performance
+            // Índices para melhor performance
             $table->index(['appointment_date', 'appointment_time']);
             $table->index('user_id');
 

@@ -3,8 +3,6 @@
 namespace Tests\Feature\Livewire\Specialist\Appointment;
 
 use App\Livewire\Specialist\Appointment\Index;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use Tests\TestCase;
 

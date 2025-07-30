@@ -5,8 +5,8 @@ namespace App\Livewire\User\Subscribe;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Assinatura', 'guard' => 'user'])]
 class Show extends Component

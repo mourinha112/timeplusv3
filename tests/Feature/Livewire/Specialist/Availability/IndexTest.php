@@ -3,8 +3,6 @@
 namespace Tests\Feature\Livewire\Specialist\Availability;
 
 use App\Livewire\Specialist\Availability\Index;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use Tests\TestCase;
 

@@ -2,12 +2,9 @@
 
 namespace App\Livewire\Specialist\Onboarding;
 
-use App\Models\Gender;
-use App\Models\Specialty;
+use App\Models\{Gender, Specialty};
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Computed;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
+use Livewire\Attributes\{Computed, Layout, Rule};
 use Livewire\Component;
 
 #[Layout('components.layouts.guest', ['title' => 'Dados Pessoais', 'guard' => 'specialist'])]
@@ -44,11 +41,11 @@ class PersonalDetail extends Component
         $specialist = Auth::guard('specialist')->user();
 
         $specialist->update([
-            'gender_id' => $this->gender_id,
-            'specialty_id' => $this->specialty_id,
-            'crp' => $this->crp,
+            'gender_id'           => $this->gender_id,
+            'specialty_id'        => $this->specialty_id,
+            'crp'                 => $this->crp,
             'year_started_acting' => $this->year_started_acting,
-            'onboarding_step' => 'completed',
+            'onboarding_step'     => 'completed',
         ]);
 
         return $this->redirect(route('specialist.appointment.index'));

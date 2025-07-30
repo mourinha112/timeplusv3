@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\{User, Specialist, Welcome};
+use App\Livewire\{Specialist, User, Welcome};
 use Illuminate\Support\Facades\Route;
 
 /**

@@ -8,16 +8,16 @@
 use Jantinnerezo\LivewireAlert\Enums\Position;
 
 return [
-    'position' => Position::Bottom,
-    'width' => '32rem',
-    'padding' => '0.7rem',
-    'timer' => 3000,
-    'toast' => true,
-    'text' => null,
+    'position'          => Position::Bottom,
+    'width'             => '32rem',
+    'padding'           => '0.7rem',
+    'timer'             => 3000,
+    'toast'             => true,
+    'text'              => null,
     'confirmButtonText' => 'Yes',
-    'cancelButtonText' => 'Cancel',
-    'denyButtonText' => 'No',
-    'showCancelButton' => false,
+    'cancelButtonText'  => 'Cancel',
+    'denyButtonText'    => 'No',
+    'showCancelButton'  => false,
     'showConfirmButton' => false,
-    'backdrop' => true,
+    'backdrop'          => true,
 ];

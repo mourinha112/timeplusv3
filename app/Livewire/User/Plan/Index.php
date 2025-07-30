@@ -5,9 +5,8 @@ namespace App\Livewire\User\Plan;
 use App\Models\Plan;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
-use Livewire\Attributes\Computed;
+use Livewire\Attributes\{Computed, Layout};
 use Livewire\Component;
-use Livewire\Attributes\Layout;
 
 #[Layout('components.layouts.app', ['title' => 'Planos', 'guard' => 'user'])]
 class Index extends Component
@@ -29,13 +28,14 @@ class Index extends Component
                 ->text('Você já possui uma assinatura ativa.')
                 ->error()
                 ->show();
+
             return;
         }
 
         Auth::user()->subscribes()->create([
-            'plan_id' => $plan->id,
+            'plan_id'    => $plan->id,
             'start_date' => now(),
-            'end_date' => now()->addDays($plan->duration_days),
+            'end_date'   => now()->addDays($plan->duration_days),
         ]);
 
         LivewireAlert::title('Sucesso!')

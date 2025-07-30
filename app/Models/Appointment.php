@@ -14,7 +14,7 @@ class Appointment extends Model
         'appointment_date',
         'appointment_time',
         'status',
-        'notes'
+        'notes',
     ];
 
     /**

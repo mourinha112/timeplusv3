@@ -2,21 +2,17 @@
 
 namespace App\Livewire\User\Specialist;
 
-use App\Models\Appointment;
-use App\Models\Availability;
+use App\Models\{Appointment, Availability};
 use Carbon\Carbon;
-use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\{Auth, DB, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
-use Livewire\Attributes\Computed;
-use Livewire\Attributes\Rule;
+use Livewire\Attributes\{Computed, Rule};
 use Livewire\Component;
 
 class Schedule extends Component
 {
     public $specialist;
+
     public $dates = [];
 
     #[Rule('required|string|date_format:Y-m-d')]
@@ -46,18 +42,18 @@ class Schedule extends Component
             ->groupBy('available_date')
             ->map(function ($items, $date) use ($scheduledTimes) {
                 $availableTimes = $items->pluck('available_time')->toArray();
-                $scheduled = $scheduledTimes[$date] ?? [];
+                $scheduled      = $scheduledTimes[$date] ?? [];
 
                 // Filtrar horários já agendados
                 return array_values(array_diff($availableTimes, $scheduled));
             })
             ->toArray();
 
-
         /* Garantir os próximos 5 dias (hoje + 4) */
         $result = [];
+
         for ($i = 0; $i < 5; $i++) {
-            $date = Carbon::today()->addDays($i)->toDateString();
+            $date          = Carbon::today()->addDays($i)->toDateString();
             $result[$date] = $availabilities[$date] ?? [];
         }
 
@@ -119,15 +115,16 @@ class Schedule extends Component
                     ->show();
 
                 $this->clearSelection();
+
                 return;
             }
 
             Appointment::create([
-                'user_id' => Auth::user()->id,
-                'specialist_id' => $this->specialist->id,
+                'user_id'          => Auth::user()->id,
+                'specialist_id'    => $this->specialist->id,
                 'appointment_date' => $this->selectedDate,
                 'appointment_time' => $this->selectedTime,
-                'status' => 'scheduled',
+                'status'           => 'scheduled',
             ]);
 
             LivewireAlert::title('Agendamento Confirmado')
@@ -142,11 +139,11 @@ class Schedule extends Component
             DB::rollBack();
 
             Log::error('Erro ao agendar consulta', [
-                'user_id' => Auth::id(),
+                'user_id'       => Auth::id(),
                 'specialist_id' => $this->specialist->id,
-                'date' => $this->selectedDate,
-                'time' => $this->selectedTime,
-                'error' => $e->getMessage(),
+                'date'          => $this->selectedDate,
+                'time'          => $this->selectedTime,
+                'error'         => $e->getMessage(),
             ]);
 
             LivewireAlert::title('Erro!')

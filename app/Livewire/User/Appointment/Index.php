@@ -3,8 +3,7 @@
 namespace App\Livewire\User\Appointment;
 
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Computed;
-use Livewire\Attributes\Layout;
+use Livewire\Attributes\{Computed, Layout};
 use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Agendamentos', 'guard' => 'user'])]

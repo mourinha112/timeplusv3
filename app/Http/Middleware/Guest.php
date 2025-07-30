@@ -13,6 +13,7 @@ class Guest
     {
         if (Auth::guard($guard)->check()) {
             $dashboardRoute = $guard === 'user' ? "$guard.dashboard.show" : "$guard.appointment.index";
+
             return redirect()->guest(route($dashboardRoute));
         }
 

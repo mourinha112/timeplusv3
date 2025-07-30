@@ -10,6 +10,7 @@ use Livewire\Component;
 class Card extends Component
 {
     public $specialist;
+
     public bool $favorited = false;
 
     public function mount()
@@ -31,10 +32,11 @@ class Card extends Component
                 ->text('Especialista removido dos favoritos com sucesso!')
                 ->success()
                 ->show();
+
             return;
         } else {
             Favorite::create([
-                'user_id' => Auth::id(),
+                'user_id'       => Auth::id(),
                 'specialist_id' => $this->specialist->id,
             ]);
             $this->favorited = true;
@@ -42,6 +44,7 @@ class Card extends Component
                 ->text('Especialista adicionado aos favoritos com sucesso!')
                 ->success()
                 ->show();
+
             return;
         }
     }

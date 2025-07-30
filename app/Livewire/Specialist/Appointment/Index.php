@@ -13,7 +13,9 @@ use Livewire\Component;
 class Index extends Component
 {
     public $currentWeekStart;
+
     public $appointments;
+
     public $weekDays = [];
 
     public function mount()
@@ -38,13 +40,13 @@ class Index extends Component
         $this->weekDays = [];
 
         for ($i = 0; $i < 7; $i++) {
-            $date = $this->currentWeekStart->copy()->addDays($i);
+            $date             = $this->currentWeekStart->copy()->addDays($i);
             $this->weekDays[] = [
-                'date' => $date,
+                'date'      => $date,
                 'dayOfWeek' => $this->getDayOfWeekAbbr($date->dayOfWeek),
-                'day' => $date->format('d'),
-                'month' => $this->getMonthAbbr($date->format('m')),
-                'full_date' => $date->format('Y-m-d')
+                'day'       => $date->format('d'),
+                'month'     => $this->getMonthAbbr($date->format('m')),
+                'full_date' => $date->format('Y-m-d'),
             ];
         }
     }
@@ -52,7 +54,7 @@ class Index extends Component
     public function loadAppointments()
     {
         $startDate = $this->currentWeekStart->format('Y-m-d');
-        $endDate = $this->currentWeekStart->copy()->addDays(6)->format('Y-m-d');
+        $endDate   = $this->currentWeekStart->copy()->addDays(6)->format('Y-m-d');
 
         $this->appointments = Appointment::whereBetween('appointment_date', [$startDate, $endDate])
             ->where('specialist_id', Auth::id())
@@ -99,9 +101,11 @@ class Index extends Component
     public function getTimeSlots()
     {
         $slots = [];
+
         for ($hour = 0; $hour < 24; $hour++) {
             $slots[] = sprintf('%02d:00', $hour);
         }
+
         return $slots;
     }
 
@@ -114,7 +118,7 @@ class Index extends Component
             3 => 'QUA', // Wednesday
             4 => 'QUI', // Thursday
             5 => 'SEX', // Friday
-            6 => 'SAB'  // Saturday
+            6 => 'SAB',  // Saturday
         ];
 
         return $days[$dayOfWeek];
@@ -134,7 +138,7 @@ class Index extends Component
             '09' => 'SET',
             '10' => 'OUT',
             '11' => 'NOV',
-            '12' => 'DEZ'
+            '12' => 'DEZ',
         ];
 
         return $months[$month];
@@ -143,10 +147,10 @@ class Index extends Component
     public function render()
     {
         return view('livewire.specialist.appointment.index', [
-            'timeSlots' => $this->getTimeSlots(),
+            'timeSlots'         => $this->getTimeSlots(),
             'totalAppointments' => $this->appointments->flatten()->count(),
-            'firstDayOfWeek' => $this->getFirstDayOfWeek(),
-            'lastDayOfWeek' => $this->getLastDayOfWeek(),
+            'firstDayOfWeek'    => $this->getFirstDayOfWeek(),
+            'lastDayOfWeek'     => $this->getLastDayOfWeek(),
         ]);
     }
 }
