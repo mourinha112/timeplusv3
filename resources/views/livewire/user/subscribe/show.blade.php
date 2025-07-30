@@ -1,7 +1,7 @@
 <div>
     <ul class="menu menu-vertical lg:menu-horizontal bg-base-100 rounded-box w-full mb-6">
-        <li><a class="{{ !Route::is('user.subscribe.show') ?: 'font-bold bg-base-200'}}" href="{{ route('user.subscribe.show') }}">Plano atual</a></li>
-        <li><a class="{{ !Route::is('user.subscribe.history') ?: 'font-bold bg-base-200'}}" href="{{ route('user.subscribe.history') }}">Histórico</a></li>
+        <li><a class="{{ !Route::is('user.subscribe.show') ?: 'menu-active'}}" href="{{ route('user.subscribe.show') }}">Plano atual</a></li>
+        <li><a class="{{ !Route::is('user.subscribe.history') ?: 'menu-active'}}" href="{{ route('user.subscribe.history') }}">Histórico</a></li>
     </ul>
 
     <div class="space-y-3 mb-8">
