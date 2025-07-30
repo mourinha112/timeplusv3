@@ -48,16 +48,32 @@
 
                 @if ($hasAppointment)
                 {{-- Slot ocupado --}}
-                <button wire:click="cancelAppointment('{{ $dayInfo['full_date'] }}', '{{ $time }}')" class="btn btn-sm lg:btn-md rounded border text-xs font-medium flex items-center justify-center relative cursor-pointer group bg-blue-50 border-blue-200 hover:bg-red-50 hover:border-red-300 text-blue-600" title="Agendado para: {{ $userName }}">
-                    <span class="flex items-center gap-1 group-hover:hidden">
+                {{-- <button wire:click="cancelAppointment('{{ $dayInfo['full_date'] }}', '{{ $time }}')" class="btn btn-sm lg:btn-md rounded border text-xs font-medium flex items-center justify-center relative cursor-pointer group bg-blue-50 border-blue-200 hover:bg-red-50 hover:border-red-300 text-blue-600" title="Agendado para: {{ $userName }}">
+                <span class="flex items-center gap-1 group-hover:hidden">
+                    <x-carbon-user class="w-3 h-3" />
+                    <span class="hidden lg:inline text-xs truncate">{{ Str::limit($userName, 8) }}</span>
+                </span>
+                <span class="hidden group-hover:flex items-center gap-1 text-red-500">
+                    <span class="font-bold text-sm">×</span>
+                    <span class="hidden lg:inline">Cancelar</span>
+                </span>
+                </button> --}}
+                <div class="dropdown">
+                    <div tabindex="0" role="button" class="btn btn-sm lg:btn-md rounded border text-xs font-medium flex items-center justify-center relative cursor-pointer group bg-blue-50 border-blue-200 text-blue-600">
                         <x-carbon-user class="w-3 h-3" />
-                        <span class="hidden lg:inline text-xs truncate">{{ Str::limit($userName, 8) }}</span>
-                    </span>
-                    <span class="hidden group-hover:flex items-center gap-1 text-red-500">
-                        <span class="font-bold text-sm">×</span>
-                        <span class="hidden lg:inline">Cancelar</span>
-                    </span>
-                </button>
+                        <span class="hidden lg:inline text-xs truncate">{{ Str::limit($userName, 10) }}</span>
+                    </div>
+                    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                        <li><a>
+                                <x-carbon-video-chat class="w-4 h-4" />
+                                Iniciar atendimento
+                            </a></li>
+                        <li><a class="text-error" wire:click="cancelAppointment('{{ $dayInfo['full_date'] }}', '{{ $time }}')">
+                                <x-carbon-close class="w-4 h-4" />
+                                Cancelar
+                            </a></li>
+                    </ul>
+                </div>
                 @else
                 {{-- Slot disponível --}}
                 <button class="btn btn-sm lg:btn-md rounded border text-xs font-medium flex items-center justify-center cursor-not-allowed relative group bg-gray-50 border-gray-200 text-gray-400">
