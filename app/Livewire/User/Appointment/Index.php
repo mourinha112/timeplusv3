@@ -20,7 +20,6 @@ class Index extends Component
 
     public function render()
     {
-        dd('okofgasf');
         return view('livewire.user.appointment.index');
     }
 }

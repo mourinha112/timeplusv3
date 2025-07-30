@@ -109,6 +109,7 @@ class Schedule extends Component
             $appointment = Appointment::where('specialist_id', $this->specialist->id)
                 ->where('appointment_date', $this->selectedDate)
                 ->where('appointment_time', $this->selectedTime)
+                // ->where('status', '!=', 'cancelled')
                 ->first();
 
             if ($appointment) {
@@ -126,7 +127,7 @@ class Schedule extends Component
                 'specialist_id' => $this->specialist->id,
                 'appointment_date' => $this->selectedDate,
                 'appointment_time' => $this->selectedTime,
-                'status' => 'pending',
+                'status' => 'scheduled',
             ]);
 
             LivewireAlert::title('Agendamento Confirmado')

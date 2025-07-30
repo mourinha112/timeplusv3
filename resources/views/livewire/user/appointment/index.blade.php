@@ -14,6 +14,7 @@
                         <th>Especialista</th>
                         <th>Data</th>
                         <th>Horário</th>
+                        <th>Situação</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -23,6 +24,17 @@
                         <td>{{ $appointment->specialist->name }}</td>
                         <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d/m/Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') }}</td>
+                        <td>
+                            @if($appointment->status === 'scheduled')
+                            <div class="tooltip" data-tip="Seu agendamento está confirmado.">
+                                <span class="badge badge-sm badge-success">Agendado</span>
+                            </div>
+                            @elseif($appointment->status === 'cancelled')
+                            <div class="tooltip" data-tip="Seu agendamento foi cancelado pelo especialista.">
+                                <span class="badge badge-sm badge-error">Cancelado</span>
+                            </div>
+                            @endif
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>

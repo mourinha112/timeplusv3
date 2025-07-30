@@ -19,6 +19,17 @@ return new class extends Migration
             $table->date('appointment_date');
             $table->time('appointment_time');
 
+            $table->text('notes')->nullable();
+
+            $table->enum('status', ['scheduled', 'confirmed', 'cancelled', 'completed'])->default('scheduled');
+
+             // Índices para melhor performance
+            $table->index(['appointment_date', 'appointment_time']);
+            $table->index('user_id');
+
+            // Evitar agendamentos duplicados no mesmo horário
+            $table->unique(['appointment_date', 'appointment_time']);
+
             $table->timestamps();
         });
     }
