@@ -21,7 +21,7 @@
         <x-form-group>
             <x-label id="password" required>Senha</x-label>
             <x-input wire:model="password" type="password" placeholder="Digite sua senha" />
-            <x-link href="{{ route('user.auth.register') }}">Esqueceu sua senha?</x-link>
+            <x-link href="{{ route('specialist.auth.register') }}">Esqueceu sua senha?</x-link>
         </x-form-group>
 
         <x-button type="submit">Entrar</x-button>
@@ -30,7 +30,7 @@
     <div class="mt-5">
         <x-text>
             Ainda não é cadastrado?
-            <x-link href="{{ route('user.auth.register') }}">Registrar</x-link>.
+            <x-link href="{{ route('specialist.auth.register') }}">Registrar</x-link>.
         </x-text>
     </div>
 </div>

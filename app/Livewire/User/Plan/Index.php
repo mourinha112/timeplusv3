@@ -7,8 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
-use Livewire\Livewire;
+use Livewire\Attributes\Layout;
 
+#[Layout('components.layouts.app', ['title' => 'Planos', 'guard' => 'user'])]
 class Index extends Component
 {
     #[Computed]

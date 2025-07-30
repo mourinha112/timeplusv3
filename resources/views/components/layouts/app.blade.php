@@ -20,7 +20,7 @@
 <body class="min-h-screen flex flex-col bg-base-200">
     <div class="flex flex-col min-h-screen">
 
-        <x-layouts._partials.navbar />
+        <x-layouts._partials.navbar guard="{{ $guard }}" />
 
         <main class="flex-1 py-8">
             <div class="max-w-7xl mx-auto">

@@ -4,8 +4,10 @@ namespace App\Livewire\User\Appointment;
 
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+#[Layout('components.layouts.app', ['title' => 'Agendamentos', 'guard' => 'user'])]
 class Index extends Component
 {
     #[Computed]
@@ -18,6 +20,7 @@ class Index extends Component
 
     public function render()
     {
+        dd('okofgasf');
         return view('livewire.user.appointment.index');
     }
 }

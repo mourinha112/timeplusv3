@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
-#[Layout('components.layouts.guest')]
+#[Layout('components.layouts.guest', ['title' => 'Entrar'])]
 class Login extends Component
 {
     #[Rule(['required', 'email', 'max:255'])]

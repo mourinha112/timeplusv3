@@ -5,7 +5,9 @@ namespace App\Livewire\User\Specialist;
 use App\Models\Specialist;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Livewire\Attributes\Layout;
 
+#[Layout('components.layouts.app', ['title' => 'Especialistas', 'guard' => 'user'])]
 class Index extends Component
 {
     #[Computed()]

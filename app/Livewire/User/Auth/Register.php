@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
-#[Layout('components.layouts.guest')]
+#[Layout('components.layouts.guest', ['title' => 'Registrar'])]
 class Register extends Component
 {
     #[Rule(['required', 'max:255'])]

@@ -10,7 +10,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
-#[Layout('components.layouts.guest')]
+#[Layout('components.layouts.guest', ['title' => 'Dados Pessoais', 'guard' => 'specialist'])]
 class PersonalDetail extends Component
 {
     #[Rule(['required', 'exists:genders,id'])]
@@ -37,7 +37,7 @@ class PersonalDetail extends Component
         return Specialty::all();
     }
 
-    public function submit(): void
+    public function submit()
     {
         $this->validate();
 
@@ -50,6 +50,8 @@ class PersonalDetail extends Component
             'year_started_acting' => $this->year_started_acting,
             'onboarding_step' => 'completed',
         ]);
+
+        return $this->redirect(route('specialist.appointment.index'));
     }
 
     public function render()
