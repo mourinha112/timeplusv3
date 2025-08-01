@@ -8,6 +8,7 @@ class Welcome extends Component
 {
     public function render()
     {
-        return view('livewire.welcome');
+        return redirect()->route('user.auth.login');
+        // return view('livewire.welcome');
     }
 }
