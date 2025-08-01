@@ -57,7 +57,7 @@ class Index extends Component
         $endDate   = $this->currentWeekStart->copy()->addDays(6)->format('Y-m-d');
 
         $this->appointments = Appointment::whereBetween('appointment_date', [$startDate, $endDate])
-            ->where('specialist_id', Auth::id())
+            ->where('specialist_id', Auth::guard('specialist')->id())
             ->where('status', 'scheduled')
             ->with('user') // Assumindo que existe relacionamento com User
             ->get()

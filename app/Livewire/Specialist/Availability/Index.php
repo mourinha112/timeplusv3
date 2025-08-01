@@ -57,7 +57,7 @@ class Index extends Component
         $endDate   = $this->currentWeekStart->copy()->addDays(6)->format('Y-m-d');
 
         $this->availabilities = Availability::whereBetween('available_date', [$startDate, $endDate])
-            ->where('specialist_id', Auth::id()) // Filtra por especialista autenticado
+            ->where('specialist_id', Auth::guard('specialist')->id()) // Filtra por especialista autenticado
             ->get()
             ->groupBy('available_date')
             ->map(function ($dayAvailabilities) {
@@ -86,7 +86,7 @@ class Index extends Component
         if ($availability) {
             $appointment = Appointment::where('appointment_date', $date)
                 ->where('appointment_time', $time . ':00')
-                ->where('specialist_id', auth()->id())
+                ->where('specialist_id', Auth::guard('specialist')->id())
                 ->first();
 
             /* Caso exista um agendamento para este horário, não permitir a remoção */
@@ -105,7 +105,7 @@ class Index extends Component
             Availability::create([
                 'available_date' => $date,
                 'available_time' => $time . ':00',
-                'specialist_id'  => auth()->id(),
+                'specialist_id'  => Auth::guard('specialist')->id(),
             ]);
         }
 

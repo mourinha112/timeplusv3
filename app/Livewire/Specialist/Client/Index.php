@@ -3,6 +3,7 @@
 namespace App\Livewire\Specialist\Client;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\{Computed, Layout};
 use Livewire\Component;
 
@@ -13,7 +14,7 @@ class Index extends Component
     public function clients()
     {
         return User::whereHas('appointments', function ($query) {
-            $query->where('specialist_id', auth()->id());
+            $query->where('specialist_id', Auth::guard('specialist')->id());
         })->get();
     }
 
