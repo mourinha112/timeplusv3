@@ -16,7 +16,7 @@
         <!-- Avatar -->
         <div class="avatar">
             <div class="w-22 rounded-full">
-                <img src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" alt="João da silva" />
+                <img src="{{ asset('images/avatar.png') }}" alt="{{ $specialist->name }}" />
             </div>
         </div>
 
