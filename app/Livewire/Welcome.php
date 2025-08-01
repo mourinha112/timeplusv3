@@ -6,9 +6,12 @@ use Livewire\Component;
 
 class Welcome extends Component
 {
+    public function mount(){
+        return redirect()->route('user.auth.login');
+    }
+
     public function render()
     {
-        return redirect()->route('user.auth.login');
-        // return view('livewire.welcome');
+        return view('livewire.welcome');
     }
 }
