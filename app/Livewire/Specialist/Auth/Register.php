@@ -41,7 +41,7 @@ class Register extends Component
 
         Auth::guard('specialist')->login($specialist, true);
 
-        $specialist->notify(new WelcomeNotification());
+        // $specialist->notify(new WelcomeNotification());
 
         $this->redirectRoute('specialist.appointment.index');
     }
