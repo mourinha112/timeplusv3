@@ -1,6 +1,6 @@
 @props(['required' => false])
 
-<legend class="fieldset-legend font-normal text-sm text-slate-800">
+<legend class="fieldset-legend">
     {{ $slot }}:
 
     @if($required)

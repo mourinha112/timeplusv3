@@ -1,11 +1,3 @@
-@props(['color' => 'primary'])
-
-@php
-    $colors = [
-        'primary' => 'btn btn-info btn-block',
-    ];
-@endphp
-
-<button {{ $attributes->merge(['class' => "{$colors[$color]}"]) }}>
+<button {{ $attributes->merge(['class' => "btn btn-info"]) }}>
     {{ $slot }}
 </button>

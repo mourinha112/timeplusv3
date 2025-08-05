@@ -4,6 +4,9 @@ namespace App\Livewire\User\Auth;
 
 use App\Models\User;
 use App\Notifications\User\WelcomeNotification;
+use App\Rules\FormattedCpf;
+use App\Rules\FormattedPhoneNumber;
+use App\Rules\ValidatedCpf;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\{Layout, Rule};
@@ -15,10 +18,10 @@ class Register extends Component
     #[Rule(['required', 'max:255'])]
     public ?string $name = null;
 
-    #[Rule(['required', 'max:14', 'unique:users,cpf', 'regex:/^\d{3}\.\d{3}\.\d{3}-\d{2}$/'])]
+    #[Rule(['required', 'max:14', 'unique:users,cpf', new FormattedCpf(), new ValidatedCpf()])]
     public ?string $cpf = null;
 
-    #[Rule(['required', 'max:20', 'regex:/^\(\d{2}\) \d{5}-\d{4}$/'])]
+    #[Rule(['required', 'max:20', new FormattedPhoneNumber()])]
     public ?string $phone_number = null;
 
     public ?string $birth_date = null;

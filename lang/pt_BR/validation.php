@@ -238,6 +238,7 @@ return [
         'birth_date'            => 'data de nascimento',
         'cpf'                   => 'CPF',
         'phone_number'          => 'celular',
+        'email'                 => 'e-mail',
     ],
 
 ];

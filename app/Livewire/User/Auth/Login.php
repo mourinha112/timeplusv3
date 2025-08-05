@@ -2,8 +2,9 @@
 
 namespace App\Livewire\User\Auth;
 
-use Illuminate\Support\Facades\{Auth, RateLimiter};
+use Illuminate\Support\Facades\{Auth, Log, RateLimiter};
 use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
@@ -20,23 +21,44 @@ class Login extends Component
     {
         $this->validate();
 
-        if (RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
-            $this->addError('rateLimiter', trans('auth.throttle', [
-                'seconds' => RateLimiter::availableIn($this->throttleKey()),
-            ]));
+        try {
+            if (RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+                LivewireAlert::title('Limite de tentativas excedido')
+                    ->text('Você excedeu o número de tentativas de login.')
+                    ->error()
+                    ->show();
 
-            return;
+                $this->reset(['email', 'password']);
+
+                return;
+            }
+
+            if (!Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
+                RateLimiter::hit($this->throttleKey());
+
+                LivewireAlert::title('Credenciais inválidas')
+                    ->text('As credenciais fornecidas estão incorretas')
+                    ->error()
+                    ->show();
+
+                $this->reset(['password']);
+
+                return;
+            }
+
+            return $this->redirectRoute('user.dashboard.show');
+        } catch (\Exception $e) {
+            Log::error('Erro interno::' . Login::class, [
+                'message' => $e->getMessage(),
+                'email'   => $this->email,
+                'ip'      => request()->ip(),
+            ]);
+
+            LivewireAlert::title('Erro!')
+                ->text('Ocorreu um erro ao tentar fazer login.')
+                ->error()
+                ->show();
         }
-
-        if (!Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
-            RateLimiter::hit($this->throttleKey());
-
-            $this->addError('invalidCredentials', trans('auth.failed'));
-
-            return;
-        }
-
-        return $this->redirectRoute('user.dashboard.show');
     }
 
     protected function throttleKey(): string
