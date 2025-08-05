@@ -23,8 +23,11 @@ class WelcomeNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage())
-            ->line("Welcome to TimePlus.")
-            ->line('Thank you for using our application!');
+        ->subject('Bem-vindo(a) à Time Plus!')
+        ->markdown('emails.user.welcome-notification', [
+            'user' => $notifiable,
+            'url' => route('user.auth.login')
+        ]);
     }
 
     public function toArray(object $notifiable): array
