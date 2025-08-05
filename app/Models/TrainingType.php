@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Plan extends Model
+class TrainingType extends Model
 {
     protected $fillable = [
         'name',
-        'price',
-        'duration_days',
-        'discount_percentage',
     ];
+
+    public function trainings()
+    {
+        return $this->hasMany(Training::class);
+    }
 }

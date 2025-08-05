@@ -10,12 +10,17 @@
 
         <x-form-group>
             <x-label required>CPF</x-label>
-            <x-input wire:model="cpf" placeholder="Digite o seu CPF" x-mask="999.999.999-99"/>
+            <x-input wire:model="cpf" placeholder="Digite o seu CPF" x-mask="999.999.999-99" />
         </x-form-group>
 
         <x-form-group>
             <x-label required>Celular</x-label>
             <x-input wire:model="phone_number" placeholder="Digite seu celular" x-mask="(99) 99999-9999" />
+        </x-form-group>
+
+        <x-form-group>
+            <x-label required>Data de nascimento</x-label>
+            <x-input wire:model="birth_date" placeholder="Digite sua data de nascimento" x-mask="99/99/9999" />
         </x-form-group>
 
         <x-form-group>

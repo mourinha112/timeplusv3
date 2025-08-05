@@ -21,6 +21,10 @@ class Specialist extends Authenticatable
         'email',
         'password',
         'crp',
+        'birth_date',
+        'state_id',
+        'appointment_value',
+        'lgbtqia',
         'summary',
         'description',
         'year_started_acting',
@@ -41,6 +45,25 @@ class Specialist extends Authenticatable
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
         ];
+    }
+
+    public function setBirthDateAttribute($value)
+    {
+        if ($value) {
+            // Converte DD/MM/AAAA para AAAA-MM-DD
+            $date                           = \Carbon\Carbon::createFromFormat('d/m/Y', $value);
+            $this->attributes['birth_date'] = $date->format('Y-m-d');
+        }
+    }
+
+    public function getBirthDateAttribute($value)
+    {
+        if ($value) {
+            // Converte AAAA-MM-DD para DD/MM/AAAA para exibição
+            return \Carbon\Carbon::parse($value)->format('d/m/Y');
+        }
+
+        return $value;
     }
 
     /**
@@ -69,5 +92,15 @@ class Specialist extends Authenticatable
     public function availabilities(): HasMany
     {
         return $this->hasMany(Availability::class);
+    }
+
+    public function trainings(): HasMany
+    {
+        return $this->hasMany(Training::class);
+    }
+
+    public function state(): BelongsTo
+    {
+        return $this->belongsTo(State::class);
     }
 }

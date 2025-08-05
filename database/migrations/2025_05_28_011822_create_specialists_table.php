@@ -12,19 +12,26 @@ return new class () extends Migration {
 
             $table->foreignId('gender_id')->nullable()->constrained('genders');
             $table->foreignId('specialty_id')->nullable()->constrained('specialties');
+            $table->foreignId('state_id')->nullable()->constrained('states');
 
             $table->string('name');
             $table->string('cpf')->unique();
             $table->string('phone_number');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('birth_date');
+
             $table->string('crp')->nullable();
-            $table->text('summary')->nullable();
-            $table->text('description')->nullable();
-            $table->year('year_started_acting')->nullable();
+            $table->text('summary')->nullable(); // Resumo profissional
+            $table->text('description')->nullable(); // Descrição pessoal
+            $table->year('year_started_acting')->nullable(); // Ano de atuação
+            $table->decimal('appointment_value', 10, 2)->nullable(); // Valor da consulta
+
+            $table->boolean('lgbtqia')->default(false);
 
             $table->enum('onboarding_step', [
                 'personal-details',
+                'professional-details',
                 'completed',
             ])->default('personal-details');
 

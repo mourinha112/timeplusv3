@@ -75,6 +75,6 @@
             <x-carbon-time class="w-5 text-base-content/70" />
             <span class="text-xs text-base-content/70">Sessão 50 min</span>
         </div>
-        <div class="badge badge-info badge-soft font-bold">R$ 100</div>
+        <div class="badge badge-info badge-soft font-bold">R$ {{ number_format($specialist->appointment_value, 2, ',', '.') }}</div>
     </div>
 </div>

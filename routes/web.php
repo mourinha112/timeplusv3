@@ -1,7 +1,7 @@
 <?php
 
 use App\Livewire\{Specialist, User, Welcome};
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\{Auth, Route};
 
 /**
  * Landing Page Route
@@ -21,6 +21,17 @@ Route::group(['middleware' => 'guest:user'], function () {
 
     /* Register */
     Route::get('register', User\Auth\Register::class)->name('user.auth.register');
+});
+
+/**
+ * Logout Routes
+ */
+Route::group(['middleware' => 'auth:user'], function () {
+    Route::get('logout', function () {
+        auth()->guard('user')->logout();
+
+        return redirect()->route('user.auth.login');
+    })->name('user.auth.logout');
 });
 
 /**
@@ -63,11 +74,23 @@ Route::group(['middleware' => 'guest:specialist'], function () {
 });
 
 /**
+ * Logout Routes
+ */
+Route::group(['middleware' => 'auth:specialist'], function () {
+    Route::get('specialist/logout', function () {
+        Auth::guard('specialist')->logout();
+
+        return redirect()->route('specialist.auth.login');
+    })->name('specialist.auth.logout');
+});
+
+/**
  * Application Routes
  */
 Route::group(['middleware' => ['auth:specialist', 'onboarding:specialist']], function () {
     /* Onboarding */
-    Route::get('specialist/onboarding', Specialist\Onboarding\PersonalDetail::class)->name('specialist.onboarding.personal-details');
+    Route::get('specialist/onboarding/personal-details', Specialist\Onboarding\PersonalDetail::class)->name('specialist.onboarding.personal-details');
+    Route::get('specialist/onboarding/professional-details', Specialist\Onboarding\ProfessionalDetail::class)->name('specialist.onboarding.professional-details');
 
     /* Appointments */
     Route::get('specialist/appointments', Specialist\Appointment\Index::class)->name('specialist.appointment.index');
@@ -77,4 +100,8 @@ Route::group(['middleware' => ['auth:specialist', 'onboarding:specialist']], fun
 
     /* Clients */
     Route::get('specialist/clients', Specialist\Client\Index::class)->name('specialist.client.index');
+
+    /* Profile */
+    Route::get('specialist/profile/personal-details', Specialist\Profile\PersonalDetail::class)->name('specialist.profile.personal-details');
+    Route::get('specialist/profile/professional-details', Specialist\Profile\ProfessionalDetail::class)->name('specialist.profile.professional-details');
 });

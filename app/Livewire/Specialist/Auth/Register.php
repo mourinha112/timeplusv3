@@ -21,11 +21,20 @@ class Register extends Component
     #[Rule(['required', 'max:20', 'regex:/^\(\d{2}\) \d{5}-\d{4}$/'])]
     public ?string $phone_number = null;
 
+    public ?string $birth_date = null;
+
     #[Rule(['required', 'max:255', 'email', 'unique:specialists,email'])]
     public ?string $email = null;
 
     #[Rule(['required', 'min:8', 'max:255'])]
     public ?string $password = null;
+
+    public function rules(): array
+    {
+        return [
+            'birth_date' => ['required', 'date_format:d/m/Y', 'before_or_equal:' . now()->subYears(18)->toDateString()],
+        ];
+    }
 
     public function submit(): void
     {
@@ -36,6 +45,7 @@ class Register extends Component
             'email'        => $this->email,
             'cpf'          => $this->cpf,
             'phone_number' => $this->phone_number,
+            'birth_date'   => $this->birth_date,
             'password'     => bcrypt($this->password),
         ]);
 

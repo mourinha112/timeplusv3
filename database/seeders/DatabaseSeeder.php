@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
             GenderSeeder::class,
             SpecialtySeeder::class,
             ReasonSeeder::class,
+            TrainingTypeSeeder::class,
+            StateSeeder::class,
             PlanSeeder::class,
         ]);
     }

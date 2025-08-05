@@ -45,7 +45,7 @@ class PersonalDetail extends Component
             'specialty_id'        => $this->specialty_id,
             'crp'                 => $this->crp,
             'year_started_acting' => $this->year_started_acting,
-            'onboarding_step'     => 'completed',
+            'onboarding_step'     => 'professional-details',
         ]);
 
         return $this->redirect(route('specialist.appointment.index'));
