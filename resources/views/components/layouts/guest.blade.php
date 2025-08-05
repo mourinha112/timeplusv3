@@ -16,9 +16,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
-<body class="h-screen w-screen overflow-hidden">
-    <div class="w-full h-full flex flex-col justify-between items-center bg-gray-100">
-        <div class="w-full h-full max-w-lg px-5 py-10">
+<body class="min-h-screen flex flex-col bg-gray-100 overflow-x-hidden">
+    <div class="min-h-screen flex flex-col justify-between items-center">
+        <div class="w-full max-w-lg px-5 py-10 grow">
             <div class="flex justify-center">
                 <x-logotipo class="mb-8 w-50" />
             </div>
