@@ -3,6 +3,7 @@
 namespace App\Livewire\User\Auth;
 
 use App\Models\User;
+use App\Notifications\User\PasswordResetNotification;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Layout;
@@ -49,6 +50,8 @@ class PasswordReset extends Component
             $this->user->save();
 
             $this->reset(['password', 'password_confirmation']);
+
+            // $this->user->notify(new PasswordResetNotification());
 
             LivewireAlert::title('Sucesso!')
                 ->text('Sua senha foi redefinida com sucesso.')
