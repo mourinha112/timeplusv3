@@ -1,29 +1,37 @@
 <div class="space-y-4">
-    <h2 class="text-base-content/70">
+    <x-subtitle>
         Dê o primeiro passo agora! 👋🏻
-    </h2>
+    </x-subtitle>
 
-    <div class="card">
-        <div class="card-body flex flex-col justify-between sm:items-center sm:flex-row">
-            <div class="space-y-3">
-                <h2 class="card-title">Garanta sua sessão hoje</h2>
-                <p class="text-base-content/70">Busque e encontre os especialistas ideais para você.</p>
-            </div>
-            <a href="{{ route('user.specialist.index') }}" class="btn btn-info btn-block mt-2 sm:btn-wide sm:mt-0">
-                Encontrar especialista
-            </a>
-        </div>
-    </div>
+    <x-card>
+        <x-card-body class="flex justify-between sm:items-center sm:flex-row">
 
-    <div class="card">
-        <div class="card-body flex flex-col justify-between sm:items-center sm:flex-row">
             <div class="space-y-3">
-                <h2 class="card-title">Eleve sua experiência</h2>
-                <p class="text-base-content/70">Descubra o melhor plano para aprimorar sua experiência.</p>
+                <x-card-title>Garanta sua sessão hoje</x-card-title>
+                <x-text>Busque e encontre os especialistas ideais para você.</x-text>
             </div>
-            <a href="{{ route('user.plan.index') }}" class="btn btn-info btn-block mt-2 sm:btn-wide sm:mt-0">
+
+            <x-btn-link href="{{ route('user.specialist.index') }}" class="mt-2 sm:btn sm:mt-0">
+                <x-carbon-search-advanced class="w-4 h-4" />
+                Encontrar especialistas
+            </x-btn-link>
+
+        </x-card-body>
+    </x-card>
+
+    <x-card>
+        <x-card-body class="flex justify-between sm:items-center sm:flex-row">
+
+            <div class="space-y-3">
+                <x-card-title>Eleve sua experiência</x-card-title>
+                <x-text>Descubra o melhor plano para aprimorar sua experiência.</x-text>
+            </div>
+
+            <x-btn-link href="{{ route('user.plan.index') }}" class="mt-2 sm:btn sm:mt-0">
+                <x-carbon-pricing-consumption class="w-4 h-4" />
                 Conhecer os planos
-            </a>
-        </div>
-    </div>
+            </x-btn-link>
+
+        </x-card-body>
+    </x-card>
 </div>

@@ -26,10 +26,13 @@ class PasswordRecovery extends Component
             $user = User::where('email', $this->email)->first();
 
             if (!$user) {
-                LivewireAlert::title('Sucesso!1')
+                LivewireAlert::title('Sucesso!')
                 ->text('Um e-mail foi enviado com as instruções para recuperação de senha.')
                 ->success()
                 ->show();
+
+                $this->reset(['email']);
+
                 return;
             }
 
@@ -38,6 +41,9 @@ class PasswordRecovery extends Component
                     ->text('Já existe uma solicitação de recuperação de senha pendente.')
                     ->warning()
                     ->show();
+
+                $this->reset(['email']);
+
                 return;
             }
 
