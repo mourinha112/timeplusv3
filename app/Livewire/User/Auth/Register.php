@@ -9,6 +9,8 @@ use App\Rules\FormattedPhoneNumber;
 use App\Rules\ValidatedCpf;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
@@ -43,20 +45,34 @@ class Register extends Component
     {
         $this->validate();
 
-        $user = User::query()->create([
-            'name'         => $this->name,
-            'email'        => $this->email,
-            'cpf'          => $this->cpf,
-            'phone_number' => $this->phone_number,
-            'birth_date'   => $this->birth_date,
-            'password'     => bcrypt($this->password),
-        ]);
+        try {
+            $user = User::query()->create([
+                'name'         => $this->name,
+                'email'        => $this->email,
+                'cpf'          => $this->cpf,
+                'phone_number' => $this->phone_number,
+                'birth_date'   => $this->birth_date,
+                'password'     => bcrypt($this->password),
+            ]);
 
-        Auth::login($user, true);
+            Auth::login($user, true);
 
-        // $user->notify(new WelcomeNotification());
+            // $user->notify(new WelcomeNotification());
 
-        $this->redirectRoute('user.dashboard.show');
+            $this->redirectRoute('user.dashboard.show');
+        } catch (\Exception $e) {
+            Log::error('Erro interno::' . get_class($this), [
+                'message' => $e->getMessage(),
+                'email'   => $this->email,
+                'cpf'     => $this->cpf,
+                'ip'      => request()->ip(),
+            ]);
+
+            LivewireAlert::title('Erro!')
+                ->text('Ocorreu um erro ao tentar se cadastrar.')
+                ->error()
+                ->show();
+        }
     }
 
     public function render(): View

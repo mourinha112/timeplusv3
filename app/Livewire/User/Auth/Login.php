@@ -48,7 +48,7 @@ class Login extends Component
 
             return $this->redirectRoute('user.dashboard.show');
         } catch (\Exception $e) {
-            Log::error('Erro interno::' . Login::class, [
+            Log::error('Erro interno::' . get_class($this), [
                 'message' => $e->getMessage(),
                 'email'   => $this->email,
                 'ip'      => request()->ip(),

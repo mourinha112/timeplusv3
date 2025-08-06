@@ -22,8 +22,11 @@ return new class () extends Migration {
             $table->boolean('accepted_terms_contract')->default(true);
             $table->boolean('accepted_privacy_policy')->default(true);
 
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('recovery_password_token')->nullable();
+            $table->timestamp('recovery_password_token_expires_at')->nullable();
+
             $table->rememberToken();
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });
 

@@ -21,6 +21,12 @@ Route::group(['middleware' => 'guest:user'], function () {
 
     /* Register */
     Route::get('register', User\Auth\Register::class)->name('user.auth.register');
+
+    /* Password Recovery */
+    Route::get('password-recovery', User\Auth\PasswordRecovery::class)->name('user.auth.password-recovery');
+
+    /* Password Reset */
+    Route::get('password-reset/{token}', User\Auth\PasswordReset::class)->name('user.auth.password.reset');
 });
 
 /**

@@ -14,7 +14,7 @@
             <x-form-group>
                 <x-label required>Senha</x-label>
                 <x-input wire:model="password" type="password" placeholder="Digite sua senha" />
-                <x-link class="text-right" href="{{ route('user.auth.register') }}">Esqueceu sua senha?</x-link>
+                <x-link class="text-right" href="{{ route('user.auth.password-recovery') }}">Esqueceu sua senha?</x-link>
             </x-form-group>
 
             <x-button class="btn-block" type="submit">Entrar</x-button>
