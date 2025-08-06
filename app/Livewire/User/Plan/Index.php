@@ -3,7 +3,7 @@
 namespace App\Livewire\User\Plan;
 
 use App\Models\Plan;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{Auth, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Computed, Layout};
 use Livewire\Component;
@@ -19,31 +19,45 @@ class Index extends Component
 
     public function subscribe($planId)
     {
-        $plan = Plan::findOrFail($planId);
+        try {
+            $plan = Plan::findOrFail($planId);
 
-        $subscribe = Auth::user()->subscribes()->where('end_date', '>', now())->first();
+            $subscribe = Auth::user()->subscribes()->where('end_date', '>', now())->first();
 
-        if ($subscribe) {
-            LivewireAlert::title('Erro!')
-                ->text('Você já possui uma assinatura ativa.')
-                ->error()
+            if ($subscribe) {
+                LivewireAlert::title('Erro!')
+                    ->text('Você já possui uma assinatura ativa.')
+                    ->error()
+                    ->show();
+
+                return;
+            }
+
+            Auth::user()->subscribes()->create([
+                'plan_id'    => $plan->id,
+                'start_date' => now(),
+                'end_date'   => now()->addDays($plan->duration_days),
+            ]);
+
+            LivewireAlert::title('Sucesso!')
+                ->text('Assinatura realizada com sucesso!')
+                ->success()
                 ->show();
 
-            return;
+            return $this->redirect(route('user.subscribe.show'));
+        } catch (\Exception $e) {
+            Log::error('Erro interno::' . get_class($this), [
+                'user_id' => Auth::id(),
+                'plan_id' => $planId,
+                'message' => $e->getMessage(),
+                'ip'      => request()->ip(),
+            ]);
+
+            LivewireAlert::title('Erro!')
+                ->text('Ocorreu um erro ao tentar realizar a assinatura.')
+                ->error()
+                ->show();
         }
-
-        Auth::user()->subscribes()->create([
-            'plan_id'    => $plan->id,
-            'start_date' => now(),
-            'end_date'   => now()->addDays($plan->duration_days),
-        ]);
-
-        LivewireAlert::title('Sucesso!')
-            ->text('Assinatura realizada com sucesso!')
-            ->success()
-            ->show();
-
-        return $this->redirect(route('user.subscribe.show'));
     }
 
     public function render()

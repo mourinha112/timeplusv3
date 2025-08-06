@@ -6,8 +6,7 @@ use App\Models\User;
 use App\Notifications\User\PasswordResetNotification;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
+use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
 #[Layout('components.layouts.guest', ['title' => 'Redefinição de Senha'])]
@@ -28,11 +27,13 @@ class PasswordReset extends Component
 
         if (!$this->user) {
             $this->redirect(route('user.auth.login'));
+
             return;
         }
 
         if (!$this->user->recovery_password_token_expires_at || $this->user->recovery_password_token_expires_at < now()) {
             $this->expired = true;
+
             return;
         }
     }
@@ -44,7 +45,7 @@ class PasswordReset extends Component
         try {
             $this->user->password = bcrypt($this->password);
 
-            $this->user->recovery_password_token = null;
+            $this->user->recovery_password_token            = null;
             $this->user->recovery_password_token_expires_at = null;
 
             $this->user->save();

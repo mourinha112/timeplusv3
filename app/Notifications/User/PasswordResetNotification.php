@@ -3,7 +3,6 @@
 namespace App\Notifications\User;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -27,7 +26,7 @@ class PasswordResetNotification extends Notification
             ->subject('Redefinição de Senha')
             ->markdown('emails.user.password-reset-notification', [
                 'user' => $notifiable,
-                'url' => route('user.auth.login')
+                'url'  => route('user.auth.login'),
             ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\User\Auth;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\{Auth, Log, RateLimiter};
 use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -17,7 +18,7 @@ class Login extends Component
     #[Rule(['required', 'max:255'])]
     public ?string $password = null;
 
-    public function submit()
+    public function submit(): void
     {
         $this->validate();
 
@@ -46,7 +47,7 @@ class Login extends Component
                 return;
             }
 
-            return $this->redirectRoute('user.dashboard.show');
+            $this->redirect(route('user.dashboard.show'), true);
         } catch (\Exception $e) {
             Log::error('Erro interno::' . get_class($this), [
                 'message' => $e->getMessage(),
@@ -66,7 +67,7 @@ class Login extends Component
         return Str::transliterate(Str::lower('rate-limiter::' . $this->email . '|' . request()->ip()));
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.user.auth.login');
     }

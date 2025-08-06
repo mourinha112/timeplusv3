@@ -26,7 +26,7 @@ class WelcomeNotification extends Notification
         ->subject('Bem-vindo(a) à Time Plus!')
         ->markdown('emails.user.welcome-notification', [
             'user' => $notifiable,
-            'url' => route('user.auth.login')
+            'url'  => route('user.auth.login'),
         ]);
     }
 

@@ -5,11 +5,10 @@ namespace App\Livewire\User\Auth;
 use App\Models\User;
 use App\Notifications\User\PasswordRecoveryNotification;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
-use Livewire\Component;
 use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
+use Livewire\Attributes\{Layout, Rule};
+use Livewire\Component;
 
 #[Layout('components.layouts.guest', ['title' => 'Recuperação de Senha'])]
 class PasswordRecovery extends Component
@@ -36,7 +35,7 @@ class PasswordRecovery extends Component
                 return;
             }
 
-            if($user->recovery_password_token_expires_at && $user->recovery_password_token_expires_at > now()) {
+            if ($user->recovery_password_token_expires_at && $user->recovery_password_token_expires_at > now()) {
                 LivewireAlert::title('Atenção!')
                     ->text('Já existe uma solicitação de recuperação de senha pendente.')
                     ->warning()
@@ -47,7 +46,7 @@ class PasswordRecovery extends Component
                 return;
             }
 
-            $user->recovery_password_token = Str::random(60);
+            $user->recovery_password_token            = Str::random(60);
             $user->recovery_password_token_expires_at = now()->addMinutes(3);
 
             $user->save();
