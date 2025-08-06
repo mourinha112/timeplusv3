@@ -23,7 +23,7 @@
     <div class="min-h-screen flex flex-col justify-between items-center relative z-10">
         <div class="w-full max-w-lg px-5 py-10 grow"> --}}
 
-<body class="min-h-screen flex flex-col bg-gray-100 overflow-x-hidden">
+<body class="min-h-screen flex flex-col bg-base-200 overflow-x-hidden">
     <div class="min-h-screen flex flex-col justify-between items-center">
         <div class="w-full max-w-lg px-5 py-10 grow">
             <div class="flex justify-center">
