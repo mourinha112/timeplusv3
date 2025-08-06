@@ -16,6 +16,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
+
+{{-- <body class="min-h-screen flex flex-col bg-cover bg-center overflow-x-hidden relative" style="background-image: url('https://www.eniac.edu.br/hs-fs/hubfs/Design%20sem%20nome%20-%202023-10-19T165649.301.jpg?width=1200&height=600&name=Design%20sem%20nome%20-%202023-10-19T165649.301.jpg')">
+    <div class="absolute inset-0 bg-black opacity-70"></div>
+
+    <div class="min-h-screen flex flex-col justify-between items-center relative z-10">
+        <div class="w-full max-w-lg px-5 py-10 grow"> --}}
+
 <body class="min-h-screen flex flex-col bg-gray-100 overflow-x-hidden">
     <div class="min-h-screen flex flex-col justify-between items-center">
         <div class="w-full max-w-lg px-5 py-10 grow">
