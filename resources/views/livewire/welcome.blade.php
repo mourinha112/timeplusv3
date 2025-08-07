@@ -1,24 +1,27 @@
-<div>
-    <div class="card w-96 bg-base-100 card-sm shadow-sm mt-3">
-        <div class="card-body flex flex-row justify-between items-center">
-            <div>
-                <h2 class="card-title">Cliente</h2>
-                <p>Acessar plataforma do cliente.</p>
+<div class="space-y-4">
+    <x-card>
+        <x-card-body class="flex flex-row justify-between items-center">
+           <div class="space-y-2">
+                <x-card-title>Cliente</x-card-title>
+                <x-text>Acessar plataforma do cliente.</x-text>
             </div>
-            <div class="justify-end card-actions">
-                <a href="{{ route('user.auth.login') }}" class="btn btn-info">Acessar</a>
+            <x-btn-link href="{{ route('user.auth.login') }}">
+                Acessar
+                <x-carbon-arrow-right class="w-4 h-4" />
+            </x-btn-link>
+        </x-card-body>
+    </x-card>
+
+    <x-card>
+        <x-card-body class="flex flex-row justify-between items-center">
+            <div class="space-y-2">
+                 <x-card-title>Especialista</x-card-title>
+                <x-text>Acessar plataforma do especialista.</x-text>
             </div>
-        </div>
-    </div>
-    <div class="card w-96 bg-base-100 card-sm shadow-sm mt-3">
-        <div class="card-body flex flex-row justify-between items-center">
-            <div>
-                <h2 class="card-title">Especialista</h2>
-                <p>Acessar plataforma do especialista.</p>
-            </div>
-            <div class="justify-end card-actions">
-                <a href="{{ route('specialist.auth.login') }}" class="btn btn-info">Acessar</a>
-            </div>
-        </div>
-    </div>
+            <x-btn-link href="{{ route('specialist.auth.login') }}">
+                Acessar
+                <x-carbon-arrow-right class="w-4 h-4" />
+            </x-btn-link>
+        </x-card-body>
+    </x-card>
 </div>
