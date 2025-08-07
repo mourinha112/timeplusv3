@@ -51,7 +51,7 @@ class PasswordRecovery extends Component
 
             $user->save();
 
-            // $user->notify(new PasswordRecoveryNotification());
+            $user->notify(new PasswordRecoveryNotification());
 
             $this->reset(['email']);
 

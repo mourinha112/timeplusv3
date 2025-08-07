@@ -1,110 +1,99 @@
-<div>
-    <!-- Header do Perfil -->
-    <div class="card card-md shadow-sm border border-slate-200 mb-10">
-        <div class="card-body items-center justify-center">
-            <!-- Avatar -->
-            <h1 class="text-xl font-semibold">Foto de Perfil</h1>
-            <x-carbon-user-avatar-filled class="text-info h-35 w-35" />
+<div class="space-y-4">
+    <x-heading>
+        <x-title>Perfil</x-title>
+        <x-subtitle>Atualize suas informações pessoais.</x-subtitle>
+    </x-heading>
 
-            <!-- Info do usuário -->
-            <div>
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Envie sua foto:</legend>
-                    <input type="file" class="file-input" />
-                    <label class="label">Imagem deve ser pelo menos 300x300px</label>
-                </fieldset>
-            </div>
-        </div>
-    </div>
+    {{-- Foto de perfil --}}
+    <x-card>
+        <x-card-body class="items-center justify-center">
+            @if ($currentAvatar)
+                {{-- Avatar atual --}}
+                <img src="{{ Storage::url($currentAvatar) }}" class="w-25 h-25 rounded-full">
+            @else
+                {{-- Avatar padrão --}}
+                <img src="{{ asset('images/avatar.png') }}" class="w-25 h-25 rounded-full">
+            @endif
 
-    @if (session()->has('success_update_password'))
-    <div class="alert alert-success">
-        <span>{{ session('success_update_password') }}</span>
-    </div>
-    @endif
+            <x-form-group>
+                <x-label>Foto de perfil</x-label>
+                <x-input-file wire:model="avatar" accept="image/*" />
+                <x-input-description>Imagem deve conter no máximo 2MB.</x-input-description>
+            </x-form-group>
+        </x-card-body>
+    </x-card>
 
-    <!-- Seção de Alteração de Senha -->
-    <div class="card card-md shadow-sm border border-slate-200 mb-10 mt-2">
-        <div class="card-body">
-            <h2 class="text-2xl font-semibold text-base-content mb-6">Alterar Senha</h2>
+    {{-- Alteração de senha --}}
+    <x-card>
+        <x-card-body>
+            <x-card-title>Alterar senha</x-card-title>
+            <x-text>Mantenha sua conta segura alterando sua senha regularmente.</x-text>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Nova Senha:</legend>
-                    <input type="password" class="input" wire:model="password" />
-                    @error('password')
-                    <span class="text-error">{{ $message }}</span>
-                    @enderror
-                </fieldset>
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Confirmação da Nova Senha:</legend>
-                    <input type="password" class="input" wire:model="password_confirmation" />
-                    @error('password_confirmation')
-                    <span class="text-error">{{ $message }}</span>
-                    @enderror
-                </fieldset>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                <x-form-group>
+                    <x-label required>Nova senha</x-label>
+                    <x-input type="password" wire:model="password" placeholder="Digite sua nova senha" />
+                </x-form-group>
+
+                <x-form-group>
+                    <x-label required>Confirmação de senha</x-label>
+                    <x-input type="password" wire:model="password_confirmation" placeholder="Digite a confirmação da senha" />
+                </x-form-group>
             </div>
 
-            <div class="mt-6 flex justify-end">
-                <button class="btn btn-info" wire:click="updatePassword">
+            <div class="mt-2 text-end">
+                <x-button class="btn-block sm:btn-wide" wire:click="updatePassword">
                     <x-carbon-unlocked class="w-4 h-4" />
                     Alterar senha
-                </button>
+                </x-button>
             </div>
-        </div>
-    </div>
+        </x-card-body>
+    </x-card>
 
-    @if (session()->has('success_update_profile'))
-    <div class="alert alert-success">
-        <span>{{ session('success_update_profile') }}</span>
-    </div>
-    @endif
+    {{-- Dados pessoais --}}
+    <x-card>
+        <x-card-body>
+            <x-card-title>Dados Pessoais</x-card-title>
+            <x-text>Mantenha suas informações pessoais atualizadas.</x-text>
 
-    <!-- Seção de Dados Pessoais -->
-    <div class="card card-md shadow-sm border border-slate-200 mb-10 mt-2">
-        <div class="card-body">
-            <h2 class="text-2xl font-semibold text-base-content mb-6">Dados Pessoais</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+                <x-form-group>
+                    <x-label>E-mail</x-label>
+                    <x-text>{{ $this->user->email }}</x-text>
+                </x-form-group>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Nome e Telefone -->
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Nome:</legend>
-                    <input type="text" wire:model="name" class="input" />
-                    @error('name')
-                    <span class="text-error">{{ $message }}</span>
-                    @enderror
-                </fieldset>
+                <x-form-group>
+                    <x-label>CPF</x-label>
+                    <x-text>{{ $this->user->cpf }}</x-text>
+                </x-form-group>
 
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Telefone:</legend>
-                    <input type="text" wire:model="phone_number" class="input"  x-mask="(99) 99999-9999" />
-                    @error('phone_number')
-                    <span class="text-error">{{ $message }}</span>
-                    @enderror
-                </fieldset>
+                <x-form-group>
+                    <x-label>Data de cadastro</x-label>
+                    <x-text>{{ \Carbon\Carbon::parse($this->user->created_at)->format('d/m/Y') }}</x-text>
+                </x-form-group>
 
-                <!-- CPF e Endereço -->
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">CPF:</legend>
-                    <input type="text" class="input" wire:model="cpf" disabled x-mask="999.999.999-99" />
-                </fieldset>
+                <x-form-group>
+                    <x-label required>Nome</x-label>
+                    <x-input type="text" wire:model="name" placeholder="Digite seu nome" />
+                </x-form-group>
 
-                <fieldset class="fieldset">
-                    <legend class="fieldset-legend">Data de nascimento:</legend>
-                    <input type="text" class="input" wire:model="birth_date" x-mask="99/99/9999" />
-                    @error('birth_date')
-                    <span class="text-error">{{ $message }}</span>
-                    @enderror
-                </fieldset>
+                <x-form-group>
+                    <x-label required>Telefone</x-label>
+                    <x-input type="text" wire:model="phone_number" x-mask="(99) 99999-9999" />
+                </x-form-group>
+
+                <x-form-group>
+                    <x-label required>Data de nascimento</x-label>
+                    <x-input type="text" wire:model="birth_date" x-mask="99/99/9999" />
+                </x-form-group>
             </div>
 
-            <!-- Botão de Salvar -->
-            <div class="mt-6 flex justify-end">
-                <button class="btn btn-info" wire:click="updateProfile">
+            <div class="mt-2 text-end">
+                 <x-button class="btn-block sm:btn-wide" wire:click="updateProfile">
                     <x-carbon-save class="w-4 h-4" />
                     Salvar
-                </button>
+                </x-button>
             </div>
-        </div>
-    </div>
+        </x-card-body>
+    </x-card>
 </div>

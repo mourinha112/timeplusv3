@@ -54,7 +54,7 @@ class Register extends Component
 
             Auth::login($user, true);
 
-            // $user->notify(new WelcomeNotification());
+            $user->notify(new WelcomeNotification());
 
             $this->redirectRoute('user.dashboard.show');
         } catch (\Exception $e) {

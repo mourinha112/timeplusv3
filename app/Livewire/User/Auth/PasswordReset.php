@@ -52,7 +52,7 @@ class PasswordReset extends Component
 
             $this->reset(['password', 'password_confirmation']);
 
-            // $this->user->notify(new PasswordResetNotification());
+            $this->user->notify(new PasswordResetNotification());
 
             LivewireAlert::title('Sucesso!')
                 ->text('Sua senha foi redefinida com sucesso.')
