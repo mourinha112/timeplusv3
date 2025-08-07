@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\ServiceProvider;
 use SendGrid;
 use SendGrid\Mail\Mail as SendGridMail;
-use Symfony\Component\Mailer\Transport\TransportInterface;
 use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\Transport\TransportInterface;
 use Symfony\Component\Mime\MessageConverter;
 
 class SendGridServiceProvider extends ServiceProvider
@@ -57,6 +57,7 @@ class SendGridTransport implements TransportInterface
 
         try {
             $response = $this->sendgrid->send($email);
+
             return new SentMessage(MessageConverter::toEmail($message), $envelope ?? $message);
         } catch (\Exception $e) {
             throw $e;

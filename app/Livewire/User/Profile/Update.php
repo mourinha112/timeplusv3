@@ -17,13 +17,17 @@ class Update extends Component
     public User $user;
 
     public $avatar;
+
     public $currentAvatar;
 
     public ?string $name = null;
+
     public ?string $phone_number = null;
+
     public ?string $birth_date = null;
 
     public ?string $password = null;
+
     public ?string $password_confirmation = null;
 
     public function mount()
