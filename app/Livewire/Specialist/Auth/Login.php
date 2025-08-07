@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Specialist\Auth;
 
-use Illuminate\Support\Facades\{Auth, RateLimiter};
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\{Auth, Log, RateLimiter};
 use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
@@ -16,27 +18,48 @@ class Login extends Component
     #[Rule(['required', 'max:255'])]
     public ?string $password = null;
 
-    public function submit()
+    public function submit(): void
     {
         $this->validate();
 
-        if (RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
-            $this->addError('rateLimiter', trans('auth.throttle', [
-                'seconds' => RateLimiter::availableIn($this->throttleKey()),
-            ]));
+        try {
+            if (RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+                LivewireAlert::title('Limite de tentativas excedido')
+                    ->text('Você excedeu o número de tentativas de login.')
+                    ->error()
+                    ->show();
 
-            return;
+                $this->reset(['email', 'password']);
+
+                return;
+            }
+
+            if (!Auth::guard('specialist')->attempt(['email' => $this->email, 'password' => $this->password])) {
+                RateLimiter::hit($this->throttleKey());
+
+                LivewireAlert::title('Credenciais inválidas')
+                    ->text('As credenciais fornecidas estão incorretas')
+                    ->error()
+                    ->show();
+
+                $this->reset(['password']);
+
+                return;
+            }
+
+            $this->redirect(route('specialist.appointment.index'), true);
+        } catch (\Exception $e) {
+            Log::error('Erro interno::' . get_class($this), [
+                'message' => $e->getMessage(),
+                'email'   => $this->email,
+                'ip'      => request()->ip(),
+            ]);
+
+            LivewireAlert::title('Erro!')
+                ->text('Ocorreu um erro ao tentar fazer login.')
+                ->error()
+                ->show();
         }
-
-        if (!Auth::guard('specialist')->attempt(['email' => $this->email, 'password' => $this->password])) {
-            RateLimiter::hit($this->throttleKey());
-
-            $this->addError('invalidCredentials', trans('auth.failed'));
-
-            return;
-        }
-
-        return $this->redirectRoute('specialist.appointment.index');
     }
 
     protected function throttleKey(): string
@@ -44,7 +67,7 @@ class Login extends Component
         return Str::transliterate(Str::lower('rate-limiter::' . $this->email . '|' . request()->ip()));
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.specialist.auth.login');
     }
