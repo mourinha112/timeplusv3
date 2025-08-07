@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
     public function up(): void
     {
         Schema::create('specialists', function (Blueprint $table) {
@@ -37,6 +37,9 @@ return new class () extends Migration {
 
             $table->boolean('accepted_terms_contract')->default(true);
             $table->boolean('accepted_privacy_policy')->default(true);
+
+            $table->string('recovery_password_token')->nullable();
+            $table->timestamp('recovery_password_token_expires_at')->nullable();
 
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

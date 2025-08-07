@@ -32,11 +32,15 @@ class Specialist extends Authenticatable
         'is_active',
         'email_verified_at',
         'remember_token',
+        'recovery_password_token',
+        'recovery_password_token_expires_at',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'recovery_password_token',
+        'recovery_password_token_expires_at',
     ];
 
     protected function casts(): array

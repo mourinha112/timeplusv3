@@ -77,6 +77,12 @@ Route::group(['middleware' => 'guest:specialist'], function () {
 
     /* Register */
     Route::get('specialist/register', Specialist\Auth\Register::class)->name('specialist.auth.register');
+
+    /* Password Recovery */
+    Route::get('specialist/password-recovery', Specialist\Auth\PasswordRecovery::class)->name('specialist.auth.password-recovery');
+
+    /* Password Reset */
+    Route::get('specialist/password-reset/{token}', Specialist\Auth\PasswordReset::class)->name('specialist.auth.password.reset');
 });
 
 /**

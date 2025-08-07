@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Livewire\User\Auth;
+namespace App\Livewire\Specialist\Auth;
 
-use App\Models\User;
-use App\Notifications\User\PasswordRecoveryNotification;
+use App\Models\Specialist;
+use App\Notifications\Specialist\PasswordRecoveryNotification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -22,20 +22,20 @@ class PasswordRecovery extends Component
 
         try {
 
-            $user = User::where('email', $this->email)->first();
+            $specialist = Specialist::where('email', $this->email)->first();
 
-            if (!$user) {
+            if (!$specialist) {
                 LivewireAlert::title('Sucesso!')
-                ->text('Um e-mail foi enviado com as instruções para recuperação de senha.')
-                ->success()
-                ->show();
+                    ->text('Um e-mail foi enviado com as instruções para recuperação de senha.')
+                    ->success()
+                    ->show();
 
                 $this->reset(['email']);
 
                 return;
             }
 
-            if ($user->recovery_password_token_expires_at && $user->recovery_password_token_expires_at > now()) {
+            if ($specialist->recovery_password_token_expires_at && $specialist->recovery_password_token_expires_at > now()) {
                 LivewireAlert::title('Atenção!')
                     ->text('Já existe uma solicitação de recuperação de senha pendente.')
                     ->warning()
@@ -46,12 +46,12 @@ class PasswordRecovery extends Component
                 return;
             }
 
-            $user->recovery_password_token            = Str::random(60);
-            $user->recovery_password_token_expires_at = now()->addMinutes(3);
+            $specialist->recovery_password_token            = Str::random(60);
+            $specialist->recovery_password_token_expires_at = now()->addMinutes(3);
 
-            $user->save();
+            $specialist->save();
 
-            $user->notify(new PasswordRecoveryNotification());
+            $specialist->notify(new PasswordRecoveryNotification());
 
             $this->reset(['email']);
 
@@ -75,6 +75,6 @@ class PasswordRecovery extends Component
 
     public function render()
     {
-        return view('livewire.user.auth.password-recovery');
+        return view('livewire.specialist.auth.password-recovery');
     }
 }
