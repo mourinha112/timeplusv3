@@ -67,7 +67,6 @@ class Update extends Component
         } catch (\Exception $e) {
             Log::error('Erro interno::' . get_class($this), [
                 'message' => $e->getMessage(),
-                'email'   => $this->user->email,
                 'ip'      => request()->ip(),
             ]);
 
@@ -101,7 +100,6 @@ class Update extends Component
         } catch (\Exception $e) {
             Log::error('Erro interno::' . get_class($this), [
                 'message' => $e->getMessage(),
-                'email'   => $this->user->email,
                 'ip'      => request()->ip(),
             ]);
 
@@ -133,7 +131,6 @@ class Update extends Component
         } catch (\Exception $e) {
             Log::error('Erro interno::' . get_class($this), [
                 'message' => $e->getMessage(),
-                'email'   => $this->user->email,
                 'ip'      => request()->ip(),
             ]);
 

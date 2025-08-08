@@ -167,8 +167,11 @@
 
                         <div tabindex="0" role="button" class="header-btn btn btn-ghost btn-circle avatar">
                             <div class="w-10 rounded-full flex items-center justify-center">
-                                {{-- <x-carbon-user-avatar-filled class="w-10 h-10" /> --}}
-                                <img src="{{ asset('images/avatar.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full" />
+                                @if(Auth::guard('specialist')->user()->avatar)
+                                    <img src="{{ asset('storage/' . Auth::guard('specialist')->user()->avatar) }}" class="w-10 h-10 rounded-full" />
+                                @else
+                                    <img src="{{ asset('images/avatar.png') }}" class="w-10 h-10 rounded-full" />
+                                @endif
                             </div>
                         </div>
                     </div>

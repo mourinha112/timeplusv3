@@ -14,11 +14,11 @@
 
     <div class="flex items-start space-x-3 mb-4">
         <!-- Avatar -->
-        <div class="avatar">
-            <div class="w-22 rounded-full">
-                <img src="{{ asset('images/avatar.png') }}" alt="{{ $specialist->name }}" />
-            </div>
-        </div>
+        @if($specialist->avatar)
+            <img src="{{ asset('storage/' . $specialist->avatar) }}" class="w-10 h-10 rounded-full" />
+        @else
+            <img src="{{ asset('images/avatar.png') }}" class="w-10 h-10 rounded-full" />
+        @endif
 
         <!-- Conteúdo -->
         <div class="flex flex-col space-y-2">

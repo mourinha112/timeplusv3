@@ -55,7 +55,6 @@ class PersonalDetail extends Component
         } catch (\Exception $e) {
             Log::error('Erro interno::' . get_class($this), [
                 'message' => $e->getMessage(),
-                'email'   => $this->email,
                 'ip'      => request()->ip(),
             ]);
 

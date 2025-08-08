@@ -47,8 +47,6 @@ class Index extends Component
             return $this->redirect(route('user.subscribe.show'));
         } catch (\Exception $e) {
             Log::error('Erro interno::' . get_class($this), [
-                'user_id' => Auth::id(),
-                'plan_id' => $planId,
                 'message' => $e->getMessage(),
                 'ip'      => request()->ip(),
             ]);

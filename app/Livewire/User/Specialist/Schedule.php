@@ -138,12 +138,9 @@ class Schedule extends Component
         } catch (\Exception $e) {
             DB::rollBack();
 
-            Log::error('Erro ao agendar consulta', [
-                'user_id'       => Auth::id(),
-                'specialist_id' => $this->specialist->id,
-                'date'          => $this->selectedDate,
-                'time'          => $this->selectedTime,
-                'error'         => $e->getMessage(),
+            Log::error('Erro interno::' . get_class($this), [
+                'message' => $e->getMessage(),
+                'ip'      => request()->ip(),
             ]);
 
             LivewireAlert::title('Erro!')
