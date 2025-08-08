@@ -243,6 +243,9 @@ return [
         'specialty_id'          => 'especialidade',
         'crp'                   => 'CRP',
         'year_started_acting'   => 'início de atuação',
+        'appointment_value'     => 'valor da sessão',
+        'summary'               => 'resumo',
+        'description'           => 'descrição',
     ],
 
 ];
