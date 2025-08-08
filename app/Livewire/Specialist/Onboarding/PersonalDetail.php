@@ -4,6 +4,8 @@ namespace App\Livewire\Specialist\Onboarding;
 
 use App\Models\{Gender, Specialty};
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Computed, Layout, Rule};
 use Livewire\Component;
 
@@ -38,17 +40,30 @@ class PersonalDetail extends Component
     {
         $this->validate();
 
-        $specialist = Auth::guard('specialist')->user();
+        try {
+            $specialist = Auth::guard('specialist')->user();
 
-        $specialist->update([
-            'gender_id'           => $this->gender_id,
-            'specialty_id'        => $this->specialty_id,
-            'crp'                 => $this->crp,
-            'year_started_acting' => $this->year_started_acting,
-            'onboarding_step'     => 'professional-details',
-        ]);
+            $specialist->update([
+                'gender_id'           => $this->gender_id,
+                'specialty_id'        => $this->specialty_id,
+                'crp'                 => $this->crp,
+                'year_started_acting' => $this->year_started_acting,
+                'onboarding_step'     => 'professional-details',
+            ]);
 
-        return $this->redirect(route('specialist.appointment.index'));
+            return $this->redirect(route('specialist.appointment.index'), true);
+        } catch (\Exception $e) {
+            Log::error('Erro interno::' . get_class($this), [
+                'message' => $e->getMessage(),
+                'email'   => $this->email,
+                'ip'      => request()->ip(),
+            ]);
+
+            LivewireAlert::title('Erro!')
+                ->text('Ocorreu um erro ao tentar salvar os dados.')
+                ->error()
+                ->show();
+        }
     }
 
     public function render()

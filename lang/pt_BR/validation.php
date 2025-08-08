@@ -239,6 +239,10 @@ return [
         'cpf'                   => 'CPF',
         'phone_number'          => 'celular',
         'email'                 => 'e-mail',
+        'gender_id'             => 'gênero',
+        'specialty_id'          => 'especialidade',
+        'crp'                   => 'CRP',
+        'year_started_acting'   => 'início de atuação',
     ],
 
 ];
