@@ -14,6 +14,7 @@ return new class() extends Migration {
             $table->foreignId('specialty_id')->nullable()->constrained('specialties');
             $table->foreignId('state_id')->nullable()->constrained('states');
 
+            $table->text('avatar')->nullable();
             $table->string('name');
             $table->string('cpf')->unique();
             $table->string('phone_number');
