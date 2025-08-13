@@ -20,7 +20,9 @@
             <x-input wire:model.defer="pixKey" disabled />
         </x-field>
 
-        <x-button class="btn-block btn-warning" x-data @click="$clipboard('{{ $pixKey }}'); $dispatch('notify', 'Chave PIX copiada!')">Copiar chave PIX</x-button>
+        <x-button class="btn-block btn-info" x-data
+            @click="$clipboard('{{ $pixKey }}'); $dispatch('notify', 'Chave PIX copiada!')">Copiar chave
+            PIX</x-button>
     @else
         <x-alert color="danger">
             Erro ao gerar o QR Code PIX. Tente novamente mais tarde.
