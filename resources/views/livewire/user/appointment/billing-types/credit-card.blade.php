@@ -11,14 +11,15 @@
     <x-divider />
 
     <div>
-        <x-subtitle>Corrida #{{ $ride->id }}</x-subtitle>
+        <x-subtitle>Sessão #{{ $appointment->id }}</x-subtitle>
 
-        <x-text class="text-xs"><strong>Data:</strong> {{ $ride->date_schedule }}</x-text>
-        <x-text class="text-xs"><strong>Hora:</strong> {{ \Carbon\Carbon::parse($ride->time_schedule)->format('H:i') }}</x-text>
+        <x-text class="text-xs"><strong>Data:</strong> {{ $appointment->appointment_date }}</x-text>
+        <x-text class="text-xs"><strong>Hora:</strong>
+            {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') }}</x-text>
 
         <x-text>
             <strong>Valor:</strong>
-            <x-badge color="success">R$ {{ number_format($ride->total_value, 2, ',', '.') }}</x-badge>
+            <x-badge color="success">R$ {{ number_format($appointment->total_value, 2, ',', '.') }}</x-badge>
         </x-text>
     </div>
 

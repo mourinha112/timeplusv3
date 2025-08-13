@@ -12,10 +12,16 @@ class Appointment extends Model
         'user_id',
         'invoice_id',
         'specialist_id',
+        'total_value',
         'appointment_date',
         'appointment_time',
         'status',
         'notes',
+    ];
+
+    protected $casts = [
+        'status'            => 'string',
+        'total_value'       => 'decimal:2',
     ];
 
     /**

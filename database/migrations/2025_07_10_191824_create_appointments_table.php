@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
     public function up(): void
     {
         Schema::create('appointments', function (Blueprint $table) {
@@ -14,6 +14,9 @@ return new class () extends Migration {
             $table->integer('invoice_id')->nullable();
 
             $table->foreignId('specialist_id')->constrained();
+
+            $table->decimal('total_value', 10, 2);
+
 
             $table->date('appointment_date');
             $table->time('appointment_time');
