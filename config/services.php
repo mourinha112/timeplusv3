@@ -14,6 +14,13 @@ return [
     |
     */
 
+    'pagarme' => [
+        'api_key' => env('PAGARME_API_KEY'),
+        'base_url' => env('PAGARME_BASE_URL'),
+        'timeout' => env('PAGARME_TIMEOUT', 30),
+        'retry_attempts' => env('PAGARME_RETRY_ATTEMPTS', 3),
+    ],
+
     'sendgrid' => [
         'key' => env('SENDGRID_API_KEY'),
     ],
