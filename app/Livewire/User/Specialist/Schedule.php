@@ -122,6 +122,7 @@ class Schedule extends Component
             $appointment = Appointment::create([
                 'user_id'          => Auth::user()->id,
                 'specialist_id'    => $this->specialist->id,
+                'total_value'      => $this->specialist->price,
                 'appointment_date' => $this->selectedDate,
                 'appointment_time' => $this->selectedTime,
                 'status'           => 'scheduled',
