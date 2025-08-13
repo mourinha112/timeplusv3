@@ -91,7 +91,7 @@
         </div>
         <button class="btn btn-info" wire:click="schedule" wire:loading.attr="disabled" wire:target="schedule"
             {{ $selectedTime && $selectedDate ? '' : 'disabled' }}>
-            <x-carbon-calendar href="{{ route('user.specialist.payment', ['session_id' => 1]) }}" class="w-5 h-5" />
+            <x-carbon-calendar class="w-5 h-5" />
             Agendar
         </button>
     </div>
