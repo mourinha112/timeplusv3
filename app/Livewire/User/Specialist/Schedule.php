@@ -119,7 +119,7 @@ class Schedule extends Component
                 return;
             }
 
-            Appointment::create([
+            $appointment = Appointment::create([
                 'user_id'          => Auth::user()->id,
                 'specialist_id'    => $this->specialist->id,
                 'appointment_date' => $this->selectedDate,
@@ -135,6 +135,8 @@ class Schedule extends Component
             $this->clearSelection();
 
             DB::commit();
+
+            $this->redirect(route('user.specialist.payment', ['appointment_id' => $appointment->id]), true);
         } catch (\Exception $e) {
             DB::rollBack();
 
