@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Http;
 abstract class PagarmeBaseService
 {
     /**
-     * Chave de API do Pagar.me.
+     * Chave de API.
      *
      * @var string
      */
     protected string $apiKey;
 
     /**
-     * URL base da API do Pagar.me.
+     * URL base da API.
      *
      * @var string
      */
@@ -44,12 +44,12 @@ abstract class PagarmeBaseService
         $this->retryAttempts = config('services.pagarme.retry_attempts');
 
         if (!$this->apiKey) {
-            throw new PagarmeException('API Key do Pagar.me não configurado.');
+            throw new PagarmeException('API Key não configurada na requisição.');
         }
     }
 
     /**
-     * Realiza uma requisição HTTP para a API do Pagar.me.
+     * Realiza uma requisição HTTP para a API.
      *
      * @param string $method Método HTTP (get, post, put, delete).
      * @param string $endpoint Endpoint da API.
@@ -75,12 +75,12 @@ abstract class PagarmeBaseService
             return $this->handleResponse($response);
 
         } catch (\Exception $e) {
-            throw new PagarmeException('Erro de comunicação com Pagar.me: ' . $e->getMessage(), 500);
+            throw new PagarmeException('Erro de comunicação com a API: ' . $e->getMessage(), 500);
         }
     }
 
     /**
-     * Manipula a resposta da API do Pagar.me.
+     * Manipula a resposta da API.
      *
      * @param Response $response
      * @return array
@@ -95,13 +95,13 @@ abstract class PagarmeBaseService
         }
 
         $errors  = $data['errors'] ?? [];
-        $message = $data['message'] ?? 'Erro na requisição para Pagar.me.';
+        $message = $data['message'] ?? 'Erro na requisição para a API.';
 
         throw new PagarmeException($message, $response->status(), $errors);
     }
 
     /**
-     * Métodos HTTP para interagir com a API do Pagar.me.
+     * Métodos HTTP para interagir com a API.
      * Cada método corresponde a um tipo de requisição.
      */
     protected function get(string $endpoint, array $params = [], $cached = true): array

@@ -16,8 +16,6 @@ class DatabaseSeeder extends Seeder
             TrainingTypeSeeder::class,
             StateSeeder::class,
             PlanSeeder::class,
-            UserSeeder::class,
-            SpecialistSeeder::class,
         ]);
     }
 }

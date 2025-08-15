@@ -8,4 +8,9 @@ class PagarmeManagerService
     {
         return new CustomerService();
     }
+
+    public function payment(): PaymentService
+    {
+        return new PaymentService();
+    }
 }

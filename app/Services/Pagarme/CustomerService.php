@@ -5,7 +5,7 @@ namespace App\Services\Pagarme;
 class CustomerService extends PagarmeBaseService
 {
     /**
-     * Criação de um cliente no Pagar.me.
+     * Criação de um cliente.
      *
      * @param array $customerData
      * @return array

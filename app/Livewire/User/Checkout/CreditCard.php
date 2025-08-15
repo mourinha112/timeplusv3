@@ -1,18 +1,16 @@
 <?php
 
-namespace App\Livewire\User\Appointment\BillingTypes;
+namespace App\Livewire\User\Appointment\Checkout;
 
-use App\Exceptions\AsaasException;
 use App\Exceptions\PagarmeException;
-use App\Facades\Asaas;
 use App\Facades\Pagarme;
-use App\Models\{Payment, Appointment};
+use App\Models\{Payment, Appointment, Charge};
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
 class CreditCard extends Component
 {
-    public Appointment $appointment;
+    public $model;
 
     /* Informações do cartão de crédito */
     #[Rule(['required', 'string', 'min:3', 'max:255'])]
@@ -30,9 +28,9 @@ class CreditCard extends Component
     #[Rule(['required', 'string', 'min:3', 'max:4'])]
     public ?string $card_cvv = '123';
 
-    public function mount(Appointment $appointment)
+    public function mount($model)
     {
-        $this->appointment = $appointment;
+        $this->model = $model;
     }
 
     public function pay()
@@ -45,11 +43,12 @@ class CreditCard extends Component
     public function payWithCreditCard()
     {
         try {
-            $payment = Payment::where('appointment_id', $this->appointment->id)
-                ->where('status', 'pending')
-                ->first();
+            // $charge = $this->model->charge->where([
+            //     ''
+            //     'status' => 'pending'
+            // ])->first();
 
-            if (!$payment?->gateway_payment_id) {
+            if (!$charge) {
                 return $this->addError('payment', 'Nenhum pagamento encontrado para esta consulta.');
             }
 
