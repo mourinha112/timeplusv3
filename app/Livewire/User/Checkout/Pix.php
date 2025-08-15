@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\User\Appointment\BillingTypes;
+namespace App\Livewire\User\Checkout;
 
 use App\Exceptions\PagarmeException;
 use App\Facades\Pagarme;
@@ -11,6 +11,8 @@ use Livewire\Component;
 class Pix extends Component
 {
     public Appointment $appointment;
+
+    public $payable;
 
     public ?string $pixKey = null;
 
@@ -27,9 +29,7 @@ class Pix extends Component
     protected function loadPixQrCode()
     {
         try {
-            $payment = Payment::where('appointment_id', $this->appointment->id)
-                ->where('status', 'pending')
-                ->first();
+            $payment = $this->payable->payment;
 
             if (!$payment?->gateway_payment_id) {
                 return $this->addError('payment', 'Nenhum pagamento encontrado para esta consulta.');
@@ -57,6 +57,6 @@ class Pix extends Component
 
     public function render()
     {
-        return view('livewire.user.appointment.billing-types.pix');
+        return view('livewire.user.checkout.pix');
     }
 }

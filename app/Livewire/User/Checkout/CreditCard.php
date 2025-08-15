@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\User\Appointment\Checkout;
+namespace App\Livewire\User\Checkout;
 
 use App\Exceptions\PagarmeException;
 use App\Facades\Pagarme;
@@ -10,7 +10,7 @@ use Livewire\Component;
 
 class CreditCard extends Component
 {
-    public $model;
+    public $payable;
 
     /* Informações do cartão de crédito */
     #[Rule(['required', 'string', 'min:3', 'max:255'])]
@@ -28,9 +28,9 @@ class CreditCard extends Component
     #[Rule(['required', 'string', 'min:3', 'max:4'])]
     public ?string $card_cvv = '123';
 
-    public function mount($model)
+    public function mount($payable)
     {
-        $this->model = $model;
+        $this->payable = $payable;
     }
 
     public function pay()
@@ -40,41 +40,41 @@ class CreditCard extends Component
         $this->payWithCreditCard();
     }
 
-    public function payWithCreditCard()
-    {
-        try {
-            // $charge = $this->model->charge->where([
-            //     ''
-            //     'status' => 'pending'
-            // ])->first();
+    // public function payWithCreditCard()
+    // {
+    //     try {
+    //         // $charge = $this->model->charge->where([
+    //         //     ''
+    //         //     'status' => 'pending'
+    //         // ])->first();
 
-            if (!$charge) {
-                return $this->addError('payment', 'Nenhum pagamento encontrado para esta consulta.');
-            }
+    //         if (!$charge) {
+    //             return $this->addError('payment', 'Nenhum pagamento encontrado para esta consulta.');
+    //         }
 
-            $payment = Pagarme::payment()->payWithCreditCard([
-                'payment_id'   => $payment->gateway_payment_id,
-                'holder_name'  => $this->card_holder_name,
-                'number'       => $this->card_number,
-                'expiry_month' => $this->card_expiry_month,
-                'expiry_year'  => $this->card_expiry_year,
-                'ccv'          => $this->card_cvv,
-            ]);
+    //         $payment = Pagarme::payment()->payWithCreditCard([
+    //             'payment_id'   => $payment->gateway_payment_id,
+    //             'holder_name'  => $this->card_holder_name,
+    //             'number'       => $this->card_number,
+    //             'expiry_month' => $this->card_expiry_month,
+    //             'expiry_year'  => $this->card_expiry_year,
+    //             'ccv'          => $this->card_cvv,
+    //         ]);
 
-            if ($payment['status'] !== 'CONFIRMED') {
-                return $this->addError('payment', 'Pagamento não confirmado. Verifique os dados do cartão.');
-            }
+    //         if ($payment['status'] !== 'CONFIRMED') {
+    //             return $this->addError('payment', 'Pagamento não confirmado. Verifique os dados do cartão.');
+    //         }
 
-            return $this->addError('payment', 'Pagamento realizado com sucesso.');
-        } catch (PagarmeException $e) {
-            return $this->addError('payment', $e->getMessage());
-        } catch (\Exception $e) {
-            return $this->addError('payment', 'Erro interno do servidor');
-        }
-    }
+    //         return $this->addError('payment', 'Pagamento realizado com sucesso.');
+    //     } catch (PagarmeException $e) {
+    //         return $this->addError('payment', $e->getMessage());
+    //     } catch (\Exception $e) {
+    //         return $this->addError('payment', 'Erro interno do servidor');
+    //     }
+    // }
 
     public function render()
     {
-        return view('livewire.user.appointment.billing-types.credit-card');
+        return view('livewire.user.checkout.credit-card');
     }
 }

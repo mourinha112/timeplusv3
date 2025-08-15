@@ -122,7 +122,7 @@ class Schedule extends Component
             $appointment = Appointment::create([
                 'user_id'          => Auth::user()->id,
                 'specialist_id'    => $this->specialist->id,
-                'total_value'      => $this->specialist->price,
+                'total_value'      => $this->specialist->appointment_value,
                 'appointment_date' => $this->selectedDate,
                 'appointment_time' => $this->selectedTime,
                 'status'           => 'scheduled',
@@ -137,7 +137,7 @@ class Schedule extends Component
 
             DB::commit();
 
-            $this->redirect(route('user.specialist.payment', ['appointment_id' => $appointment->id]), true);
+            $this->redirect(route('user.appointment.payment', ['appointment_id' => $appointment->id]), true);
         } catch (\Exception $e) {
             DB::rollBack();
 
