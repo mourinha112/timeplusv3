@@ -50,12 +50,9 @@ Route::group(['middleware' => 'auth:user'], function () {
     /* Specialists */
     Route::get('specialists', User\Specialist\Index::class)->name('user.specialist.index');
 
-    /* Payments */
-    Route::get('specialists/payment/{appointment_id}', User\Specialist\Payment::class)->name('user.specialist.payment');
-
-
     /* Appointments */
     Route::get('appointments', User\Appointment\Index::class)->name('user.appointment.index');
+    Route::get('appointments/{appointment_id}/payment', User\Appointment\Payment::class)->name('user.appointment.payment');
 
     /* Plans */
     Route::get('plans', User\Plan\Index::class)->name('user.plan.index');
