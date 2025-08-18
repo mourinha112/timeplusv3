@@ -44,6 +44,10 @@ return [
             'driver'   => 'session',
             'provider' => 'specialists',
         ],
+        'master' => [
+            'driver'   => 'session',
+            'provider' => 'masters',
+        ],
     ],
 
     /*
@@ -72,6 +76,11 @@ return [
         'specialists' => [
             'driver' => 'eloquent',
             'model'  => env('AUTH_SPECIALIST_MODEL', App\Models\Specialist::class),
+        ],
+
+        'masters' => [
+            'driver' => 'eloquent',
+            'model'  => env('AUTH_MASTER_MODEL', App\Models\Master::class),
         ],
 
         // 'users' => [
@@ -108,6 +117,12 @@ return [
         ],
         'specialists' => [
             'provider' => 'specialists',
+            'table'    => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire'   => 60,
+            'throttle' => 60,
+        ],
+        'masters' => [
+            'provider' => 'masters',
             'table'    => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire'   => 60,
             'throttle' => 60,

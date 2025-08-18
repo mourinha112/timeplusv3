@@ -12,7 +12,12 @@ class Guest
     public function handle(Request $request, Closure $next, string $guard = 'user'): Response
     {
         if (Auth::guard($guard)->check()) {
-            $dashboardRoute = $guard === 'user' ? "$guard.dashboard.show" : "$guard.appointment.index";
+            match ($guard) {
+                'user'   => $dashboardRoute = "$guard.dashboard.show",
+                'admin'  => $dashboardRoute = "$guard.appointment.index",
+                'master' => $dashboardRoute = "$guard.dashboard.show",
+                default  => throw new \InvalidArgumentException("Unknown guard: $guard"),
+            };
 
             return redirect()->guest(route($dashboardRoute));
         }

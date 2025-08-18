@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\{Specialist, User, Welcome};
+use App\Livewire\{Master, Specialist, User, Welcome};
 use Illuminate\Support\Facades\{Auth, Route};
 
 /**
@@ -117,4 +117,24 @@ Route::group(['middleware' => ['auth:specialist', 'onboarding:specialist']], fun
     /* Profile */
     Route::get('specialist/profile/personal-details', Specialist\Profile\PersonalDetail::class)->name('specialist.profile.personal-details');
     Route::get('specialist/profile/professional-details', Specialist\Profile\ProfessionalDetail::class)->name('specialist.profile.professional-details');
+});
+
+/* ----------------- */
+/* Master Routes */
+/* ----------------- */
+
+/**
+ * Authentication Routes
+ */
+Route::group(['middleware' => 'guest:master'], function () {
+    /* Login */
+    Route::get('master/login', Master\Auth\Login::class)->name('master.auth.login');
+});
+
+/**
+ * Application Routes
+ */
+Route::group(['middleware' => ['auth:master']], function () {
+    /* Dashboard */
+    Route::get('master/dashboard', Master\Dashboard\Show::class)->name('master.dashboard.show');
 });
