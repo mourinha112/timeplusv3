@@ -24,6 +24,8 @@ class Login extends Component
 
         try {
             if (RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+                // $this->addError('rateLimiter', trans('auth.throttle'));
+
                 LivewireAlert::title('Limite de tentativas excedido')
                     ->text('Você excedeu o número de tentativas de login.')
                     ->error()
@@ -36,6 +38,8 @@ class Login extends Component
 
             if (!Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
                 RateLimiter::hit($this->throttleKey());
+
+                // $this->addError('invalidCredentials', trans('auth.failed'));
 
                 LivewireAlert::title('Credenciais inválidas')
                     ->text('As credenciais fornecidas estão incorretas')
