@@ -4,9 +4,7 @@ namespace App\Livewire\Specialist\Profile;
 
 use App\Models\{Gender, Specialist, State};
 use App\Rules\FormattedPhoneNumber;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\{Auth, Log, Storage};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Computed, Layout, Rule};
 use Livewire\Component;

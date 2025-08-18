@@ -3,8 +3,6 @@
 namespace Tests\Feature\Livewire\Specialist\Auth;
 
 use App\Livewire\Specialist\Auth\PasswordReset;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use Tests\TestCase;
 

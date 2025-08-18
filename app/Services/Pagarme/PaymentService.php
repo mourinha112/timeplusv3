@@ -25,17 +25,17 @@ class PaymentService extends PagarmeBaseService
             'currency' => 'BRL',
             "payments" => [
                 [
-                    'amount' => $paymentData['amount'] * 100,
+                    'amount'         => $paymentData['amount'] * 100,
                     "payment_method" => "credit_card",
-                    "credit_card" => [
-                        "recurrence" => false,
+                    "credit_card"    => [
+                        "recurrence"   => false,
                         "installments" => 1,
-                        "card" => [
-                            "number" => $paymentData['card_number'],
+                        "card"         => [
+                            "number"      => $paymentData['card_number'],
                             "holder_name" => $paymentData['card_holder'],
-                            "exp_month" => $paymentData['card_exp_month'],
-                            "exp_year" => $paymentData['card_exp_year'],
-                            "cvv" => $paymentData['card_cvv'],
+                            "exp_month"   => $paymentData['card_exp_month'],
+                            "exp_year"    => $paymentData['card_exp_year'],
+                            "cvv"         => $paymentData['card_cvv'],
                             // "billing_address" => [
                             //     "line_1" => $paymentData['billing_address'] ?? null,
                             //     "zip_code" => $paymentData['billing_zip_code'] ?? null,
@@ -47,13 +47,13 @@ class PaymentService extends PagarmeBaseService
                     ],
                 ],
             ],
-            "ip" => $paymentData['ip'] ?? null,
+            "ip"     => $paymentData['ip'] ?? null,
             "device" => [
                 "platform" => $paymentData['device_platform'] ?? null,
             ],
         ];
 
-        $data = array_filter($data, fn($value) => !is_null($value));
+        $data = array_filter($data, fn ($value) => !is_null($value));
 
         return $this->post('/orders', $data);
     }
@@ -76,21 +76,21 @@ class PaymentService extends PagarmeBaseService
             //         "quantity" => 1,
             //     ],
             // ],
-            'amount' => $paymentData['amount'] * 100,
+            'amount'   => $paymentData['amount'] * 100,
             'currency' => 'BRL',
-            'payment' => [
+            'payment'  => [
                 'payment_method' => 'pix',
-                'pix' => [
+                'pix'            => [
                     'expires_in' => $paymentData['pix_expires_in'] ?? 600,
-                ]
+                ],
             ],
-            "ip" => $paymentData['ip'] ?? null,
+            "ip"     => $paymentData['ip'] ?? null,
             "device" => [
                 "platform" => $paymentData['device_platform'] ?? null,
             ],
         ];
 
-        $data = array_filter($data, fn($value) => !is_null($value));
+        $data = array_filter($data, fn ($value) => !is_null($value));
 
         return $this->post('/orders', $data);
     }

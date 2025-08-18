@@ -63,10 +63,10 @@ abstract class PagarmeBaseService
 
         try {
             $response = Http::withHeaders([
-                'Accept'       => 'application/json',
+                'Accept'        => 'application/json',
                 'Authorization' => "Basic " . base64_encode("{$this->apiKey}:"),
-                'Content-Type' => 'application/json',
-                'User-Agent'   => 'Laravel-Pagarme-Integration/1.0',
+                'Content-Type'  => 'application/json',
+                'User-Agent'    => 'Laravel-Pagarme-Integration/1.0',
             ])
             ->timeout($this->timeout)
             ->retry($this->retryAttempts, 1000)

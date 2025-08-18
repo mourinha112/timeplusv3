@@ -4,12 +4,9 @@ namespace App\Livewire\Specialist\Auth;
 
 use App\Models\Specialist;
 use App\Notifications\Specialist\WelcomeNotification;
-use App\Rules\FormattedCpf;
-use App\Rules\FormattedPhoneNumber;
-use App\Rules\ValidatedCpf;
+use App\Rules\{FormattedCpf, FormattedPhoneNumber, ValidatedCpf};
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\{Auth, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;

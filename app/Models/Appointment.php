@@ -3,8 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, MorphOne};
 
 class Appointment extends Model
 {
@@ -19,9 +18,9 @@ class Appointment extends Model
     ];
 
     protected $casts = [
-        'status'            => 'string',
-        'total_value'       => 'decimal:2',
-        'notes'             => 'string',
+        'status'      => 'string',
+        'total_value' => 'decimal:2',
+        'notes'       => 'string',
     ];
 
     public function user(): BelongsTo

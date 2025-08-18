@@ -26,7 +26,7 @@ class WelcomeNotification extends Notification
         ->subject('Bem-vindo(a) à Time Plus!')
         ->markdown('emails.specialist.welcome-notification', [
             'specialist' => $notifiable,
-            'url'  => route('specialist.auth.login'),
+            'url'        => route('specialist.auth.login'),
         ]);
     }
 

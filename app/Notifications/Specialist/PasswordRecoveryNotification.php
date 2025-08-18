@@ -3,7 +3,6 @@
 namespace App\Notifications\Specialist;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -27,7 +26,7 @@ class PasswordRecoveryNotification extends Notification
             ->subject('Recuperação de Senha')
             ->markdown('emails.specialist.password-recovery-notification', [
                 'specialist' => $notifiable,
-                'url'  => route('specialist.auth.password.reset', ['token' => $notifiable->recovery_password_token]),
+                'url'        => route('specialist.auth.password.reset', ['token' => $notifiable->recovery_password_token]),
             ]);
     }
 

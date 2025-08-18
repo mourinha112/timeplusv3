@@ -21,7 +21,7 @@ class Payment extends Model
         'gateway_payload',
         'refunded_amount',
         'refunded_at',
-        'refund_reason'
+        'refund_reason',
     ];
 
     public function payable()

@@ -2,8 +2,7 @@
 
 namespace App\Livewire\Specialist\Onboarding;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\{Auth, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;

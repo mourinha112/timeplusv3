@@ -246,7 +246,7 @@ return [
         'appointment_value'     => 'valor da sessão',
         'summary'               => 'resumo',
         'description'           => 'descrição',
-        'state_id'               => 'estado',
+        'state_id'              => 'estado',
     ],
 
 ];

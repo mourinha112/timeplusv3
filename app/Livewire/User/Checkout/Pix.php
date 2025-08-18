@@ -4,7 +4,7 @@ namespace App\Livewire\User\Checkout;
 
 use App\Exceptions\PagarmeException;
 use App\Facades\Pagarme;
-use App\Models\{Appointment, Payment};
+use App\Models\{Appointment};
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 

@@ -3,8 +3,7 @@
 namespace App\Livewire\Specialist\Onboarding;
 
 use App\Models\{Gender, Specialty};
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\{Auth, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Computed, Layout, Rule};
 use Livewire\Component;

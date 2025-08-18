@@ -3,7 +3,6 @@
 namespace App\Notifications\Specialist;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -27,7 +26,7 @@ class PasswordResetNotification extends Notification
             ->subject('Redefinição de Senha')
             ->markdown('emails.specialist.password-reset-notification', [
                 'specialist' => $notifiable,
-                'url'  => route('specialist.auth.login'),
+                'url'        => route('specialist.auth.login'),
             ]);
     }
 

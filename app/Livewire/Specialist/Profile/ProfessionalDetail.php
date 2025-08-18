@@ -3,11 +3,9 @@
 namespace App\Livewire\Specialist\Profile;
 
 use App\Models\Specialist;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\{Auth, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
+use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Dados profissionais', 'guard' => 'specialist'])]
@@ -28,9 +26,9 @@ class ProfessionalDetail extends Component
     {
         $this->specialist = Auth::guard('specialist')->user();
 
-        $this->appointment_value         = $this->specialist->appointment_value;
-        $this->summary        = $this->specialist->summary;
-        $this->description = $this->specialist->description;
+        $this->appointment_value = $this->specialist->appointment_value;
+        $this->summary           = $this->specialist->summary;
+        $this->description       = $this->specialist->description;
     }
 
     public function updateProfile()
