@@ -56,6 +56,7 @@ Route::group(['middleware' => 'auth:user'], function () {
 
     /* Plans */
     Route::get('plans', User\Plan\Index::class)->name('user.plan.index');
+    Route::get('plans/{plan_id}/payment', User\Plan\Payment::class)->name('user.plan.payment');
 
     /* Subscribes */
     Route::get('subscribes', User\Subscribe\Show::class)->name('user.subscribe.show');

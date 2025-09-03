@@ -40,10 +40,10 @@
                 </ul>
 
                 <div class="mt-6">
-                    <x-button class="btn-block" wire:click="subscribe({{ $plan->id }})">
+                    <x-btn-link class="btn-block" href="{{ route('user.plan.payment', ['plan_id' => $plan->id]) }}">
                         Assinar
                         <x-carbon-checkmark-outline class="w-4 h-4" />
-                    </x-button>
+                    </x-btn-link>
                 </div>
             </x-card-body>
         </x-card>

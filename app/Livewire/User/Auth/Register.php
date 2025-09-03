@@ -2,11 +2,12 @@
 
 namespace App\Livewire\User\Auth;
 
+use App\Facades\Pagarme;
 use App\Models\User;
 use App\Notifications\User\WelcomeNotification;
 use App\Rules\{FormattedCpf, FormattedPhoneNumber, ValidatedCpf};
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\{Auth, Log};
+use Illuminate\Support\Facades\{Auth, DB, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
@@ -43,6 +44,8 @@ class Register extends Component
         $this->validate();
 
         try {
+            DB::beginTransaction();
+
             $user = User::query()->create([
                 'name'         => $this->name,
                 'email'        => $this->email,
@@ -52,12 +55,25 @@ class Register extends Component
                 'password'     => bcrypt($this->password),
             ]);
 
+            $gateway = Pagarme::customer()->create([
+                'code'  => $user->id,
+                'name'  => $user->name,
+                'email' => $user->email,
+                'document' => $user->cpf,
+                'mobile_phone' => $user->phone_number,
+            ]);
+
+            $user->update(['gateway_customer_id' => $gateway['id']]);
+
             Auth::login($user, true);
 
             $user->notify(new WelcomeNotification());
 
+            DB::commit();
+
             $this->redirectRoute('user.dashboard.show');
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error('Erro interno::' . get_class($this), [
                 'message' => $e->getMessage(),
                 'email'   => $this->email,

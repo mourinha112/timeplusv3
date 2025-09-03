@@ -4,22 +4,26 @@ namespace App\Livewire\User\Plan;
 
 use App\Models\Plan;
 use App\Models\Subscribe;
-use Illuminate\Support\Facades\{Auth, Log};
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
-use Livewire\Attributes\{Computed, Layout};
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Rule;
 use Livewire\Component;
 
-#[Layout('components.layouts.app', ['title' => 'Planos', 'guard' => 'user'])]
-class Index extends Component
+#[Layout('components.layouts.app', ['title' => 'Contratar planos', 'guard' => 'user'])]
+class Payment extends Component
 {
-    #[Computed]
-    public function plans()
-    {
-        return Plan::all();
-    }
+    public $plan;
 
-    public function mount()
+    #[Rule(['required', 'string', 'in:credit_card,pix'])]
+    public ?string $payment_method = 'credit_card';
+
+    public ?string $selected_payment_method = null;
+
+    public function mount($plan_id)
     {
+        $this->plan = Plan::findOrFail($plan_id);
+
         $subscribe = Subscribe::where('end_date', '>', now())
             ->where('cancelled_date', null)
             ->where('user_id', Auth::id())
@@ -35,10 +39,15 @@ class Index extends Component
         }
     }
 
+    public function submit()
+    {
+        $this->validate();
 
+        $this->selected_payment_method = $this->payment_method;
+    }
 
     public function render()
     {
-        return view('livewire.user.plan.index');
+        return view('livewire.user.plan.payment');
     }
 }

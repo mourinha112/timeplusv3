@@ -26,12 +26,12 @@ class Payment extends Model
     ];
 
     protected $casts = [
-        'metadata' => 'array',
+        'metadata'        => 'array',
         'gateway_payload' => 'array',
-        'paid_at' => 'datetime',
-        'expires_at' => 'datetime',
-        'refunded_at' => 'datetime',
-        'amount' => 'decimal:2',
+        'paid_at'         => 'datetime',
+        'expires_at'      => 'datetime',
+        'refunded_at'     => 'datetime',
+        'amount'          => 'decimal:2',
         'refunded_amount' => 'decimal:2',
     ];
 

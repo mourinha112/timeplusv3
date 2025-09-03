@@ -12,6 +12,7 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
+        'gateway_customer_id',
         'avatar',
         'name',
         'cpf',
