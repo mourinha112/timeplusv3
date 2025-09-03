@@ -56,10 +56,10 @@ class Register extends Component
             ]);
 
             $gateway = Pagarme::customer()->create([
-                'code'  => $user->id,
-                'name'  => $user->name,
-                'email' => $user->email,
-                'document' => $user->cpf,
+                'code'         => $user->id,
+                'name'         => $user->name,
+                'email'        => $user->email,
+                'document'     => $user->cpf,
                 'mobile_phone' => $user->phone_number,
             ]);
 

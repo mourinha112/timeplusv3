@@ -2,12 +2,10 @@
 
 namespace App\Livewire\User\Plan;
 
-use App\Models\Plan;
-use App\Models\Subscribe;
+use App\Models\{Plan, Subscribe};
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
+use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Contratar planos', 'guard' => 'user'])]
@@ -35,6 +33,7 @@ class Payment extends Component
         if ($subscribe) {
             LivewireAlert::title('Erro!')->text('Você já possui uma assinatura ativa.')->error()->show();
             $this->redirect(route('user.subscribe.show'));
+
             return;
         }
     }

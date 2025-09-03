@@ -2,9 +2,8 @@
 
 namespace App\Livewire\User\Plan;
 
-use App\Models\Plan;
-use App\Models\Subscribe;
-use Illuminate\Support\Facades\{Auth, Log};
+use App\Models\{Plan, Subscribe};
+use Illuminate\Support\Facades\{Auth};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Computed, Layout};
 use Livewire\Component;
@@ -31,11 +30,10 @@ class Index extends Component
         if ($subscribe) {
             LivewireAlert::title('Erro!')->text('Você já possui uma assinatura ativa.')->error()->show();
             $this->redirect(route('user.subscribe.show'));
+
             return;
         }
     }
-
-
 
     public function render()
     {

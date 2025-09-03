@@ -3,9 +3,7 @@
 namespace App\Livewire\User\Plan\PaymentMethods;
 
 use App\Facades\Pagarme;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\{Auth, DB, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
@@ -29,7 +27,8 @@ class CreditCard extends Component
     #[Rule(['required', 'digits_between:3,4'])]
     public ?int $card_cvv = 123;
 
-    public function mount($plan){
+    public function mount($plan)
+    {
         $this->plan = $plan;
     }
 
@@ -44,18 +43,19 @@ class CreditCard extends Component
             $paymentGateway = Pagarme::payment()->createWithCreditCard([
                 'card_number' => $this->card_number,
                 'holder_name' => $this->card_holder,
-                'exp_month' => $this->card_expiry_month,
-                'exp_year' => $this->card_expiry_year,
-                'cvv' => $this->card_cvv,
-                'amount' => $this->plan->price,
+                'exp_month'   => $this->card_expiry_month,
+                'exp_year'    => $this->card_expiry_year,
+                'cvv'         => $this->card_cvv,
+                'amount'      => $this->plan->price,
                 'description' => 'Assinatura do plano ' . $this->plan->name,
-                'item_code' => $this->plan->id,
+                'item_code'   => $this->plan->id,
                 'customer_id' => Auth::user()->gateway_customer_id,
             ]);
 
             /* Verifica se o pagamento foi realizado com sucesso */
             if ($paymentGateway['status'] !== 'paid') {
                 LivewireAlert::title('Erro!')->text('Não foi possível realizar o pagamento.')->error()->show();
+
                 return;
             }
 
@@ -68,7 +68,7 @@ class CreditCard extends Component
 
             /* Criação do pagamento no banco de dados */
             $subscribe->payments()->create([
-                'gateway_order_id' => $paymentGateway['id'],
+                'gateway_order_id'  => $paymentGateway['id'],
                 'gateway_charge_id' => $paymentGateway['charges'][0]['id'],
                 'amount'            => $paymentGateway['amount'] / 100,
                 'payment_method'    => $paymentGateway['charges'][0]['payment_method'],

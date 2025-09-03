@@ -24,7 +24,7 @@ class CustomerService extends PagarmeBaseService
         }
 
         /* Retira os caracteres não numéricos */
-        $customerData['document'] = preg_replace('/\D/', '', $customerData['document']);
+        $customerData['document']     = preg_replace('/\D/', '', $customerData['document']);
         $customerData['mobile_phone'] = preg_replace('/\D/', '', $customerData['mobile_phone']);
 
         $data = [
@@ -34,16 +34,16 @@ class CustomerService extends PagarmeBaseService
             'document'      => $customerData['document'], /* CPF, CNPJ ou PASSPORT do cliente. Max: 16 caracteres para CPF e CNPJ e Max: 50 caracteres para PASSPORT */
             'type'          => $customerData['type'] ?? 'individual', /* Tipo de cliente. Valores possíveis: individual (pessoa física) ou company (pessoa jurídica) */
             'document_type' => $customerData['document_type'] ?? 'CPF', /* Tipo de documento. Valores possíveis: CPF, CNPJ ou PASSPORT */
-            "phones" => [
+            "phones"        => [
                 "mobile_phone" => [
                     "country_code" => "55",
-                    "area_code" => substr($customerData['mobile_phone'], 0, 2),
-                    "number" => substr($customerData['mobile_phone'], 2)
-                ]
+                    "area_code"    => substr($customerData['mobile_phone'], 0, 2),
+                    "number"       => substr($customerData['mobile_phone'], 2),
+                ],
             ],
         ];
 
-        $data = array_filter($data, fn($value) => !is_null($value));
+        $data = array_filter($data, fn ($value) => !is_null($value));
 
         return $this->post('/customers', $data);
     }

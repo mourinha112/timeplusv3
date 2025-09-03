@@ -3,11 +3,8 @@
 namespace App\Livewire\User\Plan\PaymentMethods;
 
 use App\Facades\Pagarme;
-use App\Models\Payment;
-use App\Models\Subscribe;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
+use App\Models\{Payment, Subscribe};
+use Illuminate\Support\Facades\{Auth, Cache, DB};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Component;
 
@@ -34,9 +31,9 @@ class Pix extends Component
 
             /* Criação do pagamento no gateway */
             $paymentGateway = Pagarme::payment()->createWithPix([
-                'amount' => $this->plan->price,
+                'amount'      => $this->plan->price,
                 'description' => 'Assinatura do plano ' . $this->plan->name,
-                'item_code' => $this->plan->id,
+                'item_code'   => $this->plan->id,
                 'customer_id' => Auth::user()->gateway_customer_id,
             ]);
             dd($paymentGateway);
