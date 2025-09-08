@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b1e24caa18d8cc52244aa8af0965c9bb",
+    "content-hash": "27b542ad9afaa4bb3c7ef521ece9804a",
     "packages": [
         {
             "name": "blade-ui-kit/blade-icons",
@@ -2878,16 +2878,16 @@
         },
         {
             "name": "power-components/livewire-powergrid",
-            "version": "v6.4.2",
+            "version": "v6.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Power-Components/livewire-powergrid.git",
-                "reference": "dbbcab79f69de2d2d03a2447535471ac8c985858"
+                "reference": "862968b768f7e9924de9d76138c03f19597fab39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Power-Components/livewire-powergrid/zipball/dbbcab79f69de2d2d03a2447535471ac8c985858",
-                "reference": "dbbcab79f69de2d2d03a2447535471ac8c985858",
+                "url": "https://api.github.com/repos/Power-Components/livewire-powergrid/zipball/862968b768f7e9924de9d76138c03f19597fab39",
+                "reference": "862968b768f7e9924de9d76138c03f19597fab39",
                 "shasum": ""
             },
             "require": {
@@ -2899,7 +2899,7 @@
                 "composer/composer": "^2.7.9",
                 "laradumps/laradumps": "^3.2|^4.0",
                 "larastan/larastan": "^2.0|^3.0",
-                "laravel/pint": "1.17",
+                "laravel/pint": "^1.24",
                 "laravel/scout": "^10.11.3",
                 "openspout/openspout": "^4.24.5",
                 "orchestra/testbench": "^9.4|^10.0",
@@ -2944,7 +2944,7 @@
             "homepage": "https://github.com/power-components/livewire-powergrid",
             "support": {
                 "issues": "https://github.com/Power-Components/livewire-powergrid/issues",
-                "source": "https://github.com/Power-Components/livewire-powergrid/tree/v6.4.2"
+                "source": "https://github.com/Power-Components/livewire-powergrid/tree/v6.6.1"
             },
             "funding": [
                 {
@@ -2952,7 +2952,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-08T11:42:32+00:00"
+            "time": "2025-09-05T11:39:28+00:00"
         },
         {
             "name": "predis/predis",
@@ -10022,12 +10022,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }

@@ -29,6 +29,8 @@ Route::group(['middleware' => 'guest:user'], function () {
     Route::get('password-reset/{token}', User\Auth\PasswordReset::class)->name('user.auth.password.reset');
 });
 
+// Master routes are declared below in the Master section
+
 /**
  * Logout Routes
  */
@@ -138,4 +140,18 @@ Route::group(['middleware' => 'guest:master'], function () {
 Route::group(['middleware' => ['auth:master']], function () {
     /* Dashboard */
     Route::get('master/dashboard', Master\Dashboard\Show::class)->name('master.dashboard.show');
+    /* Logout */
+    Route::get('master/logout', function () {
+        Auth::guard('master')->logout();
+
+        return redirect()->route('master.auth.login');
+    })->name('master.auth.logout');
+
+    /* Tables (Index components na pasta principal) */
+    Route::get('master/users', Master\User\Index::class)->name('master.user.index');
+    Route::get('master/specialists', Master\Specialist\Index::class)->name('master.specialist.index');
+
+    /* Details */
+    Route::get('master/users/{user}', Master\User\PersonalData\Show::class)->name('master.user.personal-data.show');
+    Route::get('master/specialists/{specialist}', Master\Specialist\PersonalData\Show::class)->name('master.specialist.personal-data.show');
 });
