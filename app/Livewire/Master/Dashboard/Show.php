@@ -30,7 +30,12 @@ class Show extends Component
     #[Computed()]
     public function payments()
     {
-        return Payment::count();
+        return [
+            'total' => Payment::where('status', 'paid')->sum('amount'),
+            'paid' => Payment::where('status', 'paid')->count(),
+            'rest' => Payment::count()
+
+        ];
     }
 
     public function render()

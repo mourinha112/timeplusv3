@@ -3,8 +3,7 @@
         <div class="navbar bg-base-100">
 
             <div class="navbar-start hidden sm:block">
-                <a href="#">
-                    <x-logotipo /></a>
+                <x-logotipo :guard="$guard" />
             </div>
             @if ($guard === 'user')
                 <div class="navbar-start sm:hidden">
@@ -249,6 +248,20 @@
                                     Especialistas
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('master.appointment.index') }}"
+                                    class="{{ !Route::is('master.appointment.index') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-calendar-heat-map class="w-4 h-4" />
+                                    Agendamentos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('master.payment.index') }}"
+                                    class="{{ !Route::is('master.payment.index') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-money class="w-4 h-4" />
+                                    Pagamentos
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -274,6 +287,20 @@
                                 class="{{ !Route::is('master.specialist.index') ?: 'border bg-base-200 font-semibold' }}">
                                 <x-carbon-reminder-medical class="w-5 h-5" />
                                 Especialistas
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('master.appointment.index') }}"
+                                class="{{ !Route::is('master.appointment.index') ?: 'border bg-base-200 font-semibold' }}">
+                                <x-carbon-calendar-heat-map class="w-5 h-5" />
+                                Agendamentos
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('master.payment.index') }}"
+                                class="{{ !Route::is('master.payment.index') ?: 'border bg-base-200 font-semibold' }}">
+                                <x-carbon-money class="w-5 h-5" />
+                                Pagamentos
                             </a>
                         </li>
                     </ul>

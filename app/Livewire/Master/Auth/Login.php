@@ -50,7 +50,7 @@ class Login extends Component
                 return;
             }
 
-            $this->redirect(route('master.dashboard.show'), true);
+            redirect()->to(route('master.dashboard.show'), true);
         } catch (\Exception $e) {
             Log::error('Erro interno::' . get_class($this), [
                 'message' => $e->getMessage(),

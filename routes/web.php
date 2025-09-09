@@ -150,8 +150,12 @@ Route::group(['middleware' => ['auth:master']], function () {
     /* Tables (Index components na pasta principal) */
     Route::get('master/users', Master\User\Index::class)->name('master.user.index');
     Route::get('master/specialists', Master\Specialist\Index::class)->name('master.specialist.index');
+    Route::get('master/appointments', Master\Appointment\Index::class)->name('master.appointment.index');
+    Route::get('master/payments', Master\Payment\Index::class)->name('master.payment.index');
 
     /* Details */
     Route::get('master/users/{user}', Master\User\PersonalData\Show::class)->name('master.user.personal-data.show');
     Route::get('master/specialists/{specialist}', Master\Specialist\PersonalData\Show::class)->name('master.specialist.personal-data.show');
+    Route::get('master/appointments/{appointment}', Master\Appointment\Show::class)->name('master.appointment.show');
+    Route::get('master/payments/{payment}', Master\Payment\Show::class)->name('master.payment.show');
 });
