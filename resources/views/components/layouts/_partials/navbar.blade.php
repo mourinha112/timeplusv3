@@ -5,6 +5,7 @@
             <div class="navbar-start hidden sm:block">
                 <x-logotipo :guard="$guard" />
             </div>
+
             @if ($guard === 'user')
                 <div class="navbar-start sm:hidden">
                     <div class="dropdown">
@@ -218,7 +219,8 @@
                         </ul>
                     </div>
                 </div>
-            @endif
+            @endauth
+
             @if ($guard === 'master')
                 <div class="navbar-start sm:hidden">
                     <div class="dropdown">
@@ -239,6 +241,13 @@
                                     class="{{ !Route::is('master.user.index') ?: 'border bg-base-200 font-semibold' }}">
                                     <x-carbon-user class="w-4 h-4" />
                                     Usuários
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('master.company.index') }}"
+                                    class="{{ !Route::is('master.company.index') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-enterprise class="w-4 h-4" />
+                                    Empresas
                                 </a>
                             </li>
                             <li>
@@ -283,6 +292,13 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{ route('master.company.index') }}"
+                                class="{{ !Route::is('master.company.index') ?: 'border bg-base-200 font-semibold' }}">
+                                <x-carbon-enterprise class="w-5 h-5" />
+                                Empresas
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('master.specialist.index') }}"
                                 class="{{ !Route::is('master.specialist.index') ?: 'border bg-base-200 font-semibold' }}">
                                 <x-carbon-reminder-medical class="w-5 h-5" />
@@ -312,8 +328,8 @@
                         Sair
                     </a>
                 </div>
-            @endif
-    </div>
+            @endauth
+</div>
 </div>
 
 <!-- Gradient Border Bottom -->

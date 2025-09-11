@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Master\Dashboard;
 
-use App\Models\{Appointment, Payment, Specialist, User};
+use App\Models\{Appointment, Company, Payment, Specialist, User};
 use Livewire\Attributes\{Computed, Layout};
 use Livewire\Component;
 
@@ -22,6 +22,12 @@ class Show extends Component
     }
 
     #[Computed()]
+    public function companies()
+    {
+        return Company::count();
+    }
+
+    #[Computed()]
     public function appointments()
     {
         return Appointment::count();
@@ -32,9 +38,7 @@ class Show extends Component
     {
         return [
             'total' => Payment::where('status', 'paid')->sum('amount'),
-            'paid' => Payment::where('status', 'paid')->count(),
-            'rest' => Payment::count()
-
+            'count' => Payment::where('status', 'paid')->count()
         ];
     }
 

@@ -247,6 +247,8 @@ return [
         'summary'               => 'resumo',
         'description'           => 'descrição',
         'state_id'              => 'estado',
+        'zip_code'              => 'cep',
+        'employee_count'        => 'quadro de funcionários'
     ],
 
 ];

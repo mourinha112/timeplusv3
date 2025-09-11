@@ -4,7 +4,7 @@
         <x-subtitle>Consulte relatórios e estatísticas.</x-subtitle>
     </x-heading>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-base-100 border-base-300 border">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 bg-base-100 border-base-300 border">
         <div class="stat">
             <div class="stat-title flex justify-between">
                 Clientes
@@ -23,6 +23,14 @@
 
         <div class="stat">
             <div class="stat-title flex justify-between">
+                Empresas
+                <a href="{{ route('master.company.index') }}" class="badge badge-xs badge-ghost">Visualizar</a>
+            </div>
+            <div class="stat-value">{{ $this->companies }}</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-title flex justify-between">
                 Agendamentos
                 <a href="{{ route('master.appointment.index') }}" class="badge badge-xs badge-ghost">Visualizar</a>
             </div>
@@ -35,15 +43,8 @@
                 <a href="{{ route('master.payment.index') }}" class="badge badge-xs badge-ghost">Visualizar</a>
             </div>
             <div class="stat-value">R$ {{ number_format($this->payments['total'], 2, ',', '.') }}</div>
-            <div class="stat-desc">{{ $this->payments['paid'] }} pagamentos aprovados de um total de
-                {{ $this->payments['rest'] }}</div>
+            <div class="stat-desc">{{ $this->payments['count'] }} pagamentos aprovados</div>
         </div>
-
-
-
-
-
-
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">

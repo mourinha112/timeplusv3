@@ -150,12 +150,44 @@ Route::group(['middleware' => ['auth:master']], function () {
     /* Tables (Index components na pasta principal) */
     Route::get('master/users', Master\User\Index::class)->name('master.user.index');
     Route::get('master/specialists', Master\Specialist\Index::class)->name('master.specialist.index');
+    Route::get('master/companies', Master\Company\Index::class)->name('master.company.index');
     Route::get('master/appointments', Master\Appointment\Index::class)->name('master.appointment.index');
     Route::get('master/payments', Master\Payment\Index::class)->name('master.payment.index');
+
+    /* CRUD Companies */
+    Route::get('master/companies/create', Master\Company\Create::class)->name('master.company.create');
+    Route::get('master/companies/{company}/edit', Master\Company\Edit::class)->name('master.company.edit');
 
     /* Details */
     Route::get('master/users/{user}', Master\User\PersonalData\Show::class)->name('master.user.personal-data.show');
     Route::get('master/specialists/{specialist}', Master\Specialist\PersonalData\Show::class)->name('master.specialist.personal-data.show');
+    Route::get('master/companies/{company}', Master\Company\Show::class)->name('master.company.show');
     Route::get('master/appointments/{appointment}', Master\Appointment\Show::class)->name('master.appointment.show');
     Route::get('master/payments/{payment}', Master\Payment\Show::class)->name('master.payment.show');
+});
+
+/* ----------------- */
+/* Company Routes   */
+/* ----------------- */
+
+/**
+ * Authentication Routes
+ */
+Route::group(['middleware' => 'guest:company'], function () {
+    /* Login */
+    Route::get('company/login', App\Livewire\Company\Auth\Login::class)->name('company.auth.login');
+});
+
+/**
+ * Application Routes
+ */
+Route::group(['middleware' => ['auth:company']], function () {
+    /* Dashboard */
+    Route::get('company/dashboard', App\Livewire\Company\Dashboard\Show::class)->name('company.dashboard.show');
+
+    /* Logout */
+    Route::get('company/logout', function () {
+        Auth::guard('company')->logout();
+        return redirect()->route('company.auth.login');
+    })->name('company.auth.logout');
 });

@@ -13,10 +13,11 @@ class Guest
     {
         if (Auth::guard($guard)->check()) {
             match ($guard) {
-                'user'   => $dashboardRoute = "$guard.dashboard.show",
-                'admin'  => $dashboardRoute = "$guard.appointment.index",
-                'master' => $dashboardRoute = "$guard.dashboard.show",
-                default  => throw new \InvalidArgumentException("Unknown guard: $guard"),
+                'user'    => $dashboardRoute = "$guard.dashboard.show",
+                'admin'   => $dashboardRoute = "$guard.appointment.index",
+                'master'  => $dashboardRoute = "$guard.dashboard.show",
+                'company' => $dashboardRoute = "$guard.dashboard.show",
+                default   => throw new \InvalidArgumentException("Unknown guard: $guard"),
             };
 
             return redirect()->guest(route($dashboardRoute));

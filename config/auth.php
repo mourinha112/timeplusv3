@@ -48,7 +48,12 @@ return [
             'driver'   => 'session',
             'provider' => 'masters',
         ],
+        'company' => [
+            'driver'   => 'session',
+            'provider' => 'companies',
+        ],
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -81,6 +86,11 @@ return [
         'masters' => [
             'driver' => 'eloquent',
             'model'  => env('AUTH_MASTER_MODEL', App\Models\Master::class),
+        ],
+
+        'companies' => [
+            'driver' => 'eloquent',
+            'model'  => env('AUTH_SPECIALIST_MODEL', App\Models\Company::class),
         ],
 
         // 'users' => [
