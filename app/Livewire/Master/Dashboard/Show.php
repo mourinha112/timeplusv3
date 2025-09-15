@@ -38,7 +38,7 @@ class Show extends Component
     {
         return [
             'total' => Payment::where('status', 'paid')->sum('amount'),
-            'count' => Payment::where('status', 'paid')->count()
+            'count' => Payment::where('status', 'paid')->count(),
         ];
     }
 

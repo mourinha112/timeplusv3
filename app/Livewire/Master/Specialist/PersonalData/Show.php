@@ -21,4 +21,3 @@ class Show extends Component
         return view('livewire.master.specialist.personal-data.show');
     }
 }
-

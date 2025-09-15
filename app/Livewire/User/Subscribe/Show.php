@@ -12,7 +12,9 @@ use Livewire\Component;
 class Show extends Component
 {
     public $subscribe;
+
     public $companyPlan;
+
     public $hasCompanyPlan = false;
 
     public function mount()
@@ -30,7 +32,7 @@ class Show extends Component
             ->first();
 
         if ($companyPlan) {
-            $this->companyPlan = $companyPlan;
+            $this->companyPlan    = $companyPlan;
             $this->hasCompanyPlan = true;
         }
     }

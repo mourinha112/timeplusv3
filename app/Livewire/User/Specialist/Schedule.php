@@ -22,12 +22,12 @@ class Schedule extends Component
     public $selectedTime = null;
 
     public array $pricing_info = [
-        'original_amount' => 0,
-        'final_amount' => 0,
-        'has_discount' => false,
-        'discount_percentage' => 0,
+        'original_amount'         => 0,
+        'final_amount'            => 0,
+        'has_discount'            => false,
+        'discount_percentage'     => 0,
         'company_discount_amount' => 0,
-        'company_plan_name' => null,
+        'company_plan_name'       => null,
     ];
 
     public function mount()
@@ -37,18 +37,18 @@ class Schedule extends Component
 
     public function calculatePricing()
     {
-        $user = Auth::user();
+        $user           = Auth::user();
         $originalAmount = $this->specialist->appointment_value;
 
         $calculatedPayment = $user->calculatePaymentAmount($originalAmount);
 
         $this->pricing_info = [
-            'original_amount' => $originalAmount,
-            'final_amount' => $calculatedPayment['employee_amount'],
-            'has_discount' => $calculatedPayment['has_company_discount'],
-            'discount_percentage' => $calculatedPayment['discount_percentage'],
+            'original_amount'         => $originalAmount,
+            'final_amount'            => $calculatedPayment['employee_amount'],
+            'has_discount'            => $calculatedPayment['has_company_discount'],
+            'discount_percentage'     => $calculatedPayment['discount_percentage'],
             'company_discount_amount' => $calculatedPayment['company_amount'],
-            'company_plan_name' => $calculatedPayment['plan_name'] ?? null,
+            'company_plan_name'       => $calculatedPayment['plan_name'] ?? null,
         ];
     }
 

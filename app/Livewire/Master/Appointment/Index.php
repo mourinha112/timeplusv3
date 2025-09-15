@@ -13,4 +13,3 @@ class Index extends Component
         return view('livewire.master.appointment.index');
     }
 }
-

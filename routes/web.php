@@ -200,7 +200,7 @@ Route::group(['middleware' => ['auth:company']], function () {
     Route::get('company/employees/{employee}', App\Livewire\Company\Employee\Show::class)->name('company.employee.show');
 
     /* Payments */
-    Route::get('company/payments', App\Livewire\Company\Payment\Index::class)->name('company.payment.index');
+    // Route::get('company/payments', App\Livewire\Company\Payment\Index::class)->name('company.payment.index');
 
     /* Profile */
     Route::get('company/profile', App\Livewire\Company\Profile\Show::class)->name('company.profile.show');
@@ -208,6 +208,7 @@ Route::group(['middleware' => ['auth:company']], function () {
     /* Logout */
     Route::get('company/logout', function () {
         Auth::guard('company')->logout();
+
         return redirect()->route('company.auth.login');
     })->name('company.auth.logout');
 });

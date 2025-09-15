@@ -3,14 +3,12 @@
 namespace App\Livewire\Company\Profile;
 
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
+use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Perfil da Empresa', 'guard' => 'company'])]
 class Show extends Component
 {
-
     public $company;
 
     #[Rule('required|string|max:255')]
@@ -41,14 +39,14 @@ class Show extends Component
     {
         $this->company = Auth::guard('company')->user();
 
-        $this->name = $this->company->name;
-        $this->cnpj = $this->company->cnpj;
-        $this->email = $this->company->email;
-        $this->phone = $this->company->phone ?? '';
+        $this->name     = $this->company->name;
+        $this->cnpj     = $this->company->cnpj;
+        $this->email    = $this->company->email;
+        $this->phone    = $this->company->phone ?? '';
         $this->zip_code = $this->company->zip_code ?? '';
-        $this->address = $this->company->address ?? '';
-        $this->city = $this->company->city ?? '';
-        $this->state = $this->company->state ?? '';
+        $this->address  = $this->company->address ?? '';
+        $this->city     = $this->company->city ?? '';
+        $this->state    = $this->company->state ?? '';
     }
 
     public function save()
@@ -56,14 +54,14 @@ class Show extends Component
         $this->validate();
 
         $this->company->update([
-            'name' => $this->name,
-            'cnpj' => $this->cnpj,
-            'email' => $this->email,
-            'phone' => $this->phone,
+            'name'     => $this->name,
+            'cnpj'     => $this->cnpj,
+            'email'    => $this->email,
+            'phone'    => $this->phone,
             'zip_code' => $this->zip_code,
-            'address' => $this->address,
-            'city' => $this->city,
-            'state' => $this->state,
+            'address'  => $this->address,
+            'city'     => $this->city,
+            'state'    => $this->state,
         ]);
 
         session()->flash('success', 'Perfil atualizado com sucesso!');

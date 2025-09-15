@@ -9,17 +9,17 @@ use Livewire\Component;
 #[Layout('components.layouts.app', ['title' => 'Funcionários', 'guard' => 'company'])]
 class Index extends Component
 {
-  public $company;
+    public $company;
 
-  public function mount()
-  {
-    $this->company = Auth::guard('company')->user();
-  }
+    public function mount()
+    {
+        $this->company = Auth::guard('company')->user();
+    }
 
-  public function render()
-  {
-    return view('livewire.company.employee.index', [
-      'company' => $this->company
-    ]);
-  }
+    public function render()
+    {
+        return view('livewire.company.employee.index', [
+            'company' => $this->company,
+        ]);
+    }
 }

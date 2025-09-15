@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
@@ -124,24 +124,24 @@ class User extends Authenticatable
 
         if (!$activeCompanyPlan) {
             return [
-                'employee_amount' => $originalPrice,
-                'company_amount' => 0,
-                'discount_percentage' => 0,
+                'employee_amount'      => $originalPrice,
+                'company_amount'       => 0,
+                'discount_percentage'  => 0,
                 'has_company_discount' => false,
             ];
         }
 
         $discountPercentage = $activeCompanyPlan->companyPlan->discount_percentage;
-        $discountAmount = ($originalPrice * $discountPercentage) / 100;
-        $employeeAmount = $originalPrice - $discountAmount;
+        $discountAmount     = ($originalPrice * $discountPercentage) / 100;
+        $employeeAmount     = $originalPrice - $discountAmount;
 
         return [
-            'employee_amount' => round($employeeAmount, 2),
-            'company_amount' => round($discountAmount, 2),
-            'discount_percentage' => $discountPercentage,
+            'employee_amount'      => round($employeeAmount, 2),
+            'company_amount'       => round($discountAmount, 2),
+            'discount_percentage'  => $discountPercentage,
             'has_company_discount' => true,
-            'company_name' => $activeCompanyPlan->company->name,
-            'plan_name' => $activeCompanyPlan->companyPlan->name,
+            'company_name'         => $activeCompanyPlan->company->name,
+            'plan_name'            => $activeCompanyPlan->companyPlan->name,
         ];
     }
 }

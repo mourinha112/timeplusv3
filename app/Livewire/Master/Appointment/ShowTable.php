@@ -6,11 +6,8 @@ use App\Models\Appointment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
-use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
 #[Layout('components.layouts.app', ['title' => 'Agendamentos', 'guard' => 'master'])]
 class ShowTable extends PowerGridComponent
@@ -39,9 +36,9 @@ class ShowTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('user_name', fn(Appointment $model) => $model->user?->name)
-            ->add('specialist_name', fn(Appointment $model) => $model->specialist?->name)
-            ->add('appointment_date_formatted', fn(Appointment $model) => $model->appointment_date ? Carbon::parse($model->appointment_date)->format('d/m/Y') : '-')
+            ->add('user_name', fn (Appointment $model) => $model->user?->name)
+            ->add('specialist_name', fn (Appointment $model) => $model->specialist?->name)
+            ->add('appointment_date_formatted', fn (Appointment $model) => $model->appointment_date ? Carbon::parse($model->appointment_date)->format('d/m/Y') : '-')
             ->add('appointment_time')
             ->add('status_formatted', function (Appointment $model) {
                 return match ($model->status) {
@@ -51,8 +48,8 @@ class ShowTable extends PowerGridComponent
                     default     => $model->status,
                 };
             })
-            ->add('total_value_formatted', fn(Appointment $model) => 'R$ ' . number_format((float) $model->total_value, 2, ',', '.'))
-            ->add('created_at_formatted', fn(Appointment $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
+            ->add('total_value_formatted', fn (Appointment $model) => 'R$ ' . number_format((float) $model->total_value, 2, ',', '.'))
+            ->add('created_at_formatted', fn (Appointment $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
     }
 
     public function columns(): array
@@ -83,7 +80,7 @@ class ShowTable extends PowerGridComponent
                 ->slot('Visualizar')
                 ->id()
                 ->class('btn btn-info btn-sm')
-                ->dispatch('master::appointment-show', ['rowId' => $row->id])
+                ->dispatch('master::appointment-show', ['rowId' => $row->id]),
         ];
     }
 }

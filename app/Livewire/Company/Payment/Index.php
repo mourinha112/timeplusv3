@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Company\Payment;
 
-use App\Models\CompanyPlan;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -11,7 +10,9 @@ use Livewire\Component;
 class Index extends Component
 {
     public $payments = [];
+
     public $currentPlan;
+
     public $nextPayment;
 
     public function mount()
@@ -19,7 +20,7 @@ class Index extends Component
         // Dados temporariamente desabilitados para evitar erros
         $this->currentPlan = null;
         $this->nextPayment = null;
-        $this->payments = collect([]);
+        $this->payments    = collect([]);
 
         // TODO: Implementar integração com sistema de pagamentos quando estiver completo
         // $company = Auth::guard('company')->user();

@@ -6,11 +6,8 @@ use App\Models\Company;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
-use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
 #[Layout('components.layouts.app', ['title' => 'Empresas', 'guard' => 'master'])]
 class ShowTable extends PowerGridComponent
@@ -51,7 +48,7 @@ class ShowTable extends PowerGridComponent
                     ? '<span class="inline-flex w-3 h-3 bg-green-500 rounded-full"></span>'
                     : '<span class="inline-flex w-3 h-3 bg-red-500 rounded-full"></span>';
             })
-            ->add('created_at_formatted', fn(Company $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
+            ->add('created_at_formatted', fn (Company $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
     }
 
     public function columns(): array
@@ -96,7 +93,7 @@ class ShowTable extends PowerGridComponent
                 ->slot('Editar')
                 ->id()
                 ->class('btn btn-soft btn-info btn-sm')
-                ->dispatch('master::company-edit', ['rowId' => $row->id])
+                ->dispatch('master::company-edit', ['rowId' => $row->id]),
         ];
     }
 }

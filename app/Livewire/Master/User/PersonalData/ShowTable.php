@@ -6,11 +6,8 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
-use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
 #[Layout('components.layouts.app', ['title' => 'Usuários', 'guard' => 'master'])]
 class ShowTable extends PowerGridComponent
@@ -41,7 +38,7 @@ class ShowTable extends PowerGridComponent
             ->add('id')
             ->add('name')
             ->add('email')
-            ->add('created_at_formatted', fn(User $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
+            ->add('created_at_formatted', fn (User $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
     }
 
     public function columns(): array
@@ -69,7 +66,7 @@ class ShowTable extends PowerGridComponent
                 ->slot('Visualizar')
                 ->id()
                 ->class('btn btn-info btn-sm')
-                ->dispatch('master::user-show', ['rowId' => $row->id])
+                ->dispatch('master::user-show', ['rowId' => $row->id]),
         ];
     }
 }

@@ -32,16 +32,16 @@ class Payment extends Model
     ];
 
     protected $casts = [
-        'metadata'        => 'array',
-        'gateway_payload' => 'array',
-        'paid_at'         => 'datetime',
-        'expires_at'      => 'datetime',
-        'refunded_at'     => 'datetime',
-        'amount'          => 'decimal:2',
-        'refunded_amount' => 'decimal:2',
-        'original_amount' => 'decimal:2',
+        'metadata'                => 'array',
+        'gateway_payload'         => 'array',
+        'paid_at'                 => 'datetime',
+        'expires_at'              => 'datetime',
+        'refunded_at'             => 'datetime',
+        'amount'                  => 'decimal:2',
+        'refunded_amount'         => 'decimal:2',
+        'original_amount'         => 'decimal:2',
         'company_discount_amount' => 'decimal:2',
-        'discount_percentage' => 'decimal:2',
+        'discount_percentage'     => 'decimal:2',
     ];
 
     public function payable()
@@ -63,22 +63,22 @@ class Payment extends Model
     {
         if (!$this->hasCompanyDiscount()) {
             return [
-                'has_discount' => false,
-                'original_amount' => $this->amount,
-                'employee_paid' => $this->amount,
-                'company_paid' => 0,
+                'has_discount'        => false,
+                'original_amount'     => $this->amount,
+                'employee_paid'       => $this->amount,
+                'company_paid'        => 0,
                 'discount_percentage' => 0,
             ];
         }
 
         return [
-            'has_discount' => true,
-            'original_amount' => $this->original_amount,
-            'employee_paid' => $this->amount,
-            'company_paid' => $this->company_discount_amount,
+            'has_discount'        => true,
+            'original_amount'     => $this->original_amount,
+            'employee_paid'       => $this->amount,
+            'company_paid'        => $this->company_discount_amount,
             'discount_percentage' => $this->discount_percentage,
-            'company_name' => $this->company->name ?? 'N/A',
-            'plan_name' => $this->company_plan_name,
+            'company_name'        => $this->company->name ?? 'N/A',
+            'plan_name'           => $this->company_plan_name,
         ];
     }
 }

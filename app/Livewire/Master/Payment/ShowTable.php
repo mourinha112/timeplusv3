@@ -2,17 +2,12 @@
 
 namespace App\Livewire\Master\Payment;
 
-use App\Models\Payment;
-use App\Models\Appointment;
-use App\Models\Plan;
+use App\Models\{Appointment, Payment, Plan};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
-use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
 #[Layout('components.layouts.app', ['title' => 'Pagamentos', 'guard' => 'master'])]
 class ShowTable extends PowerGridComponent
@@ -51,8 +46,8 @@ class ShowTable extends PowerGridComponent
             ->add('payment_method_formatted', function (Payment $model) {
                 return match ($model->payment_method) {
                     'credit_card' => 'Cartão de Crédito',
-                    'pix'        => 'Pix',
-                    default      => (string) $model->payment_method,
+                    'pix'         => 'Pix',
+                    default       => (string) $model->payment_method,
                 };
             })
             ->add('status_formatted', function (Payment $model) {
@@ -63,9 +58,9 @@ class ShowTable extends PowerGridComponent
                     default   => (string) $model->status,
                 };
             })
-            ->add('amount_formatted', fn(Payment $model) => 'R$ ' . number_format((float) $model->amount, 2, ',', '.'))
-            ->add('paid_at_formatted', fn(Payment $model) => $model->paid_at ? Carbon::parse($model->paid_at)->format('d/m/Y H:i') : '-')
-            ->add('created_at_formatted', fn(Payment $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
+            ->add('amount_formatted', fn (Payment $model) => 'R$ ' . number_format((float) $model->amount, 2, ',', '.'))
+            ->add('paid_at_formatted', fn (Payment $model) => $model->paid_at ? Carbon::parse($model->paid_at)->format('d/m/Y H:i') : '-')
+            ->add('created_at_formatted', fn (Payment $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
     }
 
     public function columns(): array
@@ -95,7 +90,7 @@ class ShowTable extends PowerGridComponent
                 ->slot('Visualizar')
                 ->id()
                 ->class('btn btn-info btn-sm')
-                ->dispatch('master::payment-show', ['rowId' => $row->id])
+                ->dispatch('master::payment-show', ['rowId' => $row->id]),
         ];
     }
 }

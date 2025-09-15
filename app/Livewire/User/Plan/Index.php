@@ -12,6 +12,7 @@ use Livewire\Component;
 class Index extends Component
 {
     public $hasCompanyPlan = false;
+
     public $companyPlan = null;
 
     #[Computed]
@@ -33,7 +34,7 @@ class Index extends Component
 
         if ($companyPlan) {
             $this->hasCompanyPlan = true;
-            $this->companyPlan = $companyPlan;
+            $this->companyPlan    = $companyPlan;
 
             // Se o plano está ativo, bloqueia completamente
             if ($companyPlan->companyPlan->is_active) {
@@ -53,6 +54,7 @@ class Index extends Component
         if ($subscribe) {
             LivewireAlert::title('Erro!')->text('Você já possui uma assinatura ativa.')->error()->show();
             $this->redirect(route('user.subscribe.show'));
+
             return;
         }
     }

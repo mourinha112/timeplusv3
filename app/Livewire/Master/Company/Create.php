@@ -3,10 +3,9 @@
 namespace App\Livewire\Master\Company;
 
 use App\Models\Company;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
-use Livewire\Component;
 use Illuminate\Support\Str;
+use Livewire\Attributes\{Layout, Rule};
+use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Nova Empresa', 'guard' => 'master'])]
 class Create extends Component
@@ -40,12 +39,10 @@ class Create extends Component
 
     // Propriedades para o modal de credenciais
     public $showCredentialsModal = false;
+
     public $companyEmail = '';
+
     public $companyPassword = '';
-
-
-
-
 
     public function save()
     {
@@ -55,20 +52,20 @@ class Create extends Component
         $password = Str::random(12);
 
         $company = Company::create([
-            'name' => $this->name,
-            'cnpj' => $this->cnpj,
-            'email' => $this->email,
-            'password' => bcrypt($password),
-            'phone' => preg_replace('/\D/', '', $this->phone), // Remove formatação
-            'address' => $this->address,
-            'city' => $this->city,
-            'state' => $this->state,
-            'zip_code' => preg_replace('/\D/', '', $this->zip_code), // Remove formatação (hífen)
+            'name'      => $this->name,
+            'cnpj'      => $this->cnpj,
+            'email'     => $this->email,
+            'password'  => bcrypt($password),
+            'phone'     => preg_replace('/\D/', '', $this->phone), // Remove formatação
+            'address'   => $this->address,
+            'city'      => $this->city,
+            'state'     => $this->state,
+            'zip_code'  => preg_replace('/\D/', '', $this->zip_code), // Remove formatação (hífen)
             'is_active' => $this->is_active,
         ]);
 
         // Armazenar credenciais para exibir no modal
-        $this->companyEmail = $this->email;
+        $this->companyEmail    = $this->email;
         $this->companyPassword = $password;
 
         // Exibir modal com as credenciais
@@ -79,6 +76,7 @@ class Create extends Component
     {
         $this->showCredentialsModal = false;
         session()->flash('message', 'Empresa criada com sucesso!');
+
         return $this->redirect(route('master.company.index'));
     }
 

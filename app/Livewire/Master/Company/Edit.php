@@ -3,8 +3,7 @@
 namespace App\Livewire\Master\Company;
 
 use App\Models\Company;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
+use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Editar Empresa', 'guard' => 'master'])]
@@ -39,42 +38,36 @@ class Edit extends Component
     #[Rule('boolean')]
     public $is_active = true;
 
-
-
     public function mount(Company $company)
     {
         $this->company = $company->load('companyPlans');
 
-        $this->name = $company->name;
-        $this->cnpj = $company->cnpj;
-        $this->email = $company->email;
-        $this->phone = $company->phone;
-        $this->address = $company->address;
-        $this->city = $company->city;
-        $this->state = $company->state;
-        $this->zip_code = $company->zip_code;
+        $this->name      = $company->name;
+        $this->cnpj      = $company->cnpj;
+        $this->email     = $company->email;
+        $this->phone     = $company->phone;
+        $this->address   = $company->address;
+        $this->city      = $company->city;
+        $this->state     = $company->state;
+        $this->zip_code  = $company->zip_code;
         $this->is_active = $company->is_active;
     }
-
-
 
     public function save()
     {
         $this->validate();
 
         $this->company->update([
-            'name' => $this->name,
-            'cnpj' => $this->cnpj,
-            'email' => $this->email,
-            'phone' => preg_replace('/\D/', '', $this->phone),
-            'address' => $this->address,
-            'city' => $this->city,
-            'state' => $this->state,
-            'zip_code' => preg_replace('/\D/', '', $this->zip_code),
+            'name'      => $this->name,
+            'cnpj'      => $this->cnpj,
+            'email'     => $this->email,
+            'phone'     => preg_replace('/\D/', '', $this->phone),
+            'address'   => $this->address,
+            'city'      => $this->city,
+            'state'     => $this->state,
+            'zip_code'  => preg_replace('/\D/', '', $this->zip_code),
             'is_active' => $this->is_active,
         ]);
-
-
 
         session()->flash('message', 'Empresa atualizada com sucesso!');
 

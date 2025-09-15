@@ -21,4 +21,3 @@ class Show extends Component
         return view('livewire.master.appointment.show');
     }
 }
-

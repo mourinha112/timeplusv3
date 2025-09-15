@@ -250,13 +250,13 @@
                                     Funcionários
                                 </a>
                             </li>
-                            <li>
+                            {{-- <li>
                                 <a href="{{ route('company.payment.index') }}"
                                     class="{{ !Route::is('company.payment.*') ?: 'border bg-base-200 font-semibold' }}">
                                     <x-carbon-money class="w-4 h-4" />
                                     Pagamentos
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </div>
                 </div>
@@ -284,13 +284,13 @@
                                 Funcionários
                             </a>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a href="{{ route('company.payment.index') }}"
                                 class="{{ !Route::is('company.payment.*') ?: 'border bg-base-200 font-semibold' }}">
                                 <x-carbon-money class="w-5 h-5" />
                                 Pagamentos
                             </a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
 

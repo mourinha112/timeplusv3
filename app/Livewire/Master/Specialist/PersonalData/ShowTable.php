@@ -6,11 +6,8 @@ use App\Models\Specialist;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
-use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
-use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 #[Layout('components.layouts.app', ['title' => 'Especialistas', 'guard' => 'master'])]
 class ShowTable extends PowerGridComponent
@@ -34,7 +31,7 @@ class ShowTable extends PowerGridComponent
         return Specialist::query();
     }
 
-    function relationSearch(): array
+    public function relationSearch(): array
     {
         return [];
     }
@@ -52,7 +49,7 @@ class ShowTable extends PowerGridComponent
             ->add('email')
             ->add('crp')
             // ->add('is_active_formatted', fn(Specialist $model) => $model->is_active ? 'Ativo' : 'Inativo')
-            ->add('created_at_formatted', fn(Specialist $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
+            ->add('created_at_formatted', fn (Specialist $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
     }
 
     public function columns(): array
@@ -65,7 +62,7 @@ class ShowTable extends PowerGridComponent
             // Column::make('Situação', 'is_active_formatted', 'is_active')->sortable(),
             Column::make('Cadastrado em', 'created_at_formatted', 'created_at')
                 ->sortable(),
-            Column::action('Ações')
+            Column::action('Ações'),
         ];
     }
 
@@ -83,7 +80,7 @@ class ShowTable extends PowerGridComponent
                 ->slot('Visualizar')
                 ->id()
                 ->class('btn btn-info btn-sm')
-                ->dispatch('master::specialist-show', ['rowId' => $row->id])
+                ->dispatch('master::specialist-show', ['rowId' => $row->id]),
         ];
     }
 }
