@@ -185,6 +185,26 @@ Route::group(['middleware' => ['auth:company']], function () {
     /* Dashboard */
     Route::get('company/dashboard', App\Livewire\Company\Dashboard\Show::class)->name('company.dashboard.show');
 
+    /* Plans */
+    Route::get('company/plans', App\Livewire\Company\Plan\Index::class)->name('company.plan.index');
+    Route::get('company/plans/table', App\Livewire\Company\Plan\ShowTable::class)->name('company.plan.table');
+    Route::get('company/plans/create', App\Livewire\Company\Plan\Create::class)->name('company.plan.create');
+    Route::get('company/plans/{plan}/edit', App\Livewire\Company\Plan\Edit::class)->name('company.plan.edit');
+    Route::get('company/plans/{plan}', App\Livewire\Company\Plan\Show::class)->name('company.plan.show');
+
+    /* Employees */
+    Route::get('company/employees', App\Livewire\Company\Employee\Index::class)->name('company.employee.index');
+    Route::get('company/employees/table', App\Livewire\Company\Employee\ShowTable::class)->name('company.employee.table');
+    Route::get('company/employees/create', App\Livewire\Company\Employee\Create::class)->name('company.employee.create');
+    Route::get('company/employees/{employee}/edit', App\Livewire\Company\Employee\Edit::class)->name('company.employee.edit');
+    Route::get('company/employees/{employee}', App\Livewire\Company\Employee\Show::class)->name('company.employee.show');
+
+    /* Payments */
+    Route::get('company/payments', App\Livewire\Company\Payment\Index::class)->name('company.payment.index');
+
+    /* Profile */
+    Route::get('company/profile', App\Livewire\Company\Profile\Show::class)->name('company.profile.show');
+
     /* Logout */
     Route::get('company/logout', function () {
         Auth::guard('company')->logout();

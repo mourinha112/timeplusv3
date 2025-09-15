@@ -2,7 +2,7 @@
 
 namespace App\Livewire\User\Subscribe;
 
-use App\Models\User;
+use App\Models\{CompanyUser, User};
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Layout;
@@ -12,12 +12,27 @@ use Livewire\Component;
 class Show extends Component
 {
     public $subscribe;
+    public $companyPlan;
+    public $hasCompanyPlan = false;
 
     public function mount()
     {
         $user = User::find(Auth::id());
 
+        // Verificar se tem assinatura individual ativa
         $this->subscribe = $user->subscribes()->where('end_date', '>', now())->first();
+
+        // Verificar se está vinculado a uma empresa (ativo ou inativo)
+        $companyPlan = CompanyUser::where('user_id', $user->id)
+            ->where('is_active', true)
+            ->whereNotNull('company_plan_id')
+            ->with(['companyPlan.company'])
+            ->first();
+
+        if ($companyPlan) {
+            $this->companyPlan = $companyPlan;
+            $this->hasCompanyPlan = true;
+        }
     }
 
     public function cancel()

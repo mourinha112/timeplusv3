@@ -43,7 +43,7 @@ class Edit extends Component
 
     public function mount(Company $company)
     {
-        $this->company = $company->load('companyPlan');
+        $this->company = $company->load('companyPlans');
 
         $this->name = $company->name;
         $this->cnpj = $company->cnpj;

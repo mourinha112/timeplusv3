@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
 class Company extends Authenticatable
@@ -35,13 +37,25 @@ class Company extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function companyPlan(): HasOne
+    public function companyPlans(): HasMany
     {
-        return $this->hasOne(CompanyPlan::class);
+        return $this->hasMany(CompanyPlan::class);
     }
 
     public function payments(): MorphMany
     {
         return $this->morphMany(Payment::class, 'payable');
+    }
+
+    public function employees(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'company_user')
+            ->withPivot(['is_active'])
+            ->withTimestamps();
+    }
+
+    public function activeEmployees(): BelongsToMany
+    {
+        return $this->employees()->wherePivot('is_active', true);
     }
 }

@@ -42,7 +42,7 @@
                             </div>
                             <div>
                                 <x-text
-                                    class="font-bold">{{ $company->companyPlan ? 'Tem Planos' : 'Sem Planos' }}</x-text>
+                                    class="font-bold">{{ $company->companyPlans->count() > 0 ? 'Tem Planos' : 'Sem Planos' }}</x-text>
                                 <div class="mt-0.5 text-xs text-base-content/60">Planos da Empresa</div>
                             </div>
                             <div>
@@ -113,7 +113,7 @@
                                 </div>
                             </div>
 
-                            @if ($company->companyPlan)
+                            @if ($company->companyPlans->count() > 0)
                                 <div class="mt-6 p-4 bg-base-200/20 rounded-lg border border-base-300">
                                     <h4 class="font-semibold text-base-content flex items-center gap-2 mb-3">
                                         <x-carbon-plan class="w-4 h-4 text-success" />

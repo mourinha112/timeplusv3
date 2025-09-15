@@ -221,6 +221,122 @@
                 </div>
             @endauth
 
+            @if ($guard === 'company')
+                <div class="navbar-start sm:hidden">
+                    <div class="dropdown">
+                        <div tabindex="0" role="button" class="btn btn-ghost">
+                            <x-carbon-menu class="w-7 h-7 text-slate-900" />
+                        </div>
+                        <ul tabindex="0"
+                            class="menu menu-sm dropdown-content bg-white rounded-box z-1 mt-3 w-52 p-2 shadow">
+                            <li>
+                                <a href="{{ route('company.dashboard.show') }}"
+                                    class="{{ !Route::is('company.dashboard.show') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-home class="w-4 h-4" />
+                                    Início
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('company.plan.index') }}"
+                                    class="{{ !Route::is('company.plan.index') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-layers class="w-4 h-4" />
+                                    Planos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('company.employee.index') }}"
+                                    class="{{ !Route::is('company.employee.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-user-multiple class="w-4 h-4" />
+                                    Funcionários
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('company.payment.index') }}"
+                                    class="{{ !Route::is('company.payment.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-money class="w-4 h-4" />
+                                    Pagamentos
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="navbar-center hidden sm:flex">
+                    <ul class="menu menu-horizontal px-1">
+                        <li>
+                            <a href="{{ route('company.dashboard.show') }}"
+                                class="{{ !Route::is('company.dashboard.show') ?: 'border bg-base-200 font-semibold' }}">
+                                <x-carbon-home class="w-5 h-5" />
+                                Início
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('company.plan.index') }}"
+                                class="{{ !Route::is('company.plan.index') ?: 'border bg-base-200 font-semibold' }}">
+                                <x-carbon-layers class="w-5 h-5" />
+                                Planos
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('company.employee.index') }}"
+                                class="{{ !Route::is('company.employee.*') ?: 'border bg-base-200 font-semibold' }}">
+                                <x-carbon-user-multiple class="w-5 h-5" />
+                                Funcionários
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('company.payment.index') }}"
+                                class="{{ !Route::is('company.payment.*') ?: 'border bg-base-200 font-semibold' }}">
+                                <x-carbon-money class="w-5 h-5" />
+                                Pagamentos
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="navbar-end">
+                    <!-- Profile Dropdown -->
+                    <div class="dropdown dropdown-end">
+                        <div class="flex items-center gap-3">
+                            <div class="flex flex-col items-end">
+                                <span class="text-sm">{{ Auth::guard('company')->user()->name }}</span>
+                                <span class="text-xs text-gray-500">Empresa
+                                    #{{ Auth::guard('company')->user()->id }}</span>
+                            </div>
+
+                            <div tabindex="0" role="button" class="header-btn btn btn-ghost btn-circle">
+                                <div class="avatar avatar-placeholder">
+                                    <div class="bg-primary text-primary-content w-10 rounded-full">
+                                        <span class="text-lg">
+                                            <x-carbon-enterprise class="w-5 h-5" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul tabindex="0"
+                            class="menu menu-sm dropdown-content bg-white rounded-box z-1 mt-3 w-52 p-2 shadow">
+                            <li>
+                                <a href="{{ route('company.profile.show') }}"
+                                    class="profile-dropdown-item justify-between flex items-center gap-3">
+                                    <div class="flex items-center gap-3">
+                                        <x-carbon-enterprise class="w-4 h-4" />
+                                        <span>Perfil da Empresa</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('company.auth.logout') }}"
+                                    class="profile-dropdown-item flex items-center gap-3">
+                                    <x-carbon-logout class="w-4 h-4" />
+                                    <span>Sair</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            @endauth
+
             @if ($guard === 'master')
                 <div class="navbar-start sm:hidden">
                     <div class="dropdown">

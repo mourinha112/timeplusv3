@@ -82,11 +82,30 @@
     <div class="flex justify-between">
         <div>
             @if ($selectedTime && $selectedDate)
-                <p class="text-sm text-base-content font-semibold">R$ 100</p>
-                <p class="text-xs text-base-content/70">
-                    Agendar para {{ \Carbon\Carbon::parse($selectedDate)->format('d/m/Y') }} às
-                    {{ \Carbon\Carbon::parse($selectedTime)->format('H:i') }}h.
-                </p>
+                <div class="space-y-1">
+                    @if ($pricing_info['has_discount'])
+                        <div class="space-y-0">
+                            <p class="text-xs text-base-content/60 line-through">
+                                De: R$ {{ number_format($pricing_info['original_amount'], 2, ',', '.') }}
+                            </p>
+                            <p class="text-sm font-semibold text-success">
+                                Por: R$ {{ number_format($pricing_info['final_amount'], 2, ',', '.') }}
+                            </p>
+                            <p class="text-xs text-info">
+                                Desconto de {{ $pricing_info['discount_percentage'] }}% -
+                                {{ $pricing_info['company_plan_name'] }}
+                            </p>
+                        </div>
+                    @else
+                        <p class="text-sm text-base-content font-semibold">
+                            R$ {{ number_format($pricing_info['final_amount'], 2, ',', '.') }}
+                        </p>
+                    @endif
+                    <p class="text-xs text-base-content/70">
+                        Agendar para {{ \Carbon\Carbon::parse($selectedDate)->format('d/m/Y') }} às
+                        {{ \Carbon\Carbon::parse($selectedTime)->format('H:i') }}h.
+                    </p>
+                </div>
             @endif
         </div>
         <button class="btn btn-info" wire:click="schedule" wire:loading.attr="disabled" wire:target="schedule"

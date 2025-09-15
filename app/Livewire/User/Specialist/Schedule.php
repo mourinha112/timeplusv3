@@ -21,6 +21,37 @@ class Schedule extends Component
     #[Rule('required|string|date_format:H:i:s')]
     public $selectedTime = null;
 
+    public array $pricing_info = [
+        'original_amount' => 0,
+        'final_amount' => 0,
+        'has_discount' => false,
+        'discount_percentage' => 0,
+        'company_discount_amount' => 0,
+        'company_plan_name' => null,
+    ];
+
+    public function mount()
+    {
+        $this->calculatePricing();
+    }
+
+    public function calculatePricing()
+    {
+        $user = Auth::user();
+        $originalAmount = $this->specialist->appointment_value;
+
+        $calculatedPayment = $user->calculatePaymentAmount($originalAmount);
+
+        $this->pricing_info = [
+            'original_amount' => $originalAmount,
+            'final_amount' => $calculatedPayment['employee_amount'],
+            'has_discount' => $calculatedPayment['has_company_discount'],
+            'discount_percentage' => $calculatedPayment['discount_percentage'],
+            'company_discount_amount' => $calculatedPayment['company_amount'],
+            'company_plan_name' => $calculatedPayment['plan_name'] ?? null,
+        ];
+    }
+
     #[Computed]
     public function availabilities()
     {
@@ -122,7 +153,7 @@ class Schedule extends Component
             $appointment = Appointment::create([
                 'user_id'          => Auth::user()->id,
                 'specialist_id'    => $this->specialist->id,
-                'total_value'      => $this->specialist->appointment_value,
+                'total_value'      => $this->pricing_info['final_amount'],
                 'appointment_date' => $this->selectedDate,
                 'appointment_time' => $this->selectedTime,
                 'status'           => 'scheduled',

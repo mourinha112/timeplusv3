@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Payment extends Model
 {
@@ -23,6 +24,11 @@ class Payment extends Model
         'refunded_amount',
         'refunded_at',
         'refund_reason',
+        'company_id',
+        'original_amount',
+        'company_discount_amount',
+        'discount_percentage',
+        'company_plan_name',
     ];
 
     protected $casts = [
@@ -33,10 +39,46 @@ class Payment extends Model
         'refunded_at'     => 'datetime',
         'amount'          => 'decimal:2',
         'refunded_amount' => 'decimal:2',
+        'original_amount' => 'decimal:2',
+        'company_discount_amount' => 'decimal:2',
+        'discount_percentage' => 'decimal:2',
     ];
 
     public function payable()
     {
         return $this->morphTo();
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function hasCompanyDiscount(): bool
+    {
+        return $this->company_id !== null && $this->company_discount_amount > 0;
+    }
+
+    public function getDiscountInfo(): array
+    {
+        if (!$this->hasCompanyDiscount()) {
+            return [
+                'has_discount' => false,
+                'original_amount' => $this->amount,
+                'employee_paid' => $this->amount,
+                'company_paid' => 0,
+                'discount_percentage' => 0,
+            ];
+        }
+
+        return [
+            'has_discount' => true,
+            'original_amount' => $this->original_amount,
+            'employee_paid' => $this->amount,
+            'company_paid' => $this->company_discount_amount,
+            'discount_percentage' => $this->discount_percentage,
+            'company_name' => $this->company->name ?? 'N/A',
+            'plan_name' => $this->company_plan_name,
+        ];
     }
 }
