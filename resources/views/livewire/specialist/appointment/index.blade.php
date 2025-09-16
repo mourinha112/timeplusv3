@@ -8,7 +8,7 @@
         <button wire:click="previousWeek" class="btn btn-info btn-outline sm:btn-sm btn-xs">
             <x-carbon-chevron-left class="w-5" /> Anterior
         </button>
-        <h2 class="sm:text-lg text-sm text-base-content/70">{{ $firstDayOfWeek }} até {{ $lastDayOfWeek }}</h2>
+        <x-text class="sm:text-lg">{{ $firstDayOfWeek }} até {{ $lastDayOfWeek }}</x-text>
         <button wire:click="nextWeek" class="btn btn-info btn-outline sm:btn-sm btn-xs">
             <x-carbon-chevron-right class="w-5" /> Próxima
         </button>
@@ -22,33 +22,33 @@
 
                 <!-- Day Headers -->
                 @foreach ($weekDays as $dayInfo)
-                <div class="text-center">
-                    <div class="w-full p-1 lg:p-2 rounded border border-base-content/20 text-base-content">
-                        <p class="text-xs uppercase font-medium">{{ $dayInfo['dayOfWeek'] }}</p>
-                        <p class="text-sm font-bold">{{ $dayInfo['day'] }}</p>
-                        <p class="text-xs uppercase">{{ $dayInfo['month'] }}</p>
+                    <div class="text-center">
+                        <div class="w-full p-1 lg:p-2 rounded border border-base-content/20 text-base-content">
+                            <p class="text-xs uppercase font-medium">{{ $dayInfo['dayOfWeek'] }}</p>
+                            <p class="text-sm font-bold">{{ $dayInfo['day'] }}</p>
+                            <p class="text-xs uppercase">{{ $dayInfo['month'] }}</p>
+                        </div>
                     </div>
-                </div>
                 @endforeach
 
                 <!-- Time labels and slots, row by row -->
                 @foreach ($timeSlots as $time)
-                <!-- Time Label -->
-                <div class="text-center text-xs font-bold text-gray-600 flex items-center justify-center">
-                    {{ $time }}
-                </div>
+                    <!-- Time Label -->
+                    <div class="text-center text-xs font-bold text-gray-600 flex items-center justify-center">
+                        {{ $time }}
+                    </div>
 
-                <!-- Slots for this time -->
-                @foreach ($weekDays as $dayInfo)
-                @php
-                $appointment = $appointments[$dayInfo['full_date']][$time . ':00'] ?? null;
-                $hasAppointment = !is_null($appointment);
-                $userName = $hasAppointment ? ($appointment->user->name ?? 'Usuário') : '';
-                @endphp
+                    <!-- Slots for this time -->
+                    @foreach ($weekDays as $dayInfo)
+                        @php
+                            $appointment = $appointments[$dayInfo['full_date']][$time . ':00'] ?? null;
+                            $hasAppointment = !is_null($appointment);
+                            $userName = $hasAppointment ? $appointment->user->name ?? 'Usuário' : '';
+                        @endphp
 
-                @if ($hasAppointment)
-                {{-- Slot ocupado --}}
-                {{-- <button wire:click="cancelAppointment('{{ $dayInfo['full_date'] }}', '{{ $time }}')" class="btn btn-sm lg:btn-md rounded border text-xs font-medium flex items-center justify-center relative cursor-pointer group bg-blue-50 border-blue-200 hover:bg-red-50 hover:border-red-300 text-blue-600" title="Agendado para: {{ $userName }}">
+                        @if ($hasAppointment)
+                            {{-- Slot ocupado --}}
+                            {{-- <button wire:click="cancelAppointment('{{ $dayInfo['full_date'] }}', '{{ $time }}')" class="btn btn-sm lg:btn-md rounded border text-xs font-medium flex items-center justify-center relative cursor-pointer group bg-blue-50 border-blue-200 hover:bg-red-50 hover:border-red-300 text-blue-600" title="Agendado para: {{ $userName }}">
                 <span class="flex items-center gap-1 group-hover:hidden">
                     <x-carbon-user class="w-3 h-3" />
                     <span class="hidden lg:inline text-xs truncate">{{ Str::limit($userName, 8) }}</span>
@@ -58,28 +58,33 @@
                     <span class="hidden lg:inline">Cancelar</span>
                 </span>
                 </button> --}}
-                <div class="dropdown">
-                    <div tabindex="0" role="button" class="btn btn-sm lg:btn-md rounded border text-xs font-medium flex items-center justify-center relative cursor-pointer group bg-blue-50 border-blue-200 text-blue-600">
-                        <x-carbon-user class="w-3 h-3" />
-                        <span class="hidden lg:inline text-xs truncate">{{ Str::limit($userName, 10) }}</span>
-                    </div>
-                    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                        <li><a>
-                                <x-carbon-video-chat class="w-4 h-4" />
-                                Iniciar atendimento
-                            </a></li>
-                        <li><a class="text-error" wire:click="cancelAppointment('{{ $dayInfo['full_date'] }}', '{{ $time }}')">
-                                <x-carbon-close class="w-4 h-4" />
-                                Cancelar
-                            </a></li>
-                    </ul>
-                </div>
-                @else
-                {{-- Slot disponível --}}
-                <button class="btn btn-sm lg:btn-md rounded border text-xs font-medium flex items-center justify-center cursor-not-allowed relative group bg-gray-50 border-gray-200 text-gray-400">
-                </button>
-                @endif
-                @endforeach
+                            <div class="dropdown">
+                                <div tabindex="0" role="button"
+                                    class="btn btn-sm lg:btn-md rounded border text-xs font-medium flex items-center justify-center relative cursor-pointer group bg-blue-50 border-blue-200 text-blue-600">
+                                    <x-carbon-user class="w-3 h-3" />
+                                    <span
+                                        class="hidden lg:inline text-xs truncate">{{ Str::limit($userName, 10) }}</span>
+                                </div>
+                                <ul tabindex="0"
+                                    class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                                    <li><a>
+                                            <x-carbon-video-chat class="w-4 h-4" />
+                                            Iniciar atendimento
+                                        </a></li>
+                                    <li><a class="text-error"
+                                            wire:click="cancelAppointment('{{ $dayInfo['full_date'] }}', '{{ $time }}')">
+                                            <x-carbon-close class="w-4 h-4" />
+                                            Cancelar
+                                        </a></li>
+                                </ul>
+                            </div>
+                        @else
+                            {{-- Slot disponível --}}
+                            <button
+                                class="btn btn-sm lg:btn-md rounded border text-xs font-medium flex items-center justify-center cursor-not-allowed relative group bg-gray-50 border-gray-200 text-gray-400">
+                            </button>
+                        @endif
+                    @endforeach
                 @endforeach
             </div>
         </div>

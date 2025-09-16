@@ -4,7 +4,7 @@
             <x-carbon-user class="w-8 text-info" />
             Editar Funcionário
         </x-title>
-        <x-subtitle class="text-base-content/70">
+        <x-subtitle>
             Edite as informações pessoais do funcionário {{ $employee->name }}
         </x-subtitle>
     </x-heading>

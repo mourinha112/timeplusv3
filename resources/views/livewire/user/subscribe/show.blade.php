@@ -28,7 +28,7 @@
                         <x-carbon-building class="w-8 h-8 text-info" />
                         <div>
                             <h3 class="text-lg font-semibold text-info">Plano Empresarial Ativo</h3>
-                            <p class="text-sm text-base-content/70">Você está vinculado ao plano da sua empresa</p>
+                            <x-text>Você está vinculado ao plano da sua empresa</x-text>
                         </div>
                         <x-badge class="badge-success ml-auto">ATIVO</x-badge>
                     </div>
@@ -37,16 +37,16 @@
                         <x-card-body>
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <span class="text-sm text-base-content/70">Empresa</span>
+                                    <x-text>Empresa</x-text>
                                     <p class="font-semibold">{{ $companyPlan->companyPlan->company->name }}</p>
                                 </div>
                                 <div>
-                                    <span class="text-sm text-base-content/70">Plano</span>
+                                    <x-text>Plano</x-text>
                                     <p class="font-semibold">{{ $companyPlan->companyPlan->name }}</p>
                                 </div>
                             </div>
                             <div class="mt-3">
-                                <span class="text-sm text-base-content/70">Desconto oferecido</span>
+                                <x-text>Desconto oferecido</x-text>
                                 <p class="font-bold text-success text-xl">
                                     {{ number_format($companyPlan->companyPlan->discount_percentage, 1) }}%</p>
                                 <p class="text-xs text-base-content/60">A empresa cobre
@@ -74,8 +74,7 @@
                         <x-carbon-building class="w-8 h-8 text-warning" />
                         <div>
                             <h3 class="text-lg font-semibold text-warning">Plano Empresarial Inativo</h3>
-                            <p class="text-sm text-base-content/70">Seu plano empresarial está temporariamente inativo
-                            </p>
+                            <x-text>Seu plano empresarial está temporariamente inativo</x-text>
                         </div>
                         <x-badge class="badge-warning ml-auto">INATIVO</x-badge>
                     </div>
@@ -84,16 +83,16 @@
                         <x-card-body>
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <span class="text-sm text-base-content/70">Empresa</span>
+                                    <x-text>Empresa</x-text>
                                     <p class="font-semibold">{{ $companyPlan->companyPlan->company->name }}</p>
                                 </div>
                                 <div>
-                                    <span class="text-sm text-base-content/70">Plano</span>
+                                    <x-text>Plano</x-text>
                                     <p class="font-semibold">{{ $companyPlan->companyPlan->name }}</p>
                                 </div>
                             </div>
                             <div class="mt-3">
-                                <span class="text-sm text-base-content/70">Desconto (suspenso)</span>
+                                <x-text>Desconto (suspenso)</x-text>
                                 <p class="font-bold text-base-content/50 text-xl line-through">
                                     {{ number_format($companyPlan->companyPlan->discount_percentage, 1) }}%</p>
                                 <p class="text-xs text-warning">⚠️ Desconto suspenso até que o plano seja reativado pela
@@ -119,7 +118,8 @@
                 <div class="flex justify-between">
                     <span class="badge badge-xs badge-info">Plano finaliza em
                         {{ \Carbon\Carbon::parse($subscribe->end_date)->format('d/m/Y') }}</span>
-                    <span class="text-xl"><span class="text-sm text-base-content/70">R$</span>
+                    <span class="text-xl">
+                        <x-text>R$</x-text>
                         {{ number_format($subscribe->plan->price, 2, ',', '.') }}</span>
                 </div>
                 <div class="flex justify-between">

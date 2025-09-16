@@ -24,9 +24,8 @@
                                 </div>
                             </div>
                             <div>
-                                <x-text class="text-base-content/70">Empresa <span
-                                        class="text-info font-bold">#{{ $company->id }}</span></x-text>
-                                <x-title class="text-2xl">{{ $company->name ?? 'Não informado' }}</x-title>
+                                <x-text>Empresa <span class="text-info font-bold">#{{ $company->id }}</span></x-text>
+                                <x-title>{{ $company->name ?? 'Não informado' }}</x-title>
                                 <div class="text-base-content/60">
                                     <x-badge class="{{ $company->is_active ? 'badge-success' : 'badge-error' }}">
                                         {{ $company->is_active ? 'Ativa' : 'Inativa' }}

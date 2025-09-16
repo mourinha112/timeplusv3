@@ -1,4 +1,4 @@
-<div class="card bg-base-100 shadow-lg border border-gray-200 rounded-xl p-6">
+<x-card class="border border-gray-200 rounded-xl p-6">
     @if ($errors->any())
         <ul>
             @foreach ($errors->all() as $error)
@@ -83,14 +83,15 @@
                             <p class="text-xs text-base-content/50 line-through">
                                 De: R$ {{ number_format($pricing_info['original_amount'], 2, ',', '.') }}
                             </p>
-                            <p class="text-sm text-success font-semibold">
+                            <p class="text-sm text-info font-semibold">
                                 Por: R$ {{ number_format($pricing_info['final_amount'], 2, ',', '.') }}
                             </p>
                             <div class="flex items-center gap-2">
                                 <span class="badge badge-success badge-sm">{{ $pricing_info['discount_percentage'] }}%
                                     OFF</span>
                                 @if ($pricing_info['company_plan_name'])
-                                    <span class="text-xs text-success">{{ $pricing_info['company_plan_name'] }}</span>
+                                    <span class="text-xs text-success">Plano:
+                                        {{ $pricing_info['company_plan_name'] }}</span>
                                 @endif
                             </div>
                             <p class="text-xs text-success">
@@ -115,4 +116,4 @@
             Agendar
         </button>
     </div>
-</div>
+</x-card>

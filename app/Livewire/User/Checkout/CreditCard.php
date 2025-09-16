@@ -33,6 +33,46 @@ class CreditCard extends Component
         $this->payable = $payable;
     }
 
+    public function getDisplayValue()
+    {
+        $user = Auth::user();
+
+        try {
+            $paymentCalculation = $user->calculatePaymentAmount($this->payable->total_value);
+            return $paymentCalculation['employee_amount'];
+        } catch (\Exception $e) {
+            return $this->payable->total_value;
+        }
+    }
+
+    public function hasDiscount()
+    {
+        $user = Auth::user();
+
+        try {
+            $paymentCalculation = $user->calculatePaymentAmount($this->payable->total_value);
+            return $paymentCalculation['has_company_discount'];
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getDiscountInfo()
+    {
+        $user = Auth::user();
+
+        try {
+            return $user->calculatePaymentAmount($this->payable->total_value);
+        } catch (\Exception $e) {
+            return [
+                'employee_amount'      => $this->payable->total_value,
+                'company_amount'       => 0,
+                'discount_percentage'  => 0,
+                'has_company_discount' => false,
+            ];
+        }
+    }
+
     public function pay()
     {
         $this->validate();

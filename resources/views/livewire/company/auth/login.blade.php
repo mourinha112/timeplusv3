@@ -27,9 +27,9 @@
             </x-form>
 
             <div class="text-center mt-6 pt-6 border-t border-base-300">
-                <p class="text-sm text-base-content/70">
+                <x-text>
                     Problemas de acesso? Entre em contato com o suporte.
-                </p>
+                </x-text>
             </div>
         </x-card-body>
     </x-card>

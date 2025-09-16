@@ -4,7 +4,7 @@
             <x-carbon-layers class="w-8 text-info" />
             Planos da Empresa
         </h2>
-        <p class="text-base-content/70 mt-1">Gerencie os planos oferecidos pela sua empresa</p>
+        <x-text class="mt-1">Gerencie os planos oferecidos pela sua empresa</x-text>
     </div>
 
     <div class="flex gap-2">

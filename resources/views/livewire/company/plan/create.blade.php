@@ -4,7 +4,7 @@
             <x-carbon-layers class="w-8 text-info" />
             Criar Plano
         </x-title>
-        <x-subtitle class="text-base-content/70">
+        <x-subtitle>
             Crie um novo plano de desconto para seus funcionários
         </x-subtitle>
     </x-heading>
@@ -16,9 +16,9 @@
                     <x-form-group>
                         <x-label required>Nome do Plano</x-label>
                         <x-input type="text" wire:model="name" placeholder="Ex: Plano Básico, Premium, etc." />
-                        <div class="text-sm text-base-content/70 mt-1">
+                        <x-text class="mt-1">
                             Escolha um nome descritivo para identificar este plano
-                        </div>
+                        </x-text>
                         @error('name')
                             <div class="text-error text-sm mt-1">{{ $message }}</div>
                         @enderror
@@ -28,9 +28,9 @@
                         <x-label required>Percentual de Desconto (%)</x-label>
                         <x-input type="number" step="0.01" min="0.01" max="100"
                             wire:model="discount_percentage" placeholder="Ex: 50" />
-                        <div class="text-sm text-base-content/70 mt-1">
+                        <x-text class="mt-1">
                             Percentual que a empresa irá cobrir dos custos do funcionário (mínimo 0,01% - máximo 100%)
-                        </div>
+                        </x-text>
                         @error('discount_percentage')
                             <div class="text-error text-sm mt-1">{{ $message }}</div>
                         @enderror

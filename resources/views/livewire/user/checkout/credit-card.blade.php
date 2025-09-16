@@ -16,10 +16,32 @@
         <x-text class="text-xs"><strong>Hora:</strong>
             {{ \Carbon\Carbon::parse($payable->appointment_time)->format('H:i') }}</x-text>
 
-        <x-text>
-            <strong>Valor:</strong>
-            <x-badge class="badge-warning">R$ {{ number_format($payable->total_value, 2, ',', '.') }}</x-badge>
-        </x-text>
+        @if ($this->hasDiscount())
+            @php $discountInfo = $this->getDiscountInfo(); @endphp
+            <div class="space-y-2">
+                <x-text>
+                    <strong>Valor original:</strong>
+                    <span class="line-through">R$ {{ number_format($payable->total_value, 2, ',', '.') }}</span>
+                </x-text>
+                <x-text>
+                    <strong>Valor a pagar:</strong>
+                    <x-badge class="badge-success">R$
+                        {{ number_format($discountInfo['employee_amount'], 2, ',', '.') }}</x-badge>
+                    <span class="badge badge-success badge-sm ml-2">{{ $discountInfo['discount_percentage'] }}%
+                        OFF</span>
+                </x-text>
+                @if (isset($discountInfo['plan_name']))
+                    <x-text class="text-xs text-success">
+                        <strong>Desconto aplicado via:</strong> {{ $discountInfo['plan_name'] }}
+                    </x-text>
+                @endif
+            </div>
+        @else
+            <x-text>
+                <strong>Valor:</strong>
+                <x-badge class="badge-warning">R$ {{ number_format($payable->total_value, 2, ',', '.') }}</x-badge>
+            </x-text>
+        @endif
     </div>
 
     {{-- <x-divider /> --}}

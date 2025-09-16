@@ -26,7 +26,7 @@
         @endif
         <div>
             <h4 class="font-semibold text-base-content">{{ $title }}</h4>
-            <p class="text-sm text-base-content/70">{{ $description }}</p>
+            <x-text>{{ $description }}</x-text>
         </div>
     </div>
 </a>

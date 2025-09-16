@@ -33,11 +33,11 @@
                                 </div>
                             </div>
                             <div>
-                                <p class="text-base-content/70">Especialista <span
-                                        class="text-info font-bold">#{{ $specialist->id }}</span></p>
+                                <x-text>Especialista <span
+                                        class="text-info font-bold">#{{ $specialist->id }}</span></x-text>
                                 <h2 class="text-2xl font-bold text-base-content">
                                     {{ $specialist->name ?? 'Não informado' }}</h2>
-                                <p class="text-base-content/60">{{ $specialist->specialty->name }}</p>
+                                <x-text>{{ $specialist->specialty->name }}</x-text>
                             </div>
                         </div>
 

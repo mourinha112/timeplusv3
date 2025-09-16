@@ -1,11 +1,16 @@
 <div class="flex justify-between items-center mb-4">
-    <div>
-        <h2 class="text-2xl font-bold text-base-content flex items-center gap-3">
+
+    <x-heading>
+        <x-title class="flex items-center gap-3">
             <x-carbon-user-multiple class="w-8 text-info" />
             Funcionários
-        </h2>
-        <p class="text-base-content/70 mt-1">Gerencie os funcionários da sua empresa</p>
-    </div>
+        </x-title>
+        <x-subtitle>
+            Gerencie os funcionários da sua empresa
+        </x-subtitle>
+    </x-heading>
+
+
 
     <div class="flex gap-2">
         <a href="{{ route('company.employee.create') }}" class="btn btn-info">

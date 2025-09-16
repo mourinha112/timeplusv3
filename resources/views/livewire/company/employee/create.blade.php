@@ -4,7 +4,7 @@
             <x-carbon-user class="w-8 text-info" />
             Adicionar Funcionário
         </x-title>
-        <x-subtitle class="text-base-content/70">
+        <x-subtitle>
             Cadastre um novo funcionário para sua empresa
         </x-subtitle>
     </x-heading>

@@ -12,70 +12,77 @@
                     <div class="space-y-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-base-content/70">Agendamento <span class="text-info font-bold">#{{ $appointment->id }}</span></p>
-                                <h2 class="text-2xl font-bold text-base-content">{{ $appointment->status ? ucfirst($appointment->status) : '—' }}</h2>
+                                <x-text>Agendamento <span
+                                        class="text-info font-bold">#{{ $appointment->id }}</span></x-text>
+                                <x-title class="font-bold">
+                                    {{ $appointment->status ? ucfirst($appointment->status) : '—' }}</x-title>
                             </div>
                             <div class="text-right">
-                                <div class="text-sm text-base-content/70">Criado em</div>
-                                <div class="text-base font-medium">{{ $appointment->created_at->format('d/m/Y H:i') }}</div>
+                                <x-text>Criado em</x-text>
+                                <div class="text-base font-medium">{{ $appointment->created_at->format('d/m/Y H:i') }}
+                                </div>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div class="p-4 bg-base-200/30 rounded-lg">
-                                <div class="text-sm text-base-content/70">Cliente</div>
+                                <x-text>Cliente</x-text>
                                 <div class="text-base font-medium">{{ $appointment->user?->name ?? '—' }}</div>
                             </div>
                             <div class="p-4 bg-base-200/30 rounded-lg">
-                                <div class="text-sm text-base-content/70">Especialista</div>
+                                <x-text>Especialista</x-text>
                                 <div class="text-base font-medium">{{ $appointment->specialist?->name ?? '—' }}</div>
                             </div>
                             <div class="p-4 bg-base-200/30 rounded-lg">
-                                <div class="text-sm text-base-content/70">Valor</div>
-                                <div class="text-base font-medium">R$ {{ number_format((float) $appointment->total_value, 2, ',', '.') }}</div>
+                                <x-text>Valor</x-text>
+                                <div class="text-base font-medium">R$
+                                    {{ number_format((float) $appointment->total_value, 2, ',', '.') }}</div>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div class="p-4 bg-base-200/30 rounded-lg">
-                                <div class="text-sm text-base-content/70">Data</div>
-                                <div class="text-base font-medium">{{ $appointment->appointment_date ? \Illuminate\Support\Carbon::parse($appointment->appointment_date)->format('d/m/Y') : '—' }}</div>
+                                <x-text>Data</x-text>
+                                <div class="text-base font-medium">
+                                    {{ $appointment->appointment_date ? \Illuminate\Support\Carbon::parse($appointment->appointment_date)->format('d/m/Y') : '—' }}
+                                </div>
                             </div>
                             <div class="p-4 bg-base-200/30 rounded-lg">
-                                <div class="text-sm text-base-content/70">Hora</div>
+                                <x-text>Hora</x-text>
                                 <div class="text-base font-medium">{{ $appointment->appointment_time ?? '—' }}</div>
                             </div>
                             <div class="p-4 bg-base-200/30 rounded-lg">
-                                <div class="text-sm text-base-content/70">Situação</div>
+                                <x-text>Situação</x-text>
                                 <div class="text-base font-medium">{{ ucfirst($appointment->status ?? '—') }}</div>
                             </div>
                         </div>
 
-                        @if($appointment->notes)
-                        <div class="p-4 bg-base-200/20 rounded-lg border border-base-300">
-                            <div class="font-semibold mb-2">Anotações</div>
-                            <div class="text-sm">{{ $appointment->notes }}</div>
-                        </div>
+                        @if ($appointment->notes)
+                            <div class="p-4 bg-base-200/20 rounded-lg border border-base-300">
+                                <div class="font-semibold mb-2">Anotações</div>
+                                <div class="text-sm">{{ $appointment->notes }}</div>
+                            </div>
                         @endif
 
                         <div class="p-4 bg-base-200/20 rounded-lg border border-base-300">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div>
-                                    <div class="text-sm text-base-content/70">Pagamento</div>
+                                    <x-text>Pagamento</x-text>
                                     <div class="text-base font-medium">
-                                        @if($appointment->payment)
-                                            <a class="link link-info" href="{{ route('master.payment.show', ['payment' => $appointment->payment->id]) }}">#{{ $appointment->payment->id }}</a>
+                                        @if ($appointment->payment)
+                                            <a class="link link-info"
+                                                href="{{ route('master.payment.show', ['payment' => $appointment->payment->id]) }}">#{{ $appointment->payment->id }}</a>
                                         @else
                                             —
                                         @endif
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="text-sm text-base-content/70">Criado em</div>
+                                    <x-text>Criado em</x-text>
                                     <div class="text-base">{{ $appointment->created_at->format('d/m/Y H:i') }}</div>
                                 </div>
                                 <div>
-                                    <div class="text-sm text-base-content/70">Atualizado em</div>
+                                    <x-text>Atualizado em</x-text>
                                     <div class="text-base">{{ $appointment->updated_at->format('d/m/Y H:i') }}</div>
                                 </div>
                             </div>
@@ -93,4 +100,3 @@
         </div>
     </div>
 </div>
-

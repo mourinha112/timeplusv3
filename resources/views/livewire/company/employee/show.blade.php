@@ -12,7 +12,7 @@
                 <x-carbon-user class="w-8 text-info" />
                 Detalhes do Funcionário
             </x-title>
-            <x-subtitle class="text-base-content/70">
+            <x-subtitle>
                 Informações completas sobre o funcionário
             </x-subtitle>
         </x-heading>
@@ -30,9 +30,9 @@
                                 </div>
                             </div>
                             <div>
-                                <x-text class="text-base-content/70">Funcionário <span
+                                <x-text>Funcionário <span
                                         class="text-info font-bold">#{{ $employee->id }}</span></x-text>
-                                <x-title class="text-2xl">{{ $employee->name }}</x-title>
+                                <x-title>{{ $employee->name }}</x-title>
 
                             </div>
                         </div>
@@ -118,11 +118,11 @@
                                                             desconto
                                                         </span>
                                                     </div>
-                                                    <p class="text-sm text-base-content/70">
+                                                    <x-text>
                                                         A empresa cobre
                                                         {{ $companyUser->companyPlan->discount_percentage }}% dos
                                                         custos dos serviços
-                                                    </p>
+                                                    </x-text>
                                                 </div>
                                             </div>
                                         @else
@@ -155,9 +155,9 @@
                                             </div>
                                             <div class="ml-8">
                                                 <x-badge class="badge-ghost">Sem plano atribuído</x-badge>
-                                                <p class="text-sm text-base-content/70 mt-1">
+                                                <x-text class="mt-1">
                                                     Este funcionário não possui um plano de desconto ativo
-                                                </p>
+                                                </x-text>
                                             </div>
                                         </div>
                                     @endif

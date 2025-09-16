@@ -17,7 +17,8 @@
                         </p>
                         <p class="mt-1">Com
                             <strong>{{ number_format($companyPlan->companyPlan->discount_percentage, 1) }}%
-                                de desconto</strong>, você não pode contratar planos individuais.</p>
+                                de desconto</strong>, você não pode contratar planos individuais.
+                        </p>
                         <p class="mt-2">
                             <x-link class="!link-neutral" href="{{ route('user.subscribe.show') }}">Ver detalhes do plano
                                 empresarial →</x-link>
@@ -67,7 +68,7 @@
                     <div class="flex justify-between">
                         <h2 class="text-3xl font-bold">{{ $plan->name }}</h2>
 
-                        <span class="text-xl"><span class="text-sm text-base-content/70">R$</span>
+                        <span class="text-xl"><x-text>R$</x-text>
                             {{ number_format($plan->price, 2, ',', '.') }}
                         </span>
                     </div>

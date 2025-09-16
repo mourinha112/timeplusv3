@@ -19,7 +19,7 @@
                 <x-carbon-layers class="w-8 text-info" />
                 Detalhes do Plano
             </x-title>
-            <x-subtitle class="text-base-content/70">
+            <x-subtitle>
                 Informações completas sobre o plano da empresa
             </x-subtitle>
         </x-heading>
@@ -35,9 +35,8 @@
                                 </div>
                             </div>
                             <div>
-                                <x-text class="text-base-content/70">Plano <span
-                                        class="text-info font-bold">#{{ $plan->id }}</span></x-text>
-                                <x-title class="text-2xl">{{ $plan->name }}</x-title>
+                                <x-text>Plano <span class="text-info font-bold">#{{ $plan->id }}</span></x-text>
+                                <x-title>{{ $plan->name }}</x-title>
 
                             </div>
                         </div>
@@ -74,8 +73,8 @@
                                     <p class="text-base-content ml-8">
                                         <span
                                             class="text-2xl font-bold text-success">{{ $plan->discount_percentage }}%</span>
-                                        <span class="text-sm text-base-content/70 ml-2">do valor total será pago pela
-                                            empresa</span>
+                                        <x-text class="ml-2">do valor total será pago pela
+                                            empresa</x-text>
                                     </p>
                                 </div>
 

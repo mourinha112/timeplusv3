@@ -7,7 +7,7 @@
             </a>
             <div>
                 <h1 class="text-3xl font-bold text-base-content">Detalhes do Pagamento</h1>
-                <p class="text-base-content/70 mt-1">Pagamento #{{ $payment->id }}</p>
+                <x-text class="mt-1">Pagamento #{{ $payment->id }}</x-text>
             </div>
         </div>
         <div

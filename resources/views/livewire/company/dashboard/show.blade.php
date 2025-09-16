@@ -4,7 +4,7 @@
             <x-carbon-enterprise class="w-8 text-info" />
             Dashboard - {{ $company->name }}
         </x-title>
-        <x-subtitle class="text-base-content/70">
+        <x-subtitle>
             Bem-vindo ao painel de controle da sua empresa
         </x-subtitle>
     </x-heading>
@@ -44,8 +44,9 @@
                 <x-action-link href="{{ route('company.profile.show') }}" icon="carbon-settings" title="Perfil Empresa"
                     description="Ajuste as configurações da empresa" icon-color="warning" />
 
-                <x-action-link href="#" icon="carbon-document" title="Relatórios"
-                    description="Visualize relatórios e estatísticas" icon-color="info" />
+                {{-- TODO: Montar funcionalidade de relatório --}}
+                {{-- <x-action-link href="#" icon="carbon-document" title="Relatórios"
+                    description="Visualize relatórios e estatísticas" icon-color="info" /> --}}
             </div>
         </x-card-body>
     </x-card>
