@@ -200,7 +200,9 @@ Route::group(['middleware' => ['auth:company']], function () {
     Route::get('company/employees/{employee}', App\Livewire\Company\Employee\Show::class)->name('company.employee.show');
 
     /* Payments */
-    // Route::get('company/payments', App\Livewire\Company\Payment\Index::class)->name('company.payment.index');
+    Route::get('company/payments', App\Livewire\Company\Payment\Index::class)->name('company.payment.index');
+    Route::get('company/payments/table', App\Livewire\Company\Payment\ShowTable::class)->name('company.payment.table');
+    Route::get('company/payments/{payment}', App\Livewire\Company\Payment\Show::class)->name('company.payment.show');
 
     /* Profile */
     Route::get('company/profile', App\Livewire\Company\Profile\Show::class)->name('company.profile.show');

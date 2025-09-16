@@ -2,30 +2,33 @@
 
 namespace App\Livewire\Company\Payment;
 
+use App\Models\{Appointment, Payment};
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('components.layouts.app', ['title' => 'Pagamentos', 'guard' => 'company'])]
+#[Layout('components.layouts.app', ['title' => 'Pagamentos dos Funcionários', 'guard' => 'company'])]
 class Index extends Component
 {
-    public $payments = [];
-
-    public $currentPlan;
-
-    public $nextPayment;
+    public $totalPayments;
+    public $totalDiscount;
 
     public function mount()
     {
-        // Dados temporariamente desabilitados para evitar erros
-        $this->currentPlan = null;
-        $this->nextPayment = null;
-        $this->payments    = collect([]);
+        $this->calculateSummary();
+    }
 
-        // TODO: Implementar integração com sistema de pagamentos quando estiver completo
-        // $company = Auth::guard('company')->user();
-        // $this->currentPlan = $company->companyPlans()->where('is_active', true)->with('plan')->first();
-        // Simular dados de pagamento conforme necessário
+    public function calculateSummary()
+    {
+        $company = Auth::guard('company')->user();
+
+        // Consulta simplificada para evitar erros de relacionamento
+        $payments = Payment::where('company_id', $company->id)
+            ->where('status', 'paid')
+            ->get();
+
+        $this->totalPayments = $payments->count();
+        $this->totalDiscount = $payments->sum('discount_value') ?: 0;
     }
 
     public function render()
