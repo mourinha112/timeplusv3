@@ -96,7 +96,7 @@ class User extends Authenticatable
 
     public function activeCompanyPlans()
     {
-        return CompanyUser::where('user_id', $this->id)
+        return \App\Models\CompanyUser::where('user_id', $this->id)
             ->where('is_active', true)
             ->whereNotNull('company_plan_id')
             ->whereHas('companyPlan', function ($query) {

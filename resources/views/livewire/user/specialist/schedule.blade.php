@@ -26,13 +26,8 @@
                     </div>
                 </button>
 
-                <!-- Horários disponíveis -->
-                @php
-                    $maxTimes = max(5, max(array_map('count', $this->availabilities))); // Mínimo de 5 linhas
-                    $currentTimesCount = count($times);
-                @endphp
-
-                <div class="mt-2 space-y-1 {{ $maxTimes > 8 ? 'h-64 overflow-y-auto' : 'min-h-fit' }}">
+                <div
+                    class="mt-2 space-y-1 {{ max(5, max(array_map('count', $this->availabilities))) > 8 ? 'h-64 overflow-y-auto' : 'min-h-fit' }}">
                     @if (count($times) > 0)
                         {{-- Horários disponíveis --}}
                         @foreach ($times as $time)
@@ -47,7 +42,7 @@
                         @endforeach
 
                         {{-- Preencher com campos vazios até atingir o máximo (mínimo 5) --}}
-                        @for ($i = $currentTimesCount; $i < $maxTimes; $i++)
+                        @for ($i = count($times); $i < max(5, max(array_map('count', $this->availabilities))); $i++)
                             <div class="btn btn-block font-normal text-sm bg-gray-100 text-gray-400 cursor-not-allowed opacity-50"
                                 disabled>
 
@@ -84,21 +79,27 @@
             @if ($selectedTime && $selectedDate)
                 <div class="space-y-1">
                     @if ($pricing_info['has_discount'])
-                        <div class="space-y-0">
-                            <p class="text-xs text-base-content/60 line-through">
+                        <div class="space-y-1">
+                            <p class="text-xs text-base-content/50 line-through">
                                 De: R$ {{ number_format($pricing_info['original_amount'], 2, ',', '.') }}
                             </p>
-                            <p class="text-sm font-semibold text-success">
+                            <p class="text-sm text-success font-semibold">
                                 Por: R$ {{ number_format($pricing_info['final_amount'], 2, ',', '.') }}
                             </p>
-                            <p class="text-xs text-info">
-                                Desconto de {{ $pricing_info['discount_percentage'] }}% -
-                                {{ $pricing_info['company_plan_name'] }}
+                            <div class="flex items-center gap-2">
+                                <span class="badge badge-success badge-sm">{{ $pricing_info['discount_percentage'] }}%
+                                    OFF</span>
+                                @if ($pricing_info['company_plan_name'])
+                                    <span class="text-xs text-success">{{ $pricing_info['company_plan_name'] }}</span>
+                                @endif
+                            </div>
+                            <p class="text-xs text-success">
+                                Economia: R$ {{ number_format($pricing_info['company_discount_amount'], 2, ',', '.') }}
                             </p>
                         </div>
                     @else
                         <p class="text-sm text-base-content font-semibold">
-                            R$ {{ number_format($pricing_info['final_amount'], 2, ',', '.') }}
+                            R$ {{ number_format($specialist->appointment_value, 2, ',', '.') }}
                         </p>
                     @endif
                     <p class="text-xs text-base-content/70">

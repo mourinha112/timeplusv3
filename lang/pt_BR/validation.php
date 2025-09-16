@@ -248,6 +248,11 @@ return [
         'description'           => 'descrição',
         'state_id'              => 'estado',
         'zip_code'              => 'cep',
+        'card_expiry_year'      => 'ano de expiração do cartão',
+        'card_expiry_month'     => 'mês de expiração do cartão',
+        'card_cvv'              => 'código de segurança do cartão',
+        'card_holder_name'      => 'nome do titular',
+        'card_number'           => 'número do cartão',
     ],
 
 ];

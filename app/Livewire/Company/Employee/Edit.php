@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Company\Employee;
 
+use App\Facades\Pagarme;
 use App\Models\{CompanyUser, User};
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{Auth, DB, Log};
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
@@ -37,8 +39,8 @@ class Edit extends Component
 
         // Verificar se o funcionário pertence à empresa
         $this->companyUser = CompanyUser::where('company_id', $this->company->id)
-          ->where('user_id', $employee)
-          ->firstOrFail();
+            ->where('user_id', $employee)
+            ->firstOrFail();
 
         $this->employee = User::findOrFail($employee);
 
@@ -54,22 +56,54 @@ class Edit extends Component
     {
         $this->validate();
 
-        // Atualizar dados do usuário
-        $this->employee->update([
-            'name'         => $this->name,
-            'cpf'          => $this->cpf,
-            'phone_number' => $this->phone_number,
-            'birth_date'   => $this->birth_date,
-        ]);
+        try {
+            DB::beginTransaction();
 
-        // Atualizar plano do funcionário
-        $this->companyUser->update([
-            'company_plan_id' => $this->company_plan_id,
-        ]);
+            // Atualizar dados do usuário
+            $this->employee->update([
+                'name'         => $this->name,
+                'cpf'          => $this->cpf,
+                'phone_number' => $this->phone_number,
+                'birth_date'   => $this->birth_date,
+            ]);
 
-        session()->flash('message', 'Funcionário atualizado com sucesso!');
+            // Verificar se o funcionário tem gateway_customer_id, se não, criar
+            if (!$this->employee->gateway_customer_id) {
+                $gateway = Pagarme::customer()->create([
+                    'code'         => $this->employee->id,
+                    'name'         => $this->employee->name,
+                    'email'        => $this->employee->email,
+                    'document'     => $this->employee->cpf,
+                    'mobile_phone' => $this->employee->phone_number,
+                ]);
 
-        return redirect()->route('company.employee.index');
+                $this->employee->update(['gateway_customer_id' => $gateway['id']]);
+            }
+
+            // Atualizar plano do funcionário
+            $this->companyUser->update([
+                'company_plan_id' => $this->company_plan_id,
+            ]);
+
+            DB::commit();
+
+            session()->flash('message', 'Funcionário atualizado com sucesso!');
+
+            return redirect()->route('company.employee.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Erro interno::' . get_class($this), [
+                'message'     => $e->getMessage(),
+                'employee_id' => $this->employee->id,
+                'company_id'  => $this->company->id,
+                'ip'          => request()->ip(),
+            ]);
+
+            LivewireAlert::title('Erro!')
+                ->text('Ocorreu um erro ao tentar atualizar o funcionário.')
+                ->error()
+                ->show();
+        }
     }
     public function render()
     {

@@ -32,24 +32,36 @@ class Schedule extends Component
 
     public function mount()
     {
-        $this->calculatePricing();
+        $this->calculatePricingForDisplay();
     }
 
-    public function calculatePricing()
+    public function calculatePricingForDisplay()
     {
         $user           = Auth::user();
         $originalAmount = $this->specialist->appointment_value;
 
-        $calculatedPayment = $user->calculatePaymentAmount($originalAmount);
+        try {
+            $calculatedPayment = $user->calculatePaymentAmount($originalAmount);
 
-        $this->pricing_info = [
-            'original_amount'         => $originalAmount,
-            'final_amount'            => $calculatedPayment['employee_amount'],
-            'has_discount'            => $calculatedPayment['has_company_discount'],
-            'discount_percentage'     => $calculatedPayment['discount_percentage'],
-            'company_discount_amount' => $calculatedPayment['company_amount'],
-            'company_plan_name'       => $calculatedPayment['plan_name'] ?? null,
-        ];
+            $this->pricing_info = [
+                'original_amount'         => $originalAmount,
+                'final_amount'            => $calculatedPayment['employee_amount'],
+                'has_discount'            => $calculatedPayment['has_company_discount'],
+                'discount_percentage'     => $calculatedPayment['discount_percentage'],
+                'company_discount_amount' => $calculatedPayment['company_amount'],
+                'company_plan_name'       => $calculatedPayment['plan_name'] ?? null,
+            ];
+        } catch (\Exception $e) {
+            // Se houver erro no cálculo, usar valores padrão
+            $this->pricing_info = [
+                'original_amount'         => $originalAmount,
+                'final_amount'            => $originalAmount,
+                'has_discount'            => false,
+                'discount_percentage'     => 0,
+                'company_discount_amount' => 0,
+                'company_plan_name'       => null,
+            ];
+        }
     }
 
     #[Computed]
@@ -153,7 +165,7 @@ class Schedule extends Component
             $appointment = Appointment::create([
                 'user_id'          => Auth::user()->id,
                 'specialist_id'    => $this->specialist->id,
-                'total_value'      => $this->pricing_info['final_amount'],
+                'total_value'      => $this->specialist->appointment_value,
                 'appointment_date' => $this->selectedDate,
                 'appointment_time' => $this->selectedTime,
                 'status'           => 'scheduled',

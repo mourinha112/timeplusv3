@@ -26,22 +26,22 @@ class Payment extends Model
         'refund_reason',
         'company_id',
         'original_amount',
-        'company_discount_amount',
+        'discount_value',
         'discount_percentage',
         'company_plan_name',
     ];
 
     protected $casts = [
-        'metadata'                => 'array',
-        'gateway_payload'         => 'array',
-        'paid_at'                 => 'datetime',
-        'expires_at'              => 'datetime',
-        'refunded_at'             => 'datetime',
-        'amount'                  => 'decimal:2',
-        'refunded_amount'         => 'decimal:2',
-        'original_amount'         => 'decimal:2',
-        'company_discount_amount' => 'decimal:2',
-        'discount_percentage'     => 'decimal:2',
+        'metadata'            => 'array',
+        'gateway_payload'     => 'array',
+        'paid_at'             => 'datetime',
+        'expires_at'          => 'datetime',
+        'refunded_at'         => 'datetime',
+        'amount'              => 'decimal:2',
+        'refunded_amount'     => 'decimal:2',
+        'original_amount'     => 'decimal:2',
+        'discount_value'      => 'decimal:2',
+        'discount_percentage' => 'decimal:2',
     ];
 
     public function payable()
@@ -56,7 +56,7 @@ class Payment extends Model
 
     public function hasCompanyDiscount(): bool
     {
-        return $this->company_id !== null && $this->company_discount_amount > 0;
+        return $this->company_id !== null && $this->discount_value > 0;
     }
 
     public function getDiscountInfo(): array
@@ -75,7 +75,7 @@ class Payment extends Model
             'has_discount'        => true,
             'original_amount'     => $this->original_amount,
             'employee_paid'       => $this->amount,
-            'company_paid'        => $this->company_discount_amount,
+            'company_paid'        => $this->discount_value,
             'discount_percentage' => $this->discount_percentage,
             'company_name'        => $this->company->name ?? 'N/A',
             'plan_name'           => $this->company_plan_name,
