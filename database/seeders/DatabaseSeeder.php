@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             StateSeeder::class,
             PlanSeeder::class,
             MasterSeeder::class,
-            CompanySeeder::class,
+            // CompanySeeder::class,
         ]);
     }
 }
