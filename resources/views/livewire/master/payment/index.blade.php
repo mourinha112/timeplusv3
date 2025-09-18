@@ -7,7 +7,7 @@
             </h1>
         </x-heading>
 
-        <livewire:master.payment.showtable />
+        <livewire:master.payment.show-table />
     </div>
 
 </div>
