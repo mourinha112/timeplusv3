@@ -11,6 +11,9 @@
     <!-- Alpine Plugins -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
 
+    {{-- Favicon --}}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon-v1.ico') }}">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,8 +47,8 @@
             {{-- Modal::Termos e Condições --}}
             <dialog id="terms_contract_modal" class="modal">
                 <div class="modal-box w-11/12 max-w-5xl">
-                    <h3 class="text-lg font-bold text-black">Termos e Condições</h3>
-                    <p class="py-4">
+                    <h3 class="text-lg font-bold text-base-content">Termos e Condições</h3>
+                    <p class="py-4 text-base-content">
                         Termos e Condições serão adicionados em breve. Por enquanto, você pode utilizar o sistema normalmente, mas recomendamos que leia os termos assim que estiverem disponíveis.
                     </p>
                 </div>
@@ -57,8 +60,8 @@
             {{-- Modal::Politica de Privacidade --}}
             <dialog id="privacy_policy_modal" class="modal">
                 <div class="modal-box w-11/12 max-w-5xl">
-                    <h3 class="text-lg font-bold text-black">Políticas de Privacidade</h3>
-                    <p class="py-4">
+                    <h3 class="text-lg font-bold text-base-content">Políticas de Privacidade</h3>
+                    <p class="py-4 text-base-content">
                         Políticas de Privacidade serão adicionadas em breve. Por enquanto, você pode utilizar o sistema normalmente, mas recomendamos que leia os termos assim que estiverem disponíveis.
                     </p>
                 </div>

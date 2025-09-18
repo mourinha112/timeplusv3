@@ -17,16 +17,16 @@ Route::get('/', Welcome::class)->name('welcome');
  */
 Route::group(['middleware' => 'guest:user'], function () {
     /* Login */
-    Route::get('login', User\Auth\Login::class)->name('user.auth.login');
+    Route::get('entrar', User\Auth\Login::class)->name('user.auth.login');
 
     /* Register */
-    Route::get('register', User\Auth\Register::class)->name('user.auth.register');
+    Route::get('registrar', User\Auth\Register::class)->name('user.auth.register');
 
     /* Password Recovery */
-    Route::get('password-recovery', User\Auth\PasswordRecovery::class)->name('user.auth.password-recovery');
+    Route::get('recuperar-senha', User\Auth\PasswordRecovery::class)->name('user.auth.password-recovery');
 
     /* Password Reset */
-    Route::get('password-reset/{token}', User\Auth\PasswordReset::class)->name('user.auth.password.reset');
+    Route::get('redefinir-senha/{token}', User\Auth\PasswordReset::class)->name('user.auth.password.reset');
 });
 
 // Master routes are declared below in the Master section

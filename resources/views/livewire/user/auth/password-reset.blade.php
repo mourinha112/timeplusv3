@@ -29,7 +29,7 @@
             <div class="mt-5">
                 <x-text>
                     Lembra da sua senha?
-                    <x-link href="{{ route('user.auth.login') }}">Voltar para o login</x-link>.
+                    <x-link href="{{ route('user.auth.login') }}" wire:navigate>Voltar para o login</x-link>.
                 </x-text>
             </div>
         </x-card-body>

@@ -15,7 +15,7 @@ class Login extends Component
     #[Rule(['required', 'email', 'max:255'])]
     public ?string $email = null;
 
-    #[Rule(['required', 'max:255'])]
+    #[Rule(['required', 'min:8', 'max:255'])]
     public ?string $password = null;
 
     public function submit(): void
@@ -26,8 +26,8 @@ class Login extends Component
             if (RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
                 // $this->addError('rateLimiter', trans('auth.throttle'));
 
-                LivewireAlert::title('Limite de tentativas excedido')
-                    ->text('Você excedeu o número de tentativas de login.')
+                LivewireAlert::title('Limite de tentativas excedido!')
+                    ->text('Você excedeu o número de tentativas de iniciar a sessão.')
                     ->error()
                     ->show();
 
@@ -41,8 +41,8 @@ class Login extends Component
 
                 // $this->addError('invalidCredentials', trans('auth.failed'));
 
-                LivewireAlert::title('Credenciais inválidas')
-                    ->text('As credenciais fornecidas estão incorretas')
+                LivewireAlert::title('Credenciais inválidas!')
+                    ->text('As credenciais fornecidas estão incorretas.')
                     ->error()
                     ->show();
 
@@ -60,7 +60,7 @@ class Login extends Component
             ]);
 
             LivewireAlert::title('Erro!')
-                ->text('Ocorreu um erro ao tentar fazer login.')
+                ->text('Ocorreu um erro ao tentar iniciar a sessão.')
                 ->error()
                 ->show();
         }
