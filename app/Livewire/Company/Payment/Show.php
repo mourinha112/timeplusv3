@@ -10,22 +10,22 @@ use Livewire\Component;
 #[Layout('components.layouts.app', ['title' => 'Detalhes do Pagamento', 'guard' => 'company'])]
 class Show extends Component
 {
-  public Payment $payment;
+    public Payment $payment;
 
-  public function mount(Payment $payment)
-  {
-    $company = Auth::guard('company')->user();
+    public function mount(Payment $payment)
+    {
+        $company = Auth::guard('company')->user();
 
-    // Verificar se o pagamento pertence a esta empresa
-    if ($payment->company_id !== $company->id) {
-      abort(403, 'Acesso negado a este pagamento.');
+        // Verificar se o pagamento pertence a esta empresa
+        if ($payment->company_id !== $company->id) {
+            abort(403, 'Acesso negado a este pagamento.');
+        }
+
+        $this->payment = $payment->load(['payable.user', 'payable.specialist']);
     }
 
-    $this->payment = $payment->load(['payable.user', 'payable.specialist']);
-  }
-
-  public function render()
-  {
-    return view('livewire.company.payment.show');
-  }
+    public function render()
+    {
+        return view('livewire.company.payment.show');
+    }
 }

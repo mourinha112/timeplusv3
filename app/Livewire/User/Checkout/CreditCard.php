@@ -39,6 +39,7 @@ class CreditCard extends Component
 
         try {
             $paymentCalculation = $user->calculatePaymentAmount($this->payable->total_value);
+
             return $paymentCalculation['employee_amount'];
         } catch (\Exception $e) {
             return $this->payable->total_value;
@@ -51,6 +52,7 @@ class CreditCard extends Component
 
         try {
             $paymentCalculation = $user->calculatePaymentAmount($this->payable->total_value);
+
             return $paymentCalculation['has_company_discount'];
         } catch (\Exception $e) {
             return false;
@@ -104,14 +106,16 @@ class CreditCard extends Component
             // Validar valor final
             if ($finalAmount <= 0) {
                 DB::rollBack();
+
                 return $this->addError('payment', 'Valor de pagamento inválido.');
             }
 
             // Buscar company_id se há desconto
             $companyId = null;
+
             if ($paymentCalculation['has_company_discount']) {
                 $activeCompanyPlan = $user->getActiveCompanyPlan();
-                $companyId = $activeCompanyPlan ? $activeCompanyPlan->company_id : null;
+                $companyId         = $activeCompanyPlan ? $activeCompanyPlan->company_id : null;
             }
 
             // Limpar e formatar os dados do cartão

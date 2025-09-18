@@ -9,9 +9,6 @@ use Livewire\Component;
 #[Layout('components.layouts.app', ['title' => 'Agendamentos', 'guard' => 'user'])]
 class Index extends Component
 {
-
-
-
     #[Computed]
     public function appointments()
     {
@@ -39,6 +36,7 @@ class Index extends Component
         try {
             // Se o usuário tem plano de empresa, calcular desconto para exibição
             $paymentCalculation = $user->calculatePaymentAmount($appointment->total_value);
+
             return $paymentCalculation['employee_amount'];
         } catch (\Exception $e) {
             // Se houver erro no cálculo, retornar valor original
@@ -52,6 +50,7 @@ class Index extends Component
 
         try {
             $paymentCalculation = $user->calculatePaymentAmount($appointment->total_value);
+
             return $paymentCalculation['has_company_discount'];
         } catch (\Exception $e) {
             return false;

@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Company\Payment;
 
-use App\Models\{Appointment, Payment};
+use App\Models\{Payment};
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -11,6 +11,7 @@ use Livewire\Component;
 class Index extends Component
 {
     public $totalPayments;
+
     public $totalDiscount;
 
     public function mount()
