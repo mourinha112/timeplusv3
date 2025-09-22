@@ -28,6 +28,7 @@ class Payment extends Model
         'original_amount',
         'discount_value',
         'discount_percentage',
+        'discount',
         'company_plan_name',
     ];
 
@@ -42,6 +43,7 @@ class Payment extends Model
         'original_amount'     => 'decimal:2',
         'discount_value'      => 'decimal:2',
         'discount_percentage' => 'decimal:2',
+        'discount'            => 'decimal:2',
     ];
 
     public function payable()

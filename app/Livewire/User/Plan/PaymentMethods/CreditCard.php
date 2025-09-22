@@ -36,6 +36,13 @@ class CreditCard extends Component
     {
         $this->validate();
 
+        $amountToCharge     = $this->plan->price_with_discount;
+        $originalAmount     = round((float) $this->plan->price, 2);
+        $discountAmount     = max(round($this->plan->discount_amount, 2), 0.0);
+        $discountPercentage = $this->plan->hasDiscount()
+            ? round((float) $this->plan->discount_percentage, 2)
+            : 0.0;
+
         try {
             DB::beginTransaction();
 
@@ -46,7 +53,7 @@ class CreditCard extends Component
                 'exp_month'   => $this->card_expiry_month,
                 'exp_year'    => $this->card_expiry_year,
                 'cvv'         => $this->card_cvv,
-                'amount'      => $this->plan->price,
+                'amount'      => $amountToCharge,
                 'description' => 'Assinatura do plano ' . $this->plan->name,
                 'item_code'   => $this->plan->id,
                 'customer_id' => Auth::user()->gateway_customer_id,
@@ -54,6 +61,7 @@ class CreditCard extends Component
 
             /* Verifica se o pagamento foi realizado com sucesso */
             if ($paymentGateway['status'] !== 'paid') {
+                DB::rollBack();
                 LivewireAlert::title('Erro!')->text('Não foi possível realizar o pagamento.')->error()->show();
 
                 return;
@@ -67,18 +75,34 @@ class CreditCard extends Component
             ]);
 
             /* Criação do pagamento no banco de dados */
+            $chargedAmount = round($amountToCharge, 2);
+
+            if (isset($paymentGateway['amount']) && is_numeric($paymentGateway['amount'])) {
+                $rawAmount = (float) $paymentGateway['amount'];
+
+                if (abs($rawAmount - (int) $rawAmount) < 0.001 && $rawAmount >= 100) {
+                    $chargedAmount = round($rawAmount / 100, 2);
+                } else {
+                    $chargedAmount = round($rawAmount, 2);
+                }
+            }
+
             $subscribe->payments()->create([
                 'gateway_order_id'  => $paymentGateway['id'],
                 'gateway_charge_id' => $paymentGateway['charges'][0]['id'],
-                'amount'            => $paymentGateway['amount'] / 100,
+                'amount'            => $chargedAmount,
                 'payment_method'    => $paymentGateway['charges'][0]['payment_method'],
                 'status'            => $paymentGateway['status'],
                 'currency'          => $paymentGateway['currency'],
                 'description'       => $paymentGateway['items'][0]['description'] ?? null,
                 'paid_at'           => $paymentGateway['charges'][0]['paid_at'] ?? null,
+                'original_amount'   => $originalAmount,
+                'discount_value'    => $discountAmount,
+                'discount_percentage' => $discountPercentage,
+                'discount'          => $discountAmount,
             ]);
 
-            // DB::commit();
+            DB::commit();
 
             LivewireAlert::title('Sucesso!')->text('Assinatura realizada com sucesso!')->success()->show();
 

@@ -118,14 +118,20 @@
                 <div class="flex justify-between">
                     <span class="badge badge-xs badge-info">Plano finaliza em
                         {{ \Carbon\Carbon::parse($subscribe->end_date)->format('d/m/Y') }}</span>
+                    @php
+                        $latestPayment = $subscribe->payments->first();
+                        $displayAmount =
+                            $latestPayment?->amount ??
+                            ($subscribe->plan?->price_with_discount ?? ($subscribe->plan?->price ?? 0));
+                    @endphp
                     <span class="text-xl">
                         <x-text>R$</x-text>
-                        {{ number_format($subscribe->plan->price, 2, ',', '.') }}</span>
+                        {{ number_format($displayAmount, 2, ',', '.') }}</span>
                 </div>
                 <div class="flex justify-between">
                     <h2 class="text-3xl font-bold">{{ $subscribe->plan->name }}</h2>
                     @if (!$subscribe->cancelled_date && $subscribe->end_date > now())
-                        <button class="btn btn-xs btn-error" wire:click="cancel({{ $subscribe->id }})">
+                        <button class="btn btn-soft btn-xs btn-error" wire:click="cancel({{ $subscribe->id }})">
                             <x-carbon-close class="w-4 h-4" />
                             Cancelar
                         </button>

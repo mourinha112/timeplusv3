@@ -31,7 +31,7 @@ class Pix extends Component
 
             /* Criação do pagamento no gateway */
             $paymentGateway = Pagarme::payment()->createWithPix([
-                'amount'      => $this->plan->price,
+                'amount'      => $this->plan->price_with_discount,
                 'description' => 'Assinatura do plano ' . $this->plan->name,
                 'item_code'   => $this->plan->id,
                 'customer_id' => Auth::user()->gateway_customer_id,

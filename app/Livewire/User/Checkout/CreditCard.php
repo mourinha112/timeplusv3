@@ -180,6 +180,7 @@ class CreditCard extends Component
                     'discount_value'      => $discountValue,
                     'discount_percentage' => $discountPercentage,
                     'company_plan_name'   => $companyPlanName,
+                    'discount'            => $discountValue,
                 ]
             );
 

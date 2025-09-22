@@ -65,12 +65,31 @@
                         </x-badge>
                     @endif
 
-                    <div class="flex justify-between">
+                    <div class="flex justify-between items-start">
                         <h2 class="text-3xl font-bold">{{ $plan->name }}</h2>
 
-                        <span class="text-xl"><x-text>R$</x-text>
-                            {{ number_format($plan->price, 2, ',', '.') }}
-                        </span>
+                        <div class="text-right">
+                            @if ($plan->hasDiscount())
+                                <x-badge class="badge-success badge-sm">
+                                    -{{ $plan->discount_percentage_formatted }}%
+                                </x-badge>
+                                <span class="block text-xs text-base-content/50 line-through">
+                                    <x-text>R$</x-text>
+                                    {{ number_format($plan->price, 2, ',', '.') }}
+                                </span>
+                                <div class="flex items-center justify-end gap-2">
+                                    <span class="text-xl font-bold text-success">
+                                        <x-text>R$</x-text>
+                                        {{ number_format($plan->price_with_discount, 2, ',', '.') }}
+                                    </span>
+
+                                </div>
+                            @else
+                                <span class="text-xl"><x-text>R$</x-text>
+                                    {{ number_format($plan->price, 2, ',', '.') }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
 
                     <ul class="mt-6 flex flex-col gap-6 text-xs">

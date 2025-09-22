@@ -22,7 +22,18 @@ class Show extends Component
         $user = User::find(Auth::id());
 
         // Verificar se tem assinatura individual ativa
-        $this->subscribe = $user->subscribes()->where('end_date', '>', now())->first();
+        $this->subscribe = $user->subscribes()
+            ->with([
+                'plan',
+                'payments' => function ($query) {
+                    $query->where('status', 'paid')
+                        ->orderByDesc('paid_at')
+                        ->orderByDesc('id');
+                },
+            ])
+            ->where('end_date', '>', now())
+            ->orderByDesc('end_date')
+            ->first();
 
         // Verificar se está vinculado a uma empresa (ativo ou inativo)
         $companyPlan = CompanyUser::where('user_id', $user->id)

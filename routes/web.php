@@ -191,7 +191,7 @@ Route::group(['middleware' => ['auth:company']], function () {
 
     /* Plans */
     Route::get('company/plans', App\Livewire\Company\Plan\Index::class)->name('company.plan.index');
-    Route::get('company/plans/table', App\Livewire\Company\Plan\ShowTable::class)->name('company.plan.table');
+    // Route::get('company/plans/table', App\Livewire\Company\Plan\ShowTable::class)->name('company.plan.table');
     Route::get('company/plans/create', App\Livewire\Company\Plan\Create::class)->name('company.plan.create');
     Route::get('company/plans/{plan}/edit', App\Livewire\Company\Plan\Edit::class)->name('company.plan.edit');
     Route::get('company/plans/{plan}', App\Livewire\Company\Plan\Show::class)->name('company.plan.show');
