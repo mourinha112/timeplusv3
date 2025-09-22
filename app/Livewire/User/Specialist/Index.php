@@ -12,7 +12,7 @@ class Index extends Component
     #[Computed()]
     public function specialists()
     {
-        return Specialist::all();
+        return Specialist::with(['specialty', 'reasons'])->orderBy('name')->get();
     }
 
     public function render()

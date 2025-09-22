@@ -12,4 +12,9 @@ class Plan extends Model
         'duration_days',
         'discount_percentage',
     ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+        'discount_percentage' => 'decimal:2',
+    ];
 }

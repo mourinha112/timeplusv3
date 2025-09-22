@@ -2,7 +2,7 @@
     <div class="space-y-6">
         <x-heading>
             <h1 class="text-xl font-bold text-base-content flex items-center
-             gap-1">
+             gap-3">
                 <x-carbon-user class="w-8 text-info" />
 
                 Usuários

@@ -24,12 +24,18 @@
             <!-- Header Info -->
             <div class="space-y-1">
                 <h3 class="text-xl font-extrabold text-base-content">{{ $specialist->name }}</h3>
-                <p class="text-xs text-base-content/80">{{ $specialist->specialty->name }}</p>
-                <p class="text-xs text-base-content/50">{{ now()->year - $specialist->year_started_acting }} anos de
-                    experiência</p>
-                <p class="text-xs text-base-content/50">CRM: {{ $specialist->crp }}</p>
+                <p class="text-xs text-base-content/80">
+                    {{ $specialist->specialty?->name ?? 'Especialidade não informada' }}</p>
+                <p class="text-xs text-base-content/50">
+                    @if ($specialist->year_started_acting)
+                        {{ now()->year - $specialist->year_started_acting }} anos de experiência
+                    @else
+                        Experiência não informada
+                    @endif
+                </p>
+                <p class="text-xs text-base-content/50">CRM/CRP: {{ $specialist->crp ?? 'Não informado' }}</p>
 
-                <a href="#" class="btn btn-sm btn-dash mt-2">
+                <a href="{{ route('user.specialist.show', $specialist) }}" class="btn btn-sm btn-dash mt-2">
                     Mais sobre
                     <x-carbon-add-filled class="w-5" />
                 </a>
@@ -48,7 +54,8 @@
 
     <!-- Descrição -->
     <div class="mb-6">
-        <p class="text-xs text-base-content/70">
+        <p class="text-xs text-base-content/70 break-words break-all"
+            style="word-break: break-word; overflow-wrap: anywhere;">
             {{ $specialist->description }}
         </p>
     </div>

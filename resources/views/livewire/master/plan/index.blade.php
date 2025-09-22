@@ -2,12 +2,11 @@
     <div class="space-y-6">
         <x-heading>
             <h1 class="text-xl font-bold text-base-content flex items-center gap-3">
-                <x-carbon-money class="w-8 text-info" />
-                Pagamentos
+                <x-carbon-plan class="w-8 text-info" />
+                Planos
             </h1>
         </x-heading>
 
-        <livewire:master.payment.show-table />
+        <livewire:master.plan.show-table />
     </div>
-
 </div>

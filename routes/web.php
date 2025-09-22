@@ -51,6 +51,7 @@ Route::group(['middleware' => 'auth:user'], function () {
 
     /* Specialists */
     Route::get('specialists', User\Specialist\Index::class)->name('user.specialist.index');
+    Route::get('specialists/{specialist}', User\Specialist\Show::class)->name('user.specialist.show');
 
     /* Appointments */
     Route::get('appointments', User\Appointment\Index::class)->name('user.appointment.index');
@@ -153,6 +154,7 @@ Route::group(['middleware' => ['auth:master']], function () {
     Route::get('master/companies', Master\Company\Index::class)->name('master.company.index');
     Route::get('master/appointments', Master\Appointment\Index::class)->name('master.appointment.index');
     Route::get('master/payments', Master\Payment\Index::class)->name('master.payment.index');
+    Route::get('master/plans', Master\Plan\Index::class)->name('master.plan.index');
 
     /* CRUD Companies */
     Route::get('master/companies/create', Master\Company\Create::class)->name('master.company.create');
@@ -164,6 +166,8 @@ Route::group(['middleware' => ['auth:master']], function () {
     Route::get('master/companies/{company}', Master\Company\Show::class)->name('master.company.show');
     Route::get('master/appointments/{appointment}', Master\Appointment\Show::class)->name('master.appointment.show');
     Route::get('master/payments/{payment}', Master\Payment\Show::class)->name('master.payment.show');
+    Route::get('master/plans/{plan}', Master\Plan\Show::class)->name('master.plan.show');
+    Route::get('master/plans/{plan}/edit', Master\Plan\Edit::class)->name('master.plan.edit');
 });
 
 /* ----------------- */
