@@ -1,4 +1,4 @@
-<div class="container mx-auto">
+<div>
     <div class="space-y-6">
         <x-heading>
             <h1 class="text-3xl font-bold text-base-content flex items-center gap-3">
@@ -77,7 +77,7 @@
                                     <div>
                                         <x-text>ID:</x-text>
                                         @if ($payment->payable_type === \App\Models\Appointment::class)
-                                            <a class="link link-info"
+                                            <a wire:navigate class="link link-info"
                                                 href="{{ route('master.appointment.show', ['appointment' => $payment->payable_id]) }}">#{{ $payment->payable_id }}</a>
                                         @else
                                             #{{ $payment->payable_id }}
@@ -124,7 +124,8 @@
                     </div>
 
                     <div class="flex flex-col gap-3 w-full md:w-56">
-                        <a href="{{ route('master.payment.index') }}" class="btn btn-soft btn-sm btn-info">
+                        <a wire:navigate href="{{ route('master.payment.index') }}"
+                            class="btn btn-soft btn-sm btn-info">
                             <x-carbon-arrow-left class="w-5 h-5" />
                             Voltar para a Lista
                         </a>

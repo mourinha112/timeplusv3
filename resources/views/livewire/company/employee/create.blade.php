@@ -1,4 +1,4 @@
-<div class="container mx-auto">
+<div>
     <x-heading>
         <x-title class="flex items-center gap-3">
             <x-carbon-user class="w-8 text-info" />
@@ -45,7 +45,7 @@
                 </div>
 
                 <div class="flex justify-end gap-3 mt-6">
-                    <a href="{{ route('company.employee.index') }}" class="btn btn-soft btn-error">
+                    <a wire:navigate href="{{ route('company.employee.index') }}" class="btn btn-soft btn-error">
                         <x-carbon-arrow-left class="w-4 h-4" />
                         Cancelar
                     </a>

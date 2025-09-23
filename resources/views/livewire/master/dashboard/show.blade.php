@@ -1,53 +1,24 @@
-<div class="space-y-4">
+<div>
     <x-heading>
-        <x-title>Dashboard</x-title>
+        <x-title>Painel</x-title>
         <x-subtitle>Consulte relatórios e estatísticas.</x-subtitle>
     </x-heading>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 bg-base-100 border-base-300 border">
-        <div class="stat">
-            <div class="stat-title flex justify-between">
-                Clientes
-                <a href="{{ route('master.user.index') }}" class="badge badge-xs badge-ghost">Visualizar</a>
-            </div>
-            <div class="stat-value">{{ $this->users }}</div>
-        </div>
 
-        <div class="stat">
-            <div class="stat-title flex justify-between">
-                Especialistas
-                <a href="{{ route('master.specialist.index') }}" class="badge badge-xs badge-ghost">Visualizar</a>
-            </div>
-            <div class="stat-value">{{ $this->specialists }}</div>
-        </div>
+        <x-stat title="Usuários" :value="$this->users" :route="route('master.user.index')" />
 
-        <div class="stat">
-            <div class="stat-title flex justify-between">
-                Empresas
-                <a href="{{ route('master.company.index') }}" class="badge badge-xs badge-ghost">Visualizar</a>
-            </div>
-            <div class="stat-value">{{ $this->companies }}</div>
-        </div>
+        <x-stat title="Especialistas" :value="$this->specialists" :route="route('master.specialist.index')" />
 
-        <div class="stat">
-            <div class="stat-title flex justify-between">
-                Agendamentos
-                <a href="{{ route('master.appointment.index') }}" class="badge badge-xs badge-ghost">Visualizar</a>
-            </div>
-            <div class="stat-value">{{ $this->appointments }}</div>
-        </div>
+        <x-stat title="Empresas" :value="$this->companies" :route="route('master.company.index')" />
 
-        <div class="stat">
-            <div class="stat-title flex justify-between">
-                Pagamentos
-                <a href="{{ route('master.payment.index') }}" class="badge badge-xs badge-ghost">Visualizar</a>
-            </div>
-            <div class="stat-value">R$ {{ number_format($this->payments['total'], 2, ',', '.') }}</div>
-            <div class="stat-desc">{{ $this->payments['count'] }} pagamentos aprovados</div>
-        </div>
+        <x-stat title="Agendamentos" :value="$this->appointments" :route="route('master.appointment.index')" />
+
+        <x-stat title="Pagamentos" value="R$ {{ number_format($this->payments['total'], 2, ',', '.') }}" :route="route('master.payment.index')"
+            description="{{ $this->payments['count'] }} pagamentos aprovados" />
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
 
         <div class="bg-base-100 border-base-300 border p-6 rounded-lg">
             <div class="mb-4">

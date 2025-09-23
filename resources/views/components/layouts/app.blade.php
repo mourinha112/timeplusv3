@@ -12,6 +12,9 @@
     <!-- Alpine Plugins -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
 
+    {{-- Favicon --}}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon-v1.ico') }}">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,6 +38,8 @@
                 </div>
             </div>
         </main>
+
+        <x-footer />
 
     </div>
 </body>

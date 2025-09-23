@@ -43,7 +43,7 @@
             <div class="mt-5">
                 <x-text>
                     Já é cadastrado?
-                    <x-link href="{{ route('specialist.auth.login') }}">Entrar</x-link>.
+                    <x-link wire:navigate href="{{ route('specialist.auth.login') }}">Entrar</x-link>.
                 </x-text>
             </div>
         </x-card-body>

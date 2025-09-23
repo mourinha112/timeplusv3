@@ -1,4 +1,4 @@
-<div class="container mx-auto">
+<div>
     <div class="space-y-6">
         <x-heading>
             <x-title class="flex items-start gap-3">
@@ -101,7 +101,7 @@
                     </x-form-group>
 
                     <div class="flex justify-end gap-3">
-                        <a href="{{ route('master.company.index', ['company' => $company->id]) }}"
+                        <a wire:navigate href="{{ route('master.company.index', ['company' => $company->id]) }}"
                             class="btn btn-soft btn-error">
                             <x-carbon-arrow-left class="w-4 h-4" />
                             Cancelar

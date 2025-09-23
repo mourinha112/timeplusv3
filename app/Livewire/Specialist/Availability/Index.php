@@ -89,7 +89,6 @@ class Index extends Component
                 ->where('specialist_id', Auth::guard('specialist')->id())
                 ->first();
 
-            /* Caso exista um agendamento para este horário, não permitir a remoção */
             if ($appointment) {
                 LivewireAlert::title('Agendamento já existe!')
                     ->text('Não é possível remover a disponibilidade, pois já existe um agendamento para este horário.')
@@ -101,7 +100,7 @@ class Index extends Component
 
             $availability->delete();
         } else {
-            /* Cria uma nova disponibilidade */
+
             Availability::create([
                 'available_date' => $date,
                 'available_time' => $time . ':00',

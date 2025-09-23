@@ -1,15 +1,15 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@import '../../vendor/power-components/livewire-powergrid/resources/css/tailwind4.css';
+@import "../../vendor/power-components/livewire-powergrid/resources/css/tailwind4.css";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
- @plugin "daisyui" {
-   themes: light --default, dark --prefersdark;
- }
+@plugin "daisyui" {
+    themes: light --default, dark --prefersdark;
+}
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -24,18 +24,30 @@
 } */
 
 @theme {
-    --font-sans: "Montserrat", monospace, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: "Montserrat", monospace, ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
 }
 
 /* @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/forms"; */
 
 @utility card {
-  @apply bg-base-100 shadow-md;
+    @apply bg-base-100 shadow-md;
 }
 
 @utility input {
-  @apply w-full;
+    @apply w-full;
 }
 
+/* Chart.js responsive styles */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+.chart-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+}

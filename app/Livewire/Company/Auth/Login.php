@@ -43,7 +43,7 @@ class Login extends Component
                 // $this->addError('invalidCredentials', trans('auth.failed'));
 
                 LivewireAlert::title('Credenciais inválidas')
-                  ->text('As credenciais fornecidas estão incorretas')
+                  ->text('As credenciais fornecidas estão incorretas.')
                   ->error()
                   ->show();
 

@@ -1,8 +1,8 @@
 <div>
-    <div class="space-y-3 mb-8">
+    <x-heading>
         <x-title>Disponibilidades</x-title>
         <x-subtitle>Visualize e gerencie suas disponibilidades.</x-subtitle>
-    </div>
+    </x-heading>
 
     <div class="flex items-center justify-between mb-3">
         <button wire:click="previousWeek" class="btn btn-info btn-outline sm:btn-sm btn-xs">

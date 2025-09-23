@@ -10,10 +10,10 @@
                 <div class="navbar-start sm:hidden">
                     <div class="dropdown">
                         <div tabindex="0" role="button" class="btn btn-ghost">
-                            <x-carbon-menu class="w-7 h-7 text-slate-900" />
+                            <x-carbon-menu class="w-7 h-7 text-slate-500" />
                         </div>
                         <ul tabindex="0"
-                            class="menu menu-sm dropdown-content bg-white rounded-box z-1 mt-3 w-52 p-2 shadow">
+                            class="menu menu-sm dropdown-content bg-base-100 text-base-content rounded-box z-1 mt-3 w-52 p-2 shadow border border-base-300">
                             <li>
                                 <a href="{{ route('user.dashboard.show') }}"
                                     class="{{ !Route::is('user.dashboard.show') ?: 'border bg-base-200 font-semibold' }}">
@@ -71,7 +71,7 @@
                         <div class="flex items-center gap-3">
                             <div class="flex flex-col items-end">
                                 <span class="text-sm">{{ Auth::guard('user')->user()->name }}</span>
-                                <span class="text-xs text-gray-500">Cliente
+                                <span class="text-xs text-base-content/60">Cliente
                                     #{{ Auth::guard('user')->user()->id }}</span>
                             </div>
 
@@ -88,7 +88,7 @@
                             </div>
                         </div>
                         <ul tabindex="0"
-                            class="menu menu-sm dropdown-content bg-white rounded-box z-1 mt-3 w-52 p-2 shadow">
+                            class="menu menu-sm dropdown-content bg-base-100 text-base-content rounded-box z-1 mt-3 w-52 p-2 shadow border border-base-300">
                             <li>
                                 <a href="{{ route('user.profile.update') }}"
                                     class="profile-dropdown-item justify-between flex items-center gap-3">
@@ -121,10 +121,10 @@
                 <div class="navbar-start sm:hidden">
                     <div class="dropdown">
                         <div tabindex="0" role="button" class="btn btn-ghost">
-                            <x-carbon-menu class="w-7 h-7 text-slate-900" />
+                            <x-carbon-menu class="w-7 h-7 text-slate-500" />
                         </div>
                         <ul tabindex="0"
-                            class="menu menu-sm dropdown-content bg-white rounded-box z-1 mt-3 w-52 p-2 shadow">
+                            class="menu menu-sm dropdown-content bg-base-100 text-base-content rounded-box z-1 mt-3 w-52 p-2 shadow border border-base-300">
                             <li>
                                 <a href="{{ route('specialist.appointment.index') }}"
                                     class="{{ !Route::is('specialist.appointment.index') ?: 'border bg-base-200 font-semibold' }}">
@@ -182,7 +182,7 @@
                         <div class="flex items-center gap-3">
                             <div class="flex flex-col items-end">
                                 <span class="text-sm">{{ Auth::guard('specialist')->user()->name }}</span>
-                                <span class="text-xs text-gray-500">Especialista
+                                <span class="text-xs text-base-content/60">Especialista
                                     #{{ Auth::guard('specialist')->user()->id }}</span>
                             </div>
 
@@ -199,7 +199,7 @@
                             </div>
                         </div>
                         <ul tabindex="0"
-                            class="menu menu-sm dropdown-content bg-white rounded-box z-1 mt-3 w-52 p-2 shadow">
+                            class="menu menu-sm dropdown-content bg-base-100 text-base-content rounded-box z-1 mt-3 w-52 p-2 shadow border border-base-300">
                             <li>
                                 <a href="{{ route('specialist.profile.personal-details') }}"
                                     class="profile-dropdown-item justify-between flex items-center gap-3">
@@ -225,10 +225,10 @@
                 <div class="navbar-start sm:hidden">
                     <div class="dropdown">
                         <div tabindex="0" role="button" class="btn btn-ghost">
-                            <x-carbon-menu class="w-7 h-7 text-slate-900" />
+                            <x-carbon-menu class="w-7 h-7 text-slate-500" />
                         </div>
                         <ul tabindex="0"
-                            class="menu menu-sm dropdown-content bg-white rounded-box z-1 mt-3 w-52 p-2 shadow">
+                            class="menu menu-sm dropdown-content bg-base-100 text-base-content rounded-box z-1 mt-3 w-52 p-2 shadow border border-base-300">
                             <li>
                                 <a href="{{ route('company.dashboard.show') }}"
                                     class="{{ !Route::is('company.dashboard.show') ?: 'border bg-base-200 font-semibold' }}">
@@ -300,7 +300,7 @@
                         <div class="flex items-center gap-3">
                             <div class="flex flex-col items-end">
                                 <span class="text-sm">{{ Auth::guard('company')->user()->name }}</span>
-                                <span class="text-xs text-gray-500">Empresa
+                                <span class="text-xs text-base-content/60">Empresa
                                     #{{ Auth::guard('company')->user()->id }}</span>
                             </div>
 
@@ -315,7 +315,7 @@
                             </div>
                         </div>
                         <ul tabindex="0"
-                            class="menu menu-sm dropdown-content bg-white rounded-box z-1 mt-3 w-52 p-2 shadow">
+                            class="menu menu-sm dropdown-content bg-base-100 text-base-content rounded-box z-1 mt-3 w-52 p-2 shadow border border-base-300">
                             <li>
                                 <a href="{{ route('company.profile.show') }}"
                                     class="profile-dropdown-item justify-between flex items-center gap-3">
@@ -341,10 +341,10 @@
                 <div class="navbar-start sm:hidden">
                     <div class="dropdown">
                         <div tabindex="0" role="button" class="btn btn-ghost">
-                            <x-carbon-menu class="w-7 h-7 text-slate-900" />
+                            <x-carbon-menu class="w-7 h-7  text-slate-500" />
                         </div>
                         <ul tabindex="0"
-                            class="menu menu-sm dropdown-content bg-white rounded-box z-1 mt-3 w-52 p-2 shadow">
+                            class="menu menu-sm dropdown-content bg-base-100 text-base-content rounded-box z-1 mt-3 w-52 p-2 shadow border border-base-300">
                             <li>
                                 <a href="{{ route('master.dashboard.show') }}"
                                     class="{{ !Route::is('master.dashboard.show') ?: 'border bg-base-200 font-semibold' }}">
@@ -354,7 +354,9 @@
                             </li>
                             <!-- Gestão de Usuários -->
                             <li>
-                                <h3 class="menu-title text-xs font-semibold text-gray-500 px-3 py-2">Gestão
+                                <h3
+                                    class="menu-title text-xs font-semibold text-base-content/60 px-3 py-2">
+                                    Gestão
                                     de Usuários</h3>
                             </li>
                             <li class="ml-2">
@@ -380,7 +382,8 @@
                             </li>
                             <!-- Gerenciamento Interno -->
                             <li>
-                                <h3 class="menu-title text-xs font-semibold text-gray-500 px-3 py-2">
+                                <h3
+                                    class="menu-title text-xs font-semibold text-base-content/60 px-3 py-2">
                                     Gerenciamento Interno</h3>
                             </li>
                             <li class="ml-2">
@@ -426,7 +429,7 @@
                                 Gestão de Usuários
                             </button>
                             <ul tabindex="0"
-                                class="dropdown-content menu bg-white rounded-box shadow-md z-10 w-52 p-2">
+                                class="dropdown-content menu bg-base-100 text-base-content rounded-box shadow-md z-10 w-52 p-2 border border-base-300">
                                 <li>
                                     <a href="{{ route('master.user.index') }}"
                                         class="{{ !Route::is('master.user.index', 'master.user.personal-data.show') ?: 'bg-base-200 font-semibold' }}">
@@ -459,7 +462,7 @@
                                 Gerenciamento Interno
                             </button>
                             <ul tabindex="0"
-                                class="dropdown-content menu bg-white rounded-box shadow-md z-10 w-52 p-2">
+                                class="dropdown-content menu bg-base-100 text-base-content rounded-box shadow-md z-10 w-52 p-2 border border-base-300">
                                 <li>
                                     <a href="{{ route('master.appointment.index') }}"
                                         class="{{ !Route::is('master.appointment.index', 'master.appointment.show') ?: 'bg-base-200 font-semibold' }}">

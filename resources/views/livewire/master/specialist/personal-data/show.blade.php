@@ -1,4 +1,4 @@
-<div class="container mx-auto">
+<div>
     <div class="space-y-6">
         @if (session()->has('message'))
             <div role="alert" class="alert alert-success shadow-lg">
@@ -112,7 +112,8 @@
                     </div>
 
                     <div class="flex flex-col gap-3 w-full md:w-56">
-                        <a href="{{ route('master.specialist.index') }}" class="btn btn-soft btn-sm btn-info">
+                        <a wire:navigate href="{{ route('master.specialist.index') }}"
+                            class="btn btn-soft btn-sm btn-info">
                             <x-carbon-arrow-left class="w-5 h-5" />
                             Voltar para a Lista
                         </a>

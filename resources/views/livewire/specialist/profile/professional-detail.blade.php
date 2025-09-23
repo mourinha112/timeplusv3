@@ -1,7 +1,9 @@
 <div class="space-y-4">
     <ul class="menu menu-vertical lg:menu-horizontal bg-base-100 rounded-box w-full mb-6 gap-2">
-        <li><a class="{{ !Route::is('specialist.profile.personal-details') ?: 'menu-active'}}" href="{{ route('specialist.profile.personal-details') }}">Dados pessoais</a></li>
-        <li><a class="{{ !Route::is('specialist.profile.professional-details') ?: 'menu-active'}}" href="{{ route('specialist.profile.professional-details') }}">Dados profissionais</a></li>
+        <li><a class="{{ !Route::is('specialist.profile.personal-details') ?: 'menu-active' }}" wire:navigate
+                href="{{ route('specialist.profile.personal-details') }}">Dados pessoais</a></li>
+        <li><a class="{{ !Route::is('specialist.profile.professional-details') ?: 'menu-active' }}" wire:navigate
+                href="{{ route('specialist.profile.professional-details') }}">Dados profissionais</a></li>
     </ul>
 
     <x-heading>
@@ -33,7 +35,7 @@
                 </x-form-group>
             </div>
 
-             <div class="mt-2 text-end">
+            <div class="mt-2 text-end">
                 <x-button class="btn-block sm:btn-wide" wire:click="updateProfile">
                     <x-carbon-save class="w-4 h-4" />
                     Salvar

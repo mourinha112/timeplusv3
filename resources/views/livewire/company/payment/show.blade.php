@@ -2,7 +2,7 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
-            <a href="{{ route('company.payment.index') }}" class="btn btn-ghost btn-circle">
+            <a wire:navigate href="{{ route('company.payment.index') }}" class="btn btn-ghost btn-circle">
                 <x-carbon-arrow-left class="w-8 text-info" />
             </a>
             <div>
@@ -12,7 +12,14 @@
         </div>
         <div
             class="badge badge-lg {{ $payment->status === 'paid' ? 'badge-success' : ($payment->status === 'pending' ? 'badge-warning' : 'badge-error') }}">
-            {{ ucfirst($payment->status) }}
+
+            @if (ucfirst($payment->status) === 'Paid')
+                Pago
+            @elseif(ucfirst($payment->status) === 'Pending')
+                Pendente
+            @else
+                Cancelado
+            @endif
         </div>
     </div>
 

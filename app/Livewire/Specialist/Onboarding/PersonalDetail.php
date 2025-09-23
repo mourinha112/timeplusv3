@@ -17,7 +17,7 @@ class PersonalDetail extends Component
     #[Rule(['required', 'exists:specialties,id'])]
     public ?int $specialty_id = null;
 
-    #[Rule(['required', 'min:5', 'max:10', 'unique:specialists,crp'])]
+    #[Rule(['required', 'min:8', 'max:8', 'unique:specialists,crp'])]
     public ?string $crp = null;
 
     #[Rule(['required', 'date_format:Y', 'before_or_equal:now', 'after_or_equal:1900'])]

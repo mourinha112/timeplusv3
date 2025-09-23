@@ -1,4 +1,4 @@
-<div class="container mx-auto">
+<div>
     <x-heading>
         <x-title class="flex items-center gap-3">
             <x-carbon-plan class="w-8 text-info" />
@@ -10,7 +10,7 @@
     </x-heading>
 
     <div class="flex justify-between items-center mb-6">
-        <a href="{{ route('master.plan.index') }}" class="btn btn-ghost">
+        <a wire:navigate href="{{ route('master.plan.index') }}" class="btn btn-ghost">
             <x-carbon-arrow-left class="w-4 h-4" />
             Voltar para Planos
         </a>
@@ -97,10 +97,12 @@
                             </div>
                         </div>
                     </div>
+
+
                 </div>
 
                 <div class="flex justify-end gap-3 mt-8">
-                    <a href="{{ route('master.plan.index') }}" class="btn btn-ghost">
+                    <a wire:navigate href="{{ route('master.plan.index') }}" class="btn btn-ghost">
                         <x-carbon-close class="w-4 h-4" />
                         Cancelar
                     </a>

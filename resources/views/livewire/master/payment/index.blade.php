@@ -1,4 +1,4 @@
-<div class="container mx-auto">
+<div>
     <div class="space-y-6">
         <x-heading>
             <h1 class="text-xl font-bold text-base-content flex items-center gap-3">

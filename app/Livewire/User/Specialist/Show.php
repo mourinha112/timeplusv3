@@ -25,7 +25,7 @@ class Show extends Component
 
     private function calculateExperienceYears(): ?int
     {
-        if (! $this->specialist->year_started_acting) {
+        if (!$this->specialist->year_started_acting) {
             return null;
         }
 

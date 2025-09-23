@@ -1,4 +1,4 @@
-<div class="container mx-auto">
+<div>
     <x-heading>
         <x-title class="flex items-start gap-3">
             <x-carbon-enterprise class="w-8 text-info" />
@@ -102,7 +102,7 @@
 
                 <!-- Botões -->
                 <div class="flex justify-end gap-3">
-                    <a href="{{ route('master.company.index') }}" class="btn btn-soft btn-error">
+                    <a wire:navigate href="{{ route('master.company.index') }}" class="btn btn-soft btn-error">
                         <x-carbon-arrow-left class="w-4 h-4" />
                         Cancelar
                     </a>
@@ -190,7 +190,7 @@
                             <x-carbon-link class="w-4 h-4 text-info" />
                             <span class="text-sm font-medium text-info">Link de Acesso:</span>
                         </div>
-                        <a href="{{ route('company.auth.login') }}" target="_blank"
+                        <a wire:navigate href="{{ route('company.auth.login') }}" target="_blank"
                             class="text-sm text-info hover:text-info/80 underline break-all">
                             {{ route('company.auth.login') }}
                         </a>

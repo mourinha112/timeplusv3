@@ -26,12 +26,12 @@ class Edit extends Component
     public function mount(Plan $plan): void
     {
         $this->plan = $plan;
-        
+
         // Preencher os campos com os dados atuais
-        $this->name = $this->plan->name;
-        $this->price = $this->plan->price;
+        $this->name                = $this->plan->name;
+        $this->price               = $this->plan->price;
         $this->discount_percentage = $this->plan->discount_percentage;
-        $this->duration_days = $this->plan->duration_days;
+        $this->duration_days       = $this->plan->duration_days;
     }
 
     public function save()
@@ -39,10 +39,10 @@ class Edit extends Component
         $this->validate();
 
         $this->plan->update([
-            'name' => $this->name,
-            'price' => $this->price,
+            'name'                => $this->name,
+            'price'               => $this->price,
             'discount_percentage' => $this->discount_percentage,
-            'duration_days' => $this->duration_days,
+            'duration_days'       => $this->duration_days,
         ]);
 
         session()->flash('success', 'Plano atualizado com sucesso!');

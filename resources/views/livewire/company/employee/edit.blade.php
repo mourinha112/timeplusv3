@@ -1,4 +1,4 @@
-<div class="container mx-auto">
+<div>
     <x-heading>
         <x-title class="flex items-center gap-3">
             <x-carbon-user class="w-8 text-info" />
@@ -16,17 +16,11 @@
                     <x-form-group>
                         <x-label required>Nome Completo</x-label>
                         <x-input type="text" wire:model="name" placeholder="João Silva" />
-                        @error('name')
-                            <div class="text-error text-sm mt-1">{{ $message }}</div>
-                        @enderror
                     </x-form-group>
 
                     <x-form-group>
                         <x-label required>CPF</x-label>
                         <x-input type="text" wire:model="cpf" placeholder="000.000.000-00" x-mask="999.999.999-99" />
-                        @error('cpf')
-                            <div class="text-error text-sm mt-1">{{ $message }}</div>
-                        @enderror
                     </x-form-group>
 
                     <x-form-group>
@@ -42,17 +36,11 @@
                         <x-label required>Telefone</x-label>
                         <x-input type="text" wire:model="phone_number" placeholder="(11) 99999-9999"
                             x-mask="(99) 99999-9999" />
-                        @error('phone_number')
-                            <div class="text-error text-sm mt-1">{{ $message }}</div>
-                        @enderror
                     </x-form-group>
 
                     <x-form-group>
                         <x-label required>Data de Nascimento</x-label>
                         <x-input type="text" wire:model="birth_date" placeholder="01/01/1990" x-mask="99/99/9999" />
-                        @error('birth_date')
-                            <div class="text-error text-sm mt-1">{{ $message }}</div>
-                        @enderror
                     </x-form-group>
 
                     <x-form-group>
@@ -68,9 +56,6 @@
                                 </option>
                             @endforeach
                         </x-select>
-                        @error('company_plan_id')
-                            <div class="text-error text-sm mt-1">{{ $message }}</div>
-                        @enderror
                         <small class="text-base-content/60 mt-1">
                             ⚠️ Apenas planos ativos podem ser selecionados. Planos inativos não concedem descontos.
                         </small>
@@ -78,7 +63,7 @@
                 </div>
 
                 <div class="flex justify-end gap-3 mt-6">
-                    <a href="{{ route('company.employee.index') }}" class="btn btn-soft btn-error">
+                    <a wire:navigate href="{{ route('company.employee.index') }}" class="btn btn-soft btn-error">
                         <x-carbon-arrow-left class="w-4 h-4" />
                         Cancelar
                     </a>

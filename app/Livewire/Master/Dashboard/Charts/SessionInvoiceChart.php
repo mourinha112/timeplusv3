@@ -43,7 +43,9 @@ class SessionInvoiceChart extends Component
                 ],
             ])
             ->options([
-                'scales' => [
+                'responsive'          => true,
+                'maintainAspectRatio' => false,
+                'scales'              => [
                     'x' => [
                         'type' => 'time',
                         'time' => [

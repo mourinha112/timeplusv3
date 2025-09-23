@@ -88,18 +88,18 @@ class CreditCard extends Component
             }
 
             $subscribe->payments()->create([
-                'gateway_order_id'  => $paymentGateway['id'],
-                'gateway_charge_id' => $paymentGateway['charges'][0]['id'],
-                'amount'            => $chargedAmount,
-                'payment_method'    => $paymentGateway['charges'][0]['payment_method'],
-                'status'            => $paymentGateway['status'],
-                'currency'          => $paymentGateway['currency'],
-                'description'       => $paymentGateway['items'][0]['description'] ?? null,
-                'paid_at'           => $paymentGateway['charges'][0]['paid_at'] ?? null,
-                'original_amount'   => $originalAmount,
-                'discount_value'    => $discountAmount,
+                'gateway_order_id'    => $paymentGateway['id'],
+                'gateway_charge_id'   => $paymentGateway['charges'][0]['id'],
+                'amount'              => $chargedAmount,
+                'payment_method'      => $paymentGateway['charges'][0]['payment_method'],
+                'status'              => $paymentGateway['status'],
+                'currency'            => $paymentGateway['currency'],
+                'description'         => $paymentGateway['items'][0]['description'] ?? null,
+                'paid_at'             => $paymentGateway['charges'][0]['paid_at'] ?? null,
+                'original_amount'     => $originalAmount,
+                'discount_value'      => $discountAmount,
                 'discount_percentage' => $discountPercentage,
-                'discount'          => $discountAmount,
+                'discount'            => $discountAmount,
             ]);
 
             DB::commit();

@@ -1,4 +1,4 @@
-<div class="container mx-auto">
+<div>
     <x-heading>
         <x-title class="flex items-center gap-3">
             <x-carbon-layers class="w-8 text-info" />
@@ -19,9 +19,6 @@
                         <x-text class="mt-1">
                             Escolha um nome descritivo para identificar este plano
                         </x-text>
-                        @error('name')
-                            <div class="text-error text-sm mt-1">{{ $message }}</div>
-                        @enderror
                     </x-form-group>
 
                     <x-form-group>
@@ -31,9 +28,6 @@
                         <x-text class="mt-1">
                             Percentual que a empresa irá cobrir dos custos do funcionário (mínimo 0,01% - máximo 100%)
                         </x-text>
-                        @error('discount_percentage')
-                            <div class="text-error text-sm mt-1">{{ $message }}</div>
-                        @enderror
                     </x-form-group>
 
                     <div class="bg-info/10 p-4 rounded-lg">
@@ -52,7 +46,7 @@
                 </div>
 
                 <div class="flex justify-end gap-3 mt-6">
-                    <a href="{{ route('company.plan.index') }}" class="btn btn-soft btn-error">
+                    <a wire:navigate href="{{ route('company.plan.index') }}" class="btn btn-soft btn-error">
                         <x-carbon-arrow-left class="w-4 h-4" />
                         Cancelar
                     </a>

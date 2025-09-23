@@ -34,7 +34,7 @@ class Register extends Component
     public function rules(): array
     {
         return [
-            'birth_date' => ['required', 'date_format:d/m/Y', 'before_or_equal:' . now()->subYears(18)->toDateString()],
+            'birth_date' => ['required', 'date_format:d/m/Y', 'after:01/01/1900', 'before_or_equal:' . now()->subYears(18)->toDateString()],
         ];
     }
 

@@ -3,7 +3,7 @@
         <x-card-body>
 
 
-            <x-heading>
+            <x-heading class="!mb-1.5">
                 <x-title>Acesso Empresas</x-title>
                 <x-subtitle>Entre com suas credenciais de empresa.</x-subtitle>
             </x-heading>
@@ -20,8 +20,6 @@
                     <x-input type="password" id="password" wire:model="password" placeholder="Digite sua senha"
                         autocomplete="current-password" />
                 </x-form-group>
-
-
 
                 <x-button class="btn-block" type="submit">Entrar</x-button>
             </x-form>

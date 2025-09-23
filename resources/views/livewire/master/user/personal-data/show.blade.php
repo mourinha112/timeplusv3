@@ -40,10 +40,21 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <x-stat title="Sessões" :value="$user->appointments->count()" />
-                        <x-stat title="E-mail" :value="$user->email_verified_at ? 'Verificado' : 'Não verificado'" />
-                        <x-stat title="Cadastrado em" :value="$user->created_at->format('d/m/Y')" />
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div>
+                            <x-text>{{ $user->appointments->count() }}</x-text>
+                            <div class="mt-0.5 text-xs text-base-content/60">Sessões</div>
+                        </div>
+                        <div>
+                            <x-text
+                                class="font-bold">{{ $user->email_verified_at ? 'Verificado' : 'Não verificado' }}</x-text>
+                            <div class="mt-0.5 text-xs text-base-content/60">E-mail</div>
+                        </div>
+                        <div>
+                            <div class="text-base font-medium text-base-content">
+                                {{ $user->created_at->format('d/m/Y') }}</div>
+                            <div class="mt-0.5 text-xs text-base-content/60">Cadastrado em</div>
+                        </div>
                     </div>
 
                     <div class="mt-8">
@@ -55,18 +66,20 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-4">
                                 <div class="p-4 bg-base-200/30 rounded-lg">
-                                    <div class="flex items-start gap-3">
+                                    <div class="flex items-center gap-3 mb-2">
                                         <x-carbon-email class="w-5 h-5 text-info shrink-0" />
-                                        <x-info-item label="E-mail" :value="$user->email" />
+                                        <span class="font-semibold text-base-content">E-mail</span>
                                     </div>
+                                    <p class="text-base-content ml-8">{{ $user->email }}</p>
                                 </div>
 
                                 @if ($user->phone_number)
                                     <div class="p-4 bg-base-200/30 rounded-lg">
-                                        <div class="flex items-start gap-3">
+                                        <div class="flex items-center gap-3 mb-2">
                                             <x-carbon-phone class="w-5 h-5 text-info shrink-0" />
-                                            <x-info-item label="Telefone" :value="$user->phone_number" />
+                                            <span class="font-semibold text-base-content">Telefone</span>
                                         </div>
+                                        <p class="text-base-content ml-8">{{ $user->phone_number }}</p>
                                     </div>
                                 @endif
                             </div>
@@ -74,19 +87,21 @@
                             <div class="space-y-4">
                                 @if ($user->cpf)
                                     <div class="p-4 bg-base-200/30 rounded-lg">
-                                        <div class="flex items-start gap-3">
+                                        <div class="flex items-center gap-3 mb-2">
                                             <x-carbon-identification class="w-5 h-5 text-info shrink-0" />
-                                            <x-info-item label="CPF" :value="$user->cpf" :mono="true" />
+                                            <span class="font-semibold text-base-content">CPF</span>
                                         </div>
+                                        <p class="text-base-content ml-8 font-mono">{{ $user->cpf }}</p>
                                     </div>
                                 @endif
 
                                 @if ($user->birth_date)
                                     <div class="p-4 bg-base-200/30 rounded-lg">
-                                        <div class="flex items-start gap-3">
+                                        <div class="flex items-center gap-3 mb-2">
                                             <x-carbon-calendar class="w-5 h-5 text-info shrink-0" />
-                                            <x-info-item label="Data de Nascimento" :value="$user->birth_date" />
+                                            <span class="font-semibold text-base-content">Data de Nascimento</span>
                                         </div>
+                                        <p class="text-base-content ml-8">{{ $user->birth_date }}</p>
                                     </div>
                                 @endif
                             </div>
@@ -98,9 +113,15 @@
                                     <x-carbon-settings class="w-4 h-4 text-warning" />
                                     Informações do Sistema
                                 </h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <x-info-item label="ID Gateway" :value="$user->gateway_customer_id" :mono="true" />
-                                    <x-info-item label="Criado em" :value="$user->created_at->format('d/m/Y H:i')" />
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <span class="font-medium text-base-content/70">ID Gateway:</span>
+                                        <span class="font-mono ml-2">{{ $user->gateway_customer_id }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="font-medium text-base-content/70">Criado em:</span>
+                                        <span class="ml-2">{{ $user->created_at->format('d/m/Y H:i') }}</span>
+                                    </div>
                                 </div>
                             </div>
                         @endif
@@ -108,10 +129,10 @@
                 </div>
 
                 <div class="flex flex-col gap-3 w-full md:w-56">
-                    <x-btn-link wire:navigate href="{{ route('master.user.index') }}" class="btn-soft btn-sm">
+                    <a href="{{ route('master.user.index') }}" class="btn btn-soft btn-sm btn-info">
                         <x-carbon-arrow-left class="w-5 h-5" />
                         Voltar para a Lista
-                    </x-btn-link>
+                    </a>
                 </div>
             </div>
         </x-card-body>

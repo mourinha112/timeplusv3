@@ -13,7 +13,7 @@
 
 
     <div class="flex gap-2">
-        <a href="{{ route('company.employee.create') }}" class="btn btn-info">
+        <a wire:navigate href="{{ route('company.employee.create') }}" class="btn btn-info">
             <x-carbon-add class="w-4 h-4" />
             Novo Funcionário
         </a>

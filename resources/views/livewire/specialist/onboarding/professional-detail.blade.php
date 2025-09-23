@@ -28,7 +28,7 @@
             <div class="mt-5">
                 <x-text>
                     Quer entrar com outra conta?
-                    <x-link href="{{ route('specialist.auth.logout') }}">Sair</x-link>.
+                    <x-link wire:navigate href="{{ route('specialist.auth.logout') }}">Sair</x-link>.
                 </x-text>
             </div>
         </x-card-body>

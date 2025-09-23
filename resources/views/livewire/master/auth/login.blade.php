@@ -6,18 +6,6 @@
                 <x-subtitle>Painel administrativo da aplicação.</x-subtitle>
             </x-heading>
 
-            {{-- @error('invalidCredentials')
-                <x-alert type="error">
-                    {{ $message }}
-                </x-alert>
-            @enderror
-
-            @error('rateLimiter')
-                <x-alert type="error">
-                    {{ $message }}
-                </x-alert>
-            @enderror --}}
-
             <x-form wire:submit="submit">
                 <x-form-group>
                     <x-label required>E-mail</x-label>

@@ -2,8 +2,8 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Perfil da Empresa</h1>
-            <p class="text-gray-600">Gerencie as informações da sua empresa</p>
+            <h1 class="text-2xl font-bold text-base-content">Perfil da Empresa</h1>
+            <p class="text-base-content/70">Gerencie as informações da sua empresa</p>
         </div>
     </div>
 
@@ -13,7 +13,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
                 <!-- Dados Básicos -->
                 <div class="md:col-span-2">
-                    <h3 class="text-lg font-semibold text-gray-800">Dados Básicos</h3>
+                    <h3 class="text-lg font-semibold text-base-content">Dados Básicos</h3>
                 </div>
 
                 <x-form-group>
@@ -39,7 +39,7 @@
 
                 <!-- Endereço -->
                 <div class="md:col-span-2">
-                    <h3 class="text-lg font-semibold text-gray-800">Endereço</h3>
+                    <h3 class="text-lg font-semibold text-base-content">Endereço</h3>
                 </div>
 
                 <x-form-group>
@@ -111,13 +111,14 @@
                 <x-carbon-user-multiple class="w-6 text-primary mx-auto mb-2" />
                 <p class="text-2xl font-bold text-primary">
                     {{ Auth::guard('company')->user()->activeEmployees()->count() }}</p>
-                <p class="text-sm text-gray-600">Funcionários Ativos</p>
+                <p class="text-sm text-base-content/60">Funcionários Ativos</p>
             </div>
 
             <div class="text-center p-4 bg-success/5 rounded-lg">
                 <x-carbon-layers class="w-6 text-success mx-auto mb-2" />
                 <p class="text-lg font-semibold text-success">Ativo</p>
-                <p class="text-sm text-gray-600">Desde {{ Auth::guard('company')->user()->created_at->format('d/m/Y') }}
+                <p class="text-sm text-base-content/60">Desde
+                    {{ Auth::guard('company')->user()->created_at->format('d/m/Y') }}
                 </p>
             </div>
 
@@ -125,7 +126,7 @@
                 <x-carbon-time class="w-6 text-info mx-auto mb-2" />
                 <p class="text-lg font-semibold text-info">
                     {{ Auth::guard('company')->user()->created_at->diffInDays(now()) }}</p>
-                <p class="text-sm text-gray-600">Dias Cadastrado</p>
+                <p class="text-sm text-base-content/60">Dias Cadastrado</p>
             </div>
         </div>
     </x-card>
