@@ -5,6 +5,7 @@ namespace App\Livewire\User\Specialist;
 use App\Models\Favorite;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class Card extends Component
@@ -18,6 +19,21 @@ class Card extends Component
         $this->favorited = Favorite::where('specialist_id', $this->specialist->id)
             ->where('user_id', Auth::id())
             ->exists();
+    }
+
+    #[Computed]
+    public function appointments(): int
+    {
+        return $this->specialist->whereHas('appointments', function ($query) {
+            $query->where('status', 'completed');
+        })->count();
+    }
+
+    #[Computed]
+    public function reviews(): int
+    {
+        // TODO:: Implementar contagem de avaliações reais
+        return 0;
     }
 
     public function favorite()

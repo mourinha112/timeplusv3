@@ -14,19 +14,19 @@ class CreditCard extends Component
 
     /* Informações do cartão de crédito */
     #[Rule(['required', 'string', 'min:2', 'max:100', 'regex:/^[\p{L}\s]+$/u'])]
-    public ?string $card_holder_name = 'DENIS A C DA SILVA';
+    public ?string $card_holder_name = null;
 
     #[Rule(['required', 'regex:/^[0-9\s\-]+$/', 'min:13', 'max:19'])]
-    public ?string $card_number = '4000000000000010';
+    public ?string $card_number = null;
 
     #[Rule(['required', 'integer', 'between:1,12'])]
-    public ?int $card_expiry_month = 12;
+    public ?int $card_expiry_month = null;
 
     #[Rule(['required', 'integer', 'min:2025', 'max:2045'])]
-    public ?int $card_expiry_year = 2024;
+    public ?int $card_expiry_year = null;
 
     #[Rule(['required', 'digits_between:3,4'])]
-    public ?int $card_cvv = 123;
+    public ?int $card_cvv = null;
 
     public function mount($payable)
     {

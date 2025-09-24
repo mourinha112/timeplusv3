@@ -11,7 +11,7 @@
                 <x-text>Busque e encontre os especialistas ideais para você.</x-text>
             </div>
 
-            <x-btn-link href="{{ route('user.specialist.index') }}" class="mt-2 sm:btn sm:mt-0">
+            <x-btn-link href="{{ route('user.specialist.index') }}" wire:navigate class="mt-2 sm:btn sm:mt-0">
                 <x-carbon-search-advanced class="w-4 h-4" />
                 Encontrar especialistas
             </x-btn-link>
@@ -27,7 +27,7 @@
                 <x-text>Descubra o melhor plano para aprimorar sua experiência.</x-text>
             </div>
 
-            <x-btn-link href="{{ route('user.plan.index') }}" class="mt-2 sm:btn sm:mt-0">
+            <x-btn-link href="{{ route('user.plan.index') }}" wire:navigate class="mt-2 sm:btn sm:mt-0">
                 <x-carbon-pricing-consumption class="w-4 h-4" />
                 Conhecer os planos
             </x-btn-link>

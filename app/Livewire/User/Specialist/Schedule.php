@@ -88,7 +88,18 @@ class Schedule extends Component
                 $scheduled      = $scheduledTimes[$date] ?? [];
 
                 // Filtrar horários já agendados
-                return array_values(array_diff($availableTimes, $scheduled));
+                $filteredTimes = array_values(array_diff($availableTimes, $scheduled));
+
+                // Se for hoje, filtrar horários que já passaram
+                if ($date === now()->toDateString()) {
+                    $currentTime = now()->format('H:i');
+                    $filteredTimes = array_filter($filteredTimes, function ($time) use ($currentTime) {
+                        return $time > $currentTime;
+                    });
+                    $filteredTimes = array_values($filteredTimes); // Reindexar array
+                }
+
+                return $filteredTimes;
             })
             ->toArray();
 

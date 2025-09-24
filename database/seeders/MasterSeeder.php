@@ -12,7 +12,7 @@ class MasterSeeder extends Seeder
         DB::table('masters')->insert([
             [
                 'avatar'         => null,
-                'name'           => 'Master',
+                'name'           => '[Master] TimePlus',
                 'email'          => 'master@timeplus.com.br',
                 'password'       => bcrypt('q1w2e3r4'),
                 'is_active'      => true,

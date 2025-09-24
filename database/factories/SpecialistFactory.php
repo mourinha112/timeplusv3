@@ -15,8 +15,10 @@ class SpecialistFactory extends Factory
         return [
             'name'                => fake()->name(),
             'email'               => fake()->unique()->safeEmail(),
+            'birth_date'         => fake()->date('d/m/Y', '-25 years'),
             'cpf'                 => preg_replace('/[^0-9]/', '', fake()->numerify('###.###.###-##')),
             'phone_number'        => preg_replace('/[^0-9]/', '', fake()->numerify('(##) #####-####')),
+            'appointment_value' => 150.00,
             'email_verified_at'   => now(),
             'password'            => static::$password ??= Hash::make('password'),
             'year_started_acting' => fake()->year(),
@@ -30,7 +32,7 @@ class SpecialistFactory extends Factory
 
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

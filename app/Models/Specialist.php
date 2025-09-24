@@ -15,7 +15,6 @@ class Specialist extends Authenticatable
     protected $fillable = [
         'gender_id',
         'specialty_id',
-        'state_id',
         'avatar',
         'name',
         'cpf',

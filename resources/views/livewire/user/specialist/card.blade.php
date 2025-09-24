@@ -64,12 +64,12 @@
     <div class="flex items-center gap-6 mb-1">
         <div class="flex items-center justify-center gap-1">
             <x-carbon-star-filled class="w-5 text-info" />
-            <span class="text-xs font-extrabold text-base-content/70">4.5</span>
-            <span class="text-xs text-base-content/70">(10 comentários)</span>
+            <span class="text-xs font-extrabold text-base-content/70">5.0</span>
+            <span class="text-xs text-base-content/70">({{ $this->reviews }} avaliações)</span>
         </div>
         <div class="flex items-center justify-center gap-1">
             <x-carbon-user-feedback class="w-5 text-info" />
-            <span class="text-xs font-extrabold text-base-content/70">20</span>
+            <span class="text-xs font-extrabold text-base-content/70">{{ $this->appointments }}</span>
             <span class="text-xs font-base text-base-content/70">atendimentos</span>
         </div>
     </div>

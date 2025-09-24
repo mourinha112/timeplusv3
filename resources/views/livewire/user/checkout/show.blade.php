@@ -8,7 +8,10 @@
     <x-card class="cursor-pointer" wire:click="selectPaymentMethod('pix')">
         <x-card-body>
             <div class="space-y-2">
-                <x-card-title>PIX</x-card-title>
+                <x-card-title>
+                    <x-carbon-qr-code class="w-5 h-5 text-info" />
+                    PIX
+                </x-card-title>
                 <x-text>Realize o pagamento utilizando PIX.</x-text>
             </div>
         </x-card-body>
@@ -17,7 +20,10 @@
     <x-card class="cursor-pointer" wire:click="selectPaymentMethod('credit_card')">
         <x-card-body>
             <div class="space-y-2">
-                <x-card-title>Cartão de crédito</x-card-title>
+                <x-card-title>
+                    <x-carbon-purchase class="w-5 h-5 text-info" />
+                    Cartão de crédito
+                </x-card-title>
                 <x-text>Realize o pagamento utilizando cartão de crédito.</x-text>
             </div>
         </x-card-body>

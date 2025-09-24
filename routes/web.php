@@ -29,8 +29,6 @@ Route::group(['middleware' => 'guest:user'], function () {
     Route::get('redefinir-senha/{token}', User\Auth\PasswordReset::class)->name('user.auth.password.reset');
 });
 
-// Master routes are declared below in the Master section
-
 /**
  * Logout Routes
  */
@@ -47,26 +45,26 @@ Route::group(['middleware' => 'auth:user'], function () {
  */
 Route::group(['middleware' => 'auth:user'], function () {
     /* Dashboard */
-    Route::get('dashboard', User\Dashboard\Show::class)->name('user.dashboard.show');
+    Route::get('painel', User\Dashboard\Show::class)->name('user.dashboard.show');
 
     /* Specialists */
-    Route::get('specialists', User\Specialist\Index::class)->name('user.specialist.index');
-    Route::get('specialists/{specialist}', User\Specialist\Show::class)->name('user.specialist.show');
+    Route::get('especialistas', User\Specialist\Index::class)->name('user.specialist.index');
+    Route::get('especialistas/{specialist}', User\Specialist\Show::class)->name('user.specialist.show');
 
     /* Appointments */
-    Route::get('appointments', User\Appointment\Index::class)->name('user.appointment.index');
-    Route::get('appointments/{appointment_id}/payment', User\Appointment\Payment::class)->name('user.appointment.payment');
+    Route::get('agendamentos', User\Appointment\Index::class)->name('user.appointment.index');
+    Route::get('agendamentos/{appointment_id}/pagamento', User\Appointment\Payment::class)->name('user.appointment.payment');
 
     /* Plans */
-    Route::get('plans', User\Plan\Index::class)->name('user.plan.index');
-    Route::get('plans/{plan_id}/payment', User\Plan\Payment::class)->name('user.plan.payment');
+    Route::get('planos', User\Plan\Index::class)->name('user.plan.index');
+    Route::get('planos/{plan_id}/pagamento', User\Plan\Payment::class)->name('user.plan.payment');
 
     /* Subscribes */
-    Route::get('subscribes', User\Subscribe\Show::class)->name('user.subscribe.show');
-    Route::get('subscribes/history', User\Subscribe\History::class)->name('user.subscribe.history');
+    Route::get('assinaturas', User\Subscribe\Show::class)->name('user.subscribe.show');
+    Route::get('assinaturas/historico', User\Subscribe\History::class)->name('user.subscribe.history');
 
     /* Profile */
-    Route::get('profile', User\Profile\Update::class)->name('user.profile.update');
+    Route::get('perfil', User\Profile\Update::class)->name('user.profile.update');
 });
 
 /* ----------------- */
@@ -132,7 +130,7 @@ Route::group(['middleware' => ['auth:specialist', 'onboarding:specialist']], fun
  */
 Route::group(['middleware' => 'guest:master'], function () {
     /* Login */
-    Route::get('administrador/entrar', Master\Auth\Login::class)->name('master.auth.login');
+    Route::get('master/entrar', Master\Auth\Login::class)->name('master.auth.login');
 });
 
 /**
@@ -140,7 +138,7 @@ Route::group(['middleware' => 'guest:master'], function () {
  */
 Route::group(['middleware' => ['auth:master']], function () {
     /* Dashboard */
-    Route::get('administrador/painel', Master\Dashboard\Show::class)->name('master.dashboard.show');
+    Route::get('master/painel', Master\Dashboard\Show::class)->name('master.dashboard.show');
     /* Logout */
     Route::get('master/logout', function () {
         Auth::guard('master')->logout();
@@ -149,25 +147,25 @@ Route::group(['middleware' => ['auth:master']], function () {
     })->name('master.auth.logout');
 
     /* Tables (Index components na pasta principal) */
-    Route::get('administrador/usuarios', Master\User\Index::class)->name('master.user.index');
-    Route::get('administrador/especialistas', Master\Specialist\Index::class)->name('master.specialist.index');
-    Route::get('administrador/empresas', Master\Company\Index::class)->name('master.company.index');
-    Route::get('administrador/agendamentos', Master\Appointment\Index::class)->name('master.appointment.index');
-    Route::get('administrador/pagamentos', Master\Payment\Index::class)->name('master.payment.index');
-    Route::get('administrador/planos', Master\Plan\Index::class)->name('master.plan.index');
+    Route::get('master/usuarios', Master\User\Index::class)->name('master.user.index');
+    Route::get('master/especialistas', Master\Specialist\Index::class)->name('master.specialist.index');
+    Route::get('master/empresas', Master\Company\Index::class)->name('master.company.index');
+    Route::get('master/agendamentos', Master\Appointment\Index::class)->name('master.appointment.index');
+    Route::get('master/pagamentos', Master\Payment\Index::class)->name('master.payment.index');
+    Route::get('master/planos', Master\Plan\Index::class)->name('master.plan.index');
 
     /* CRUD Companies */
-    Route::get('administrador/empresas/criar', Master\Company\Create::class)->name('master.company.create');
-    Route::get('administrador/empresas/{company}/editar', Master\Company\Edit::class)->name('master.company.edit');
+    Route::get('master/empresas/criar', Master\Company\Create::class)->name('master.company.create');
+    Route::get('master/empresas/{company}/editar', Master\Company\Edit::class)->name('master.company.edit');
 
     /* Details */
-    Route::get('administrador/usuarios/{user}', Master\User\PersonalData\Show::class)->name('master.user.personal-data.show');
-    Route::get('administrador/especialistas/{specialist}', Master\Specialist\PersonalData\Show::class)->name('master.specialist.personal-data.show');
-    Route::get('administrador/empresas/{company}', Master\Company\Show::class)->name('master.company.show');
-    Route::get('administrador/agendamentos/{appointment}', Master\Appointment\Show::class)->name('master.appointment.show');
-    Route::get('administrador/pagamentos/{payment}', Master\Payment\Show::class)->name('master.payment.show');
-    Route::get('administrador/planos/{plan}', Master\Plan\Show::class)->name('master.plan.show');
-    Route::get('administrador/planos/{plan}/editar', Master\Plan\Edit::class)->name('master.plan.edit');
+    Route::get('master/usuarios/{user}', Master\User\PersonalData\Show::class)->name('master.user.personal-data.show');
+    Route::get('master/especialistas/{specialist}', Master\Specialist\PersonalData\Show::class)->name('master.specialist.personal-data.show');
+    Route::get('master/empresas/{company}', Master\Company\Show::class)->name('master.company.show');
+    Route::get('master/agendamentos/{appointment}', Master\Appointment\Show::class)->name('master.appointment.show');
+    Route::get('master/pagamentos/{payment}', Master\Payment\Show::class)->name('master.payment.show');
+    Route::get('master/planos/{plan}', Master\Plan\Show::class)->name('master.plan.show');
+    Route::get('master/planos/{plan}/editar', Master\Plan\Edit::class)->name('master.plan.edit');
 });
 
 /* ----------------- */

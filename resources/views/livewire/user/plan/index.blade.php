@@ -20,7 +20,7 @@
                                 de desconto</strong>, você não pode contratar planos individuais.
                         </p>
                         <p class="mt-2">
-                            <x-link class="!link-neutral" href="{{ route('user.subscribe.show') }}">Ver detalhes do plano
+                            <x-link class="!link-neutral" href="{{ route('user.subscribe.show') }}" wire:navigate>Ver detalhes do plano
                                 empresarial →</x-link>
                         </p>
                     </div>
@@ -43,7 +43,7 @@
                         <p class="mt-1">Entre em contato com sua empresa para mais informações sobre a reativação do
                             plano.</p>
                         <p class="mt-2">
-                            <x-link class="!link-neutral" href="{{ route('user.subscribe.show') }}">Ver detalhes
+                            <x-link class="!link-neutral" href="{{ route('user.subscribe.show') }}" wire:navigate>Ver detalhes
                                 →</x-link>
                         </p>
                     </div>
@@ -122,7 +122,7 @@
                             @endif
                         @else
                             <x-btn-link class="btn-block"
-                                href="{{ route('user.plan.payment', ['plan_id' => $plan->id]) }}">
+                                href="{{ route('user.plan.payment', ['plan_id' => $plan->id]) }}" wire:navigate>
                                 Assinar
                                 <x-carbon-checkmark-outline class="w-4 h-4" />
                             </x-btn-link>
