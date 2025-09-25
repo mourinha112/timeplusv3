@@ -67,15 +67,45 @@
                                 </div>
                                 <ul tabindex="0"
                                     class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                                    <li><a href="{{ route('specialist.videocall.index') }}" wire:navigate>
-                                            <x-carbon-video-chat class="w-4 h-4" />
-                                            Iniciar atendimento
-                                        </a></li>
-                                    <li><a class="text-error"
-                                            wire:click="cancelAppointment('{{ $dayInfo['full_date'] }}', '{{ $time }}')">
-                                            <x-carbon-close class="w-4 h-4" />
-                                            Cancelar
-                                        </a></li>
+
+                                    @if ($appointment->status === 'completed')
+                                        <li><a class="text-success cursor-default">
+                                                <x-carbon-checkmark-filled class="w-4 h-4" />
+                                                Sessão concluída
+                                            </a></li>
+                                    @elseif ($this->hasRoom($appointment))
+                                        <li><a href="{{ route('specialist.videocall.show', $appointment->room->code) }}" wire:navigate>
+                                                <x-carbon-video-chat class="w-4 h-4" />
+                                                Iniciar atendimento
+                                            </a></li>
+                                    @elseif ($this->hasScheduledRoom($appointment))
+                                        <li><a class="cursor-default">
+                                                <x-carbon-time class="w-4 h-4" />
+                                                <div x-data="countdown('{{ $this->getRoomOpenTime($appointment)?->toISOString() }}')"
+                                                     x-text="timeLeft"
+                                                     class="inline">
+                                                    Carregando...
+                                                </div>
+                                            </a></li>
+                                    @elseif ($this->isPaid($appointment))
+                                        <li><a class="text-info cursor-default">
+                                                <x-carbon-time class="w-4 h-4" />
+                                                Aguardando sala
+                                            </a></li>
+                                    @else
+                                        <li><a class="text-warning cursor-default">
+                                                <x-carbon-currency-dollar class="w-4 h-4" />
+                                                Aguardando pagamento
+                                            </a></li>
+                                    @endif
+
+                                    @if ($appointment->status !== 'completed')
+                                        <li><a class="text-error"
+                                                wire:click="cancelAppointment('{{ $dayInfo['full_date'] }}', '{{ $time }}')">
+                                                <x-carbon-close class="w-4 h-4" />
+                                                Cancelar
+                                            </a></li>
+                                    @endif
                                 </ul>
                             </div>
                         @else
@@ -102,3 +132,44 @@
         </div>
     </div>
 </div>
+
+<script>
+    function countdown(targetDateTime) {
+        return {
+            timeLeft: 'Carregando...',
+
+            init() {
+                if (!targetDateTime) {
+                    this.timeLeft = 'Horário não disponível';
+                    return;
+                }
+
+                this.updateTime();
+                setInterval(() => this.updateTime(), 1000); // Atualiza a cada segundo
+            },
+
+            updateTime() {
+                const now = new Date();
+                const target = new Date(targetDateTime);
+                const diff = target - now;
+
+                if (diff <= 0) {
+                    this.timeLeft = 'Disponível agora';
+                    return;
+                }
+
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                if (hours > 0) {
+                    this.timeLeft = `Disponível em ${hours}h ${minutes}m ${seconds}s`;
+                } else if (minutes > 0) {
+                    this.timeLeft = `Disponível em ${minutes}m ${seconds}s`;
+                } else {
+                    this.timeLeft = `Disponível em ${seconds}s`;
+                }
+            }
+        }
+    }
+</script>

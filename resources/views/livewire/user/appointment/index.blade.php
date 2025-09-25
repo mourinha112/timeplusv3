@@ -139,7 +139,11 @@
                                         <div class="tooltip" data-tip="Sala será aberta 10 minutos antes da consulta">
                                             <span class="badge badge-warning badge-sm">
                                                 <x-carbon-time class="w-3 h-3 mr-1" />
-                                                {{ $this->getRoomAvailableIn($appointment) }}
+                                                <div x-data="countdown('{{ $this->getRoomOpenTime($appointment)?->toISOString() }}')"
+                                                     x-text="timeLeft"
+                                                     class="inline">
+                                                    Carregando...
+                                                </div>
                                             </span>
                                         </div>
                                     @elseif ($this->isPaid($appointment))
@@ -276,3 +280,44 @@
         </div>
     @endif
 </div>
+
+<script>
+    function countdown(targetDateTime) {
+        return {
+            timeLeft: 'Carregando...',
+
+            init() {
+                if (!targetDateTime) {
+                    this.timeLeft = 'Horário não disponível';
+                    return;
+                }
+
+                this.updateTime();
+                setInterval(() => this.updateTime(), 1000); // Atualiza a cada segundo
+            },
+
+            updateTime() {
+                const now = new Date();
+                const target = new Date(targetDateTime);
+                const diff = target - now;
+
+                if (diff <= 0) {
+                    this.timeLeft = 'Disponível agora';
+                    return;
+                }
+
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                if (hours > 0) {
+                    this.timeLeft = `Disponível em ${hours}h ${minutes}m ${seconds}s`;
+                } else if (minutes > 0) {
+                    this.timeLeft = `Disponível em ${minutes}m ${seconds}s`;
+                } else {
+                    this.timeLeft = `Disponível em ${seconds}s`;
+                }
+            }
+        }
+    }
+</script>

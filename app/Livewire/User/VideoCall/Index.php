@@ -100,6 +100,16 @@ class Index extends Component
             ->show();
     }
 
+    public function getRoomOpenTime($room)
+    {
+        if (!$room->appointment) {
+            return null;
+        }
+
+        $appointmentDateTime = \Carbon\Carbon::parse($room->appointment->appointment_date . ' ' . $room->appointment->appointment_time);
+        return $appointmentDateTime->subMinutes(10); // 10min antes da consulta
+    }
+
     public function render()
     {
         $openRooms = Room::open()

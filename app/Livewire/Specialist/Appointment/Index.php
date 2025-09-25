@@ -58,8 +58,8 @@ class Index extends Component
 
         $this->appointments = Appointment::whereBetween('appointment_date', [$startDate, $endDate])
             ->where('specialist_id', Auth::guard('specialist')->id())
-            ->where('status', 'scheduled')
-            ->with('user') // Assumindo que existe relacionamento com User
+            ->whereIn('status', ['scheduled', 'completed'])
+            ->with(['user', 'room', 'payment']) // Incluir relacionamentos necessários
             ->get()
             ->groupBy('appointment_date')
             ->map(function ($dayAppointments) {
@@ -142,6 +142,31 @@ class Index extends Component
         ];
 
         return $months[$month];
+    }
+
+    public function isPaid($appointment)
+    {
+        return $appointment->payment && $appointment->payment->status === 'paid';
+    }
+
+    public function hasRoom($appointment)
+    {
+        return $appointment->room && $appointment->room->status === 'open';
+    }
+
+    public function hasScheduledRoom($appointment)
+    {
+        return $appointment->room && $appointment->room->status === 'closed';
+    }
+
+    public function getRoomOpenTime($appointment)
+    {
+        if (!$this->hasScheduledRoom($appointment)) {
+            return null;
+        }
+
+        $appointmentDateTime = \Carbon\Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time);
+        return $appointmentDateTime->subMinutes(10); // 10min antes da consulta
     }
 
     public function render()

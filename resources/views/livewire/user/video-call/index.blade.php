@@ -93,32 +93,14 @@
                                             às {{ \Carbon\Carbon::parse($room->appointment->appointment_time)->format('H:i') }}
                                         </td>
                                         <td>
-                                            @php
-                                                $appointmentDateTime = \Carbon\Carbon::parse($room->appointment->appointment_date . ' ' . $room->appointment->appointment_time);
-                                                $openTime = $appointmentDateTime->subMinutes(10);
-                                                $now = \Carbon\Carbon::now();
-                                            @endphp
-                                            @if ($now >= $openTime)
-                                                <span class="badge badge-info badge-sm">
-                                                    <x-carbon-time class="w-3 h-3 mr-1" />
-                                                    Disponível agora
-                                                </span>
-                                            @else
-                                                @php
-                                                    $diffInMinutes = $now->diffInMinutes($openTime, false);
-                                                    if ($diffInMinutes >= 60) {
-                                                        $hours = intval($diffInMinutes / 60);
-                                                        $minutes = $diffInMinutes % 60;
-                                                        $timeText = "Disponível em {$hours}h" . ($minutes > 0 ? " {$minutes}min" : "");
-                                                    } else {
-                                                        $timeText = "Disponível em {$diffInMinutes}min";
-                                                    }
-                                                @endphp
-                                                <span class="badge badge-warning badge-sm">
-                                                    <x-carbon-time class="w-3 h-3 mr-1" />
-                                                    {{ $timeText }}
-                                                </span>
-                                            @endif
+                                            <span class="badge badge-warning badge-sm">
+                                                <x-carbon-time class="w-3 h-3 mr-1" />
+                                                <div x-data="countdown('{{ $this->getRoomOpenTime($room)?->toISOString() }}')"
+                                                     x-text="timeLeft"
+                                                     class="inline">
+                                                    Carregando...
+                                                </div>
+                                            </span>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -170,3 +152,44 @@
         </x-card>
     @endif
 </div>
+
+<script>
+    function countdown(targetDateTime) {
+        return {
+            timeLeft: 'Carregando...',
+
+            init() {
+                if (!targetDateTime) {
+                    this.timeLeft = 'Horário não disponível';
+                    return;
+                }
+
+                this.updateTime();
+                setInterval(() => this.updateTime(), 1000); // Atualiza a cada segundo
+            },
+
+            updateTime() {
+                const now = new Date();
+                const target = new Date(targetDateTime);
+                const diff = target - now;
+
+                if (diff <= 0) {
+                    this.timeLeft = 'Disponível agora';
+                    return;
+                }
+
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                if (hours > 0) {
+                    this.timeLeft = `Disponível em ${hours}h ${minutes}m ${seconds}s`;
+                } else if (minutes > 0) {
+                    this.timeLeft = `Disponível em ${minutes}m ${seconds}s`;
+                } else {
+                    this.timeLeft = `Disponível em ${seconds}s`;
+                }
+            }
+        }
+    }
+</script>

@@ -64,6 +64,16 @@ class Index extends Component
         return "Disponível em {$diffInMinutes}min";
     }
 
+    public function getRoomOpenTime($appointment)
+    {
+        if (!$this->hasScheduledRoom($appointment)) {
+            return null;
+        }
+
+        $appointmentDateTime = \Carbon\Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time);
+        return $appointmentDateTime->subMinutes(10); // 10min antes da consulta
+    }
+
     public function getDisplayValue($appointment)
     {
         $user = Auth::user();
