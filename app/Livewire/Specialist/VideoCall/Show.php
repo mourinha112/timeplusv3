@@ -19,8 +19,8 @@ class Show extends Component
         $this->room = Room::where('code', $code)->firstOrFail();
 
         if ($this->room->status !== 'open') {
-            session()->flash('error', 'Esta sala foi encerrada. Verifique suas salas ativas.');
-            $this->redirect(route('specialist.videocall.index'), navigate: true);
+            session()->flash('error', 'Esta sala foi encerrada. Verifique sua agenda.');
+            $this->redirect(route('specialist.appointment.index'), navigate: true);
         }
 
         $specialist = auth('specialist')->user();
