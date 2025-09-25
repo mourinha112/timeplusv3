@@ -1,4 +1,33 @@
 <div>
+    @if (session('room_code'))
+        <div class="alert alert-success mb-6">
+            <x-carbon-checkmark-filled class="w-6 h-6" />
+            <div>
+                <h3 class="font-bold">🎉 Sala de videochamada criada com sucesso!</h3>
+                <div class="text-sm mt-2">
+                    <p><strong>Código da sala:</strong> <code
+                            class="bg-base-200 px-2 py-1 rounded font-mono text-lg">{{ session('room_code') }}</code></p>
+                    <p><strong>Data da consulta:</strong>
+                        {{ \Carbon\Carbon::parse(session('appointment_date'))->format('d/m/Y') }}</p>
+                    <p><strong>Horário:</strong> {{ \Carbon\Carbon::parse(session('appointment_time'))->format('H:i') }}
+                    </p>
+                    <p class="mt-2 text-info">💡 Compartilhe este código com seu especialista. A sala será
+                        automaticamente encerrada 1 hora após o horário da consulta.</p>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-error mb-6">
+            <x-carbon-close-filled class="w-6 h-6" />
+            <div>
+                <h3 class="font-bold">Sala Encerrada</h3>
+                <div class="text-sm">{{ session('error') }}</div>
+            </div>
+        </div>
+    @endif
+
     <div class="space-y-3 mb-8">
         <x-title>Minhas sessões</x-title>
         <x-subtitle>Gerencie suas sessões agendadas e visualize detalhes importantes.</x-subtitle>
@@ -6,8 +35,8 @@
 
     @if ($this->appointments->isNotEmpty())
         <x-card>
-            <div class="overflow-x-auto">
-                <table class="table">
+            <div>
+                <table class="table overflow-auto">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -16,6 +45,7 @@
                             <th>Horário</th>
                             <th>Valor</th>
                             <th>Situação</th>
+                            <th>Sala</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -58,11 +88,18 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($this->isPaid($appointment))
-                                        <div class="tooltip" data-tip="Seu agendamento está confirmado e pago.">
+                                    @if ($appointment->status === 'completed')
+                                        <div class="tooltip" data-tip="Sessão concluída com sucesso.">
                                             <span class="badge badge-sm badge-success">
+                                                <x-carbon-checkmark-filled class="w-3 h-3 mr-1" />
+                                                Concluída
+                                            </span>
+                                        </div>
+                                    @elseif ($this->isPaid($appointment))
+                                        <div class="tooltip" data-tip="Seu agendamento está confirmado e pago.">
+                                            <span class="badge badge-sm badge-info">
                                                 <x-carbon-checkmark class="w-3 h-3 mr-1" />
-                                                Pago
+                                                Confirmado
                                             </span>
                                         </div>
                                     @elseif($appointment->status === 'cancelled')
@@ -80,6 +117,41 @@
                                                 Aguardando Pagamento
                                             </span>
                                         </div>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($appointment->status === 'completed')
+                                        <div class="tooltip" data-tip="Sessão já foi concluída">
+                                            <span class="badge badge-success badge-sm">
+                                                <x-carbon-checkmark-filled class="w-3 h-3 mr-1" />
+                                                Encerrada
+                                            </span>
+                                        </div>
+                                    @elseif ($this->hasRoom($appointment))
+                                        <div class="tooltip" data-tip="Clique para entrar na sala de videochamada">
+                                            <a href="{{ route('user.videocall.show', $appointment->room->code) }}"
+                                                wire:navigate class="btn btn-sm btn-info">
+                                                <x-carbon-video class="w-4 h-4 mr-1" />
+                                                {{ $appointment->room->code }}
+                                            </a>
+                                        </div>
+                                    @elseif ($this->hasScheduledRoom($appointment))
+                                        <div class="tooltip" data-tip="Sala será aberta 10 minutos antes da consulta">
+                                            <span class="badge badge-warning badge-sm">
+                                                <x-carbon-time class="w-3 h-3 mr-1" />
+                                                {{ $this->getRoomAvailableIn($appointment) }}
+                                            </span>
+                                        </div>
+                                    @elseif ($this->isPaid($appointment))
+                                        <div class="tooltip"
+                                            data-tip="Sala será criada automaticamente no horário da consulta">
+                                            <span class="badge badge-info badge-sm">
+                                                <x-carbon-time class="w-3 h-3 mr-1" />
+                                                Em breve
+                                            </span>
+                                        </div>
+                                    @else
+                                        <span class="text-base-content/50 text-sm">-</span>
                                     @endif
                                 </td>
                                 <td>

@@ -4,7 +4,9 @@ namespace App\Livewire\User\Checkout;
 
 use App\Exceptions\PagarmeException;
 use App\Facades\Pagarme;
-use Illuminate\Support\Facades\{Auth, DB, Log};
+use App\Models\Room;
+use App\Services\JitsiService;
+use Illuminate\Support\Facades\{Auth, DB, Log, Notification};
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
@@ -184,10 +186,23 @@ class CreditCard extends Component
                 ]
             );
 
+            // Criar sala de videochamada automaticamente se for um appointment
+            $roomCode = null;
+            if ($this->payable instanceof \App\Models\Appointment) {
+                $roomCode = $this->createRoomForAppointment($this->payable);
+            }
+
             DB::commit();
 
-            // Redireciona para a página de sucesso ou appointments
-            session()->flash('success', 'Pagamento realizado com sucesso!');
+            // Redireciona para a página de sucesso mostrando a sala criada
+            if ($roomCode) {
+                session()->flash('success', 'Pagamento realizado com sucesso!');
+                session()->flash('room_code', $roomCode);
+                session()->flash('appointment_date', $this->payable->appointment_date);
+                session()->flash('appointment_time', $this->payable->appointment_time);
+            } else {
+                session()->flash('success', 'Pagamento realizado com sucesso!');
+            }
 
             return $this->redirect(route('user.appointment.index'));
         } catch (PagarmeException $e) {
@@ -214,6 +229,59 @@ class CreditCard extends Component
             ]);
 
             return $this->addError('payment', 'Erro interno: ' . $e->getMessage());
+        }
+    }
+
+    private function createRoomForAppointment($appointment)
+    {
+        try {
+            $jitsiService = new JitsiService();
+            $roomCode = $jitsiService->createRoomCode();
+
+            // Criar sala fechada - será aberta 10min antes da consulta
+            $room = Room::create([
+                'code' => $roomCode,
+                'status' => 'closed',
+                'created_by' => $appointment->user_id, // Usuário que pagou
+                'appointment_id' => $appointment->id,
+            ]);
+
+            Log::info('Sala criada automaticamente após pagamento', [
+                'appointment_id' => $appointment->id,
+                'room_code' => $roomCode,
+                'appointment_datetime' => $appointment->appointment_date . ' ' . $appointment->appointment_time,
+                'user_id' => $appointment->user_id,
+                'specialist_id' => $appointment->specialist_id,
+                'status' => 'closed' // Sala será aberta 10min antes da consulta
+            ]);
+
+            // Notificar o especialista sobre a criação da sala
+            try {
+                $specialist = $appointment->specialist;
+                // Aqui você poderia enviar email, SMS, ou notificação push
+                // Por ora, apenas logamos a intenção de notificar
+                Log::info('Notificação enviada ao especialista sobre sala criada', [
+                    'specialist_id' => $specialist->id,
+                    'specialist_email' => $specialist->email,
+                    'room_code' => $roomCode,
+                    'appointment_date' => $appointment->appointment_date,
+                    'appointment_time' => $appointment->appointment_time,
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Erro ao notificar especialista', ['error' => $e->getMessage()]);
+            }
+
+            return $roomCode;
+
+        } catch (\Exception $e) {
+            Log::error('Erro ao criar sala automaticamente após pagamento', [
+                'appointment_id' => $appointment->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            // Não falhamos o pagamento por causa disso, apenas logamos
+            return null;
         }
     }
 

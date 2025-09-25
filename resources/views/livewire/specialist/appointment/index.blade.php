@@ -67,7 +67,7 @@
                                 </div>
                                 <ul tabindex="0"
                                     class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                                    <li><a>
+                                    <li><a href="{{ route('specialist.videocall.index') }}" wire:navigate>
                                             <x-carbon-video-chat class="w-4 h-4" />
                                             Iniciar atendimento
                                         </a></li>

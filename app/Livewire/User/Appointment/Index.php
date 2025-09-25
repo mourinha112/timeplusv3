@@ -13,7 +13,7 @@ class Index extends Component
     public function appointments()
     {
         return Auth::user()->appointments()
-            ->with(['specialist', 'payment'])
+            ->with(['specialist', 'payment', 'room'])
             ->orderBy('appointment_date', 'desc')
             ->orderBy('appointment_time', 'desc')
             ->get();
@@ -27,6 +27,41 @@ class Index extends Component
     public function needsPayment($appointment)
     {
         return !$this->isPaid($appointment);
+    }
+
+    public function hasRoom($appointment)
+    {
+        return $appointment->room && $appointment->room->status === 'open';
+    }
+
+    public function hasScheduledRoom($appointment)
+    {
+        return $appointment->room && $appointment->room->status === 'closed';
+    }
+
+    public function getRoomAvailableIn($appointment)
+    {
+        if (!$this->hasScheduledRoom($appointment)) {
+            return null;
+        }
+
+        $appointmentDateTime = \Carbon\Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time);
+        $openTime = $appointmentDateTime->subMinutes(10);
+        $now = \Carbon\Carbon::now();
+
+        if ($now >= $openTime) {
+            return 'Disponível agora';
+        }
+
+        $diffInMinutes = $now->diffInMinutes($openTime, false);
+
+        if ($diffInMinutes >= 60) {
+            $hours = intval($diffInMinutes / 60);
+            $minutes = $diffInMinutes % 60;
+            return "Disponível em {$hours}h" . ($minutes > 0 ? " {$minutes}min" : "");
+        }
+
+        return "Disponível em {$diffInMinutes}min";
     }
 
     public function getDisplayValue($appointment)

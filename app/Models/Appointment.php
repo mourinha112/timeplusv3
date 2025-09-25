@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, MorphOne};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, MorphOne, HasOne};
 
 class Appointment extends Model
 {
@@ -36,5 +36,10 @@ class Appointment extends Model
     public function payment(): MorphOne
     {
         return $this->morphOne(Payment::class, 'payable');
+    }
+
+    public function room(): HasOne
+    {
+        return $this->hasOne(Room::class);
     }
 }

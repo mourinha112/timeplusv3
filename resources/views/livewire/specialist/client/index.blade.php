@@ -18,7 +18,7 @@
                         @foreach ($this->clients as $client)
                             <tr>
                                 <td>{{ $client->name }}</td>
-                                <td>{{ \Carbon\Carbon::parse($client->created_at)->format('d/m/Y') }}</td>
+                                <td>{{ $this->getLastAppointmentDate($client) }}</td>
                             </tr>
                         @endforeach
                     </tbody>

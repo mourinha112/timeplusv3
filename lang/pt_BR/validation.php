@@ -253,6 +253,8 @@ return [
         'card_cvv'              => 'código de segurança do cartão',
         'card_holder_name'      => 'nome do titular',
         'card_number'           => 'número do cartão',
+        'room_code'             => 'código da sala',
+        'roomCode'              => 'código da sala',
     ],
 
 ];
