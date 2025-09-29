@@ -13,8 +13,14 @@ class Room extends Model
         'closed_at' => 'datetime',
     ];
 
-    public function scopeOpen($q)  { return $q->where('status', 'open'); }
-    public function scopeClosed($q){ return $q->where('status', 'closed'); }
+    public function scopeOpen($q)
+    {
+        return $q->where('status', 'open');
+    }
+    public function scopeClosed($q)
+    {
+        return $q->where('status', 'closed');
+    }
 
     public function appointment(): BelongsTo
     {

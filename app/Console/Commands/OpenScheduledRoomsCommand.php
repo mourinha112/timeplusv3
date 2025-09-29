@@ -10,12 +10,13 @@ use Illuminate\Support\Facades\Log;
 class OpenScheduledRoomsCommand extends Command
 {
     protected $signature = 'rooms:open-scheduled';
+
     protected $description = 'Abre salas de videochamada 10 minutos antes do horário agendado';
 
     public function handle()
     {
         $startTime = microtime(true);
-        $now = Carbon::now();
+        $now       = Carbon::now();
 
         $this->info("🔍 Buscando salas para abrir... ({$now->format('Y-m-d H:i:s')})");
 
@@ -32,10 +33,11 @@ class OpenScheduledRoomsCommand extends Command
             ->get();
 
         $openedCount = 0;
-        $errors = 0;
+        $errors      = 0;
 
         if ($roomsToOpen->isEmpty()) {
             $this->info("✅ Nenhuma sala para abrir encontrada.");
+
             return Command::SUCCESS;
         }
 
@@ -50,11 +52,11 @@ class OpenScheduledRoomsCommand extends Command
                 $this->line("  ✅ {$room->code} - Aberta (consulta: {$appointmentTime})");
 
                 Log::info('Sala aberta automaticamente', [
-                    'room_id' => $room->id,
-                    'room_code' => $room->code,
-                    'appointment_id' => $room->appointment_id,
+                    'room_id'              => $room->id,
+                    'room_code'            => $room->code,
+                    'appointment_id'       => $room->appointment_id,
                     'appointment_datetime' => $appointmentTime,
-                    'opened_at' => $now,
+                    'opened_at'            => $now,
                 ]);
 
                 $openedCount++;
@@ -63,9 +65,9 @@ class OpenScheduledRoomsCommand extends Command
                 $this->error("  ❌ {$room->code} - Erro: {$e->getMessage()}");
 
                 Log::error('Erro ao abrir sala automaticamente', [
-                    'room_id' => $room->id,
+                    'room_id'   => $room->id,
                     'room_code' => $room->code,
-                    'error' => $e->getMessage(),
+                    'error'     => $e->getMessage(),
                 ]);
 
                 $errors++;
@@ -78,8 +80,8 @@ class OpenScheduledRoomsCommand extends Command
 
         if ($openedCount > 0) {
             Log::info('Comando rooms:open-scheduled executado', [
-                'opened_count' => $openedCount,
-                'errors' => $errors,
+                'opened_count'      => $openedCount,
+                'errors'            => $errors,
                 'execution_time_ms' => $executionTime,
             ]);
         }

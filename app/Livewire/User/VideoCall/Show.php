@@ -11,7 +11,9 @@ use Livewire\Component;
 class Show extends Component
 {
     public Room $room;
+
     public string $displayName;
+
     public string $embedUrl;
 
     public function mount(string $code, JitsiService $jitsiService)
@@ -23,7 +25,7 @@ class Show extends Component
             $this->redirect(route('user.appointment.index'), navigate: true);
         }
 
-        $user = auth('user')->user();
+        $user              = auth('user')->user();
         $this->displayName = $user ? trim($user->name) : 'Convidado';
         $this->displayName = mb_substr($this->displayName, 0, 60);
 

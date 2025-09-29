@@ -4,7 +4,7 @@
     @enderror
 
     <x-heading>
-        <x-title>Realizar pagamento utilizando Cartão de Crédito</x-title>
+        {{-- <x-title>Realizar pagamento utilizando Cartão de Crédito</x-title> --}}
     </x-heading>
 
     {{-- <x-divider /> --}}
@@ -39,7 +39,7 @@
         @else
             <x-text>
                 <strong>Valor:</strong>
-                <x-badge class="badge-warning">R$ {{ number_format($payable->total_value, 2, ',', '.') }}</x-badge>
+                <x-badge class="badge-info">R$ {{ number_format($payable->total_value, 2, ',', '.') }}</x-badge>
             </x-text>
         @endif
     </div>
@@ -70,6 +70,6 @@
         <x-input type="text" wire:model="card_cvv" x-mask="999" />
         {{-- </x-field> --}}
 
-        <x-button class="btn-block btn-warning" type="submit">Realizar pagamento</x-button>
+        <x-button class="btn-block btn-info" type="submit">Realizar pagamento</x-button>
     </x-form>
 </div>

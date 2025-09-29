@@ -92,7 +92,7 @@ class Schedule extends Component
 
                 // Se for hoje, filtrar horários que já passaram
                 if ($date === now()->toDateString()) {
-                    $currentTime = now()->format('H:i');
+                    $currentTime   = now()->format('H:i');
                     $filteredTimes = array_filter($filteredTimes, function ($time) use ($currentTime) {
                         return $time > $currentTime;
                     });

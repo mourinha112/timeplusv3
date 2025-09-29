@@ -13,19 +13,19 @@ class CreditCard extends Component
     public $plan;
 
     #[Rule(['required', 'string', 'min:2', 'max:100', 'regex:/^[\p{L}\s]+$/u'])]
-    public ?string $card_holder = 'DENIS A C DA SILVA';
+    public ?string $card_holder = null;
 
     #[Rule(['required', 'size:16'])]
-    public ?string $card_number = '4000000000000010';
+    public ?string $card_number = null;
 
     #[Rule(['required', 'integer', 'between:1,12'])]
-    public ?int $card_expiry_month = 12;
+    public ?int $card_expiry_month = null;
 
     #[Rule(['required', 'integer', 'min:2025', 'max:2045'])]
-    public ?int $card_expiry_year = 2024;
+    public ?int $card_expiry_year = null;
 
     #[Rule(['required', 'digits_between:3,4'])]
-    public ?int $card_cvv = 123;
+    public ?int $card_cvv = null;
 
     public function mount($plan)
     {
@@ -36,9 +36,9 @@ class CreditCard extends Component
     {
         $this->validate();
 
-        $amountToCharge     = $this->plan->price_with_discount;
-        $originalAmount     = round((float) $this->plan->price, 2);
-        $discountAmount     = max(round($this->plan->discount_amount, 2), 0.0);
+        $amountToCharge = $this->plan->price_with_discount;
+        $originalAmount = round((float) $this->plan->price, 2);
+        // $discountAmount     = max(round($this->plan->discount_amount, 2), 0.0);
         $discountPercentage = $this->plan->hasDiscount()
             ? round((float) $this->plan->discount_percentage, 2)
             : 0.0;
@@ -88,18 +88,18 @@ class CreditCard extends Component
             }
 
             $subscribe->payments()->create([
-                'gateway_order_id'    => $paymentGateway['id'],
-                'gateway_charge_id'   => $paymentGateway['charges'][0]['id'],
-                'amount'              => $chargedAmount,
-                'payment_method'      => $paymentGateway['charges'][0]['payment_method'],
-                'status'              => $paymentGateway['status'],
-                'currency'            => $paymentGateway['currency'],
-                'description'         => $paymentGateway['items'][0]['description'] ?? null,
-                'paid_at'             => $paymentGateway['charges'][0]['paid_at'] ?? null,
-                'original_amount'     => $originalAmount,
-                'discount_value'      => $discountAmount,
+                'gateway_order_id'  => $paymentGateway['id'],
+                'gateway_charge_id' => $paymentGateway['charges'][0]['id'],
+                'amount'            => $chargedAmount,
+                'payment_method'    => $paymentGateway['charges'][0]['payment_method'],
+                'status'            => $paymentGateway['status'],
+                'currency'          => $paymentGateway['currency'],
+                'description'       => $paymentGateway['items'][0]['description'] ?? null,
+                'paid_at'           => $paymentGateway['charges'][0]['paid_at'] ?? null,
+                'original_amount'   => $originalAmount,
+                // 'discount_value'      => $discountAmount,
                 'discount_percentage' => $discountPercentage,
-                'discount'            => $discountAmount,
+                // 'discount'            => $discountAmount,
             ]);
 
             DB::commit();

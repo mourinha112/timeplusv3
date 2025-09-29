@@ -32,10 +32,10 @@ class Index extends Component
         return $client->appointments->first();
     }
 
-
     public function getLastAppointmentDate($client)
     {
         $lastAppointment = $this->getLastAppointment($client);
+
         return $lastAppointment ?
             \Carbon\Carbon::parse($lastAppointment->appointment_date)->format('d/m/Y') :
             'Nunca';

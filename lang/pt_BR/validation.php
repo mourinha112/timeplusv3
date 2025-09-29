@@ -255,6 +255,7 @@ return [
         'card_number'           => 'número do cartão',
         'room_code'             => 'código da sala',
         'roomCode'              => 'código da sala',
+        'card_holder'           => 'nome do titular',
     ],
 
 ];

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, MorphOne, HasOne};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasOne, MorphOne};
 
 class Appointment extends Model
 {

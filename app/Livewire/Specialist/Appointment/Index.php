@@ -166,6 +166,7 @@ class Index extends Component
         }
 
         $appointmentDateTime = \Carbon\Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time);
+
         return $appointmentDateTime->subMinutes(10); // 10min antes da consulta
     }
 

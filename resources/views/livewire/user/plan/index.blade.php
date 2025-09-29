@@ -69,7 +69,7 @@
                         <h2 class="text-3xl font-bold">{{ $plan->name }}</h2>
 
                         <div class="text-right">
-                            @if ($plan->hasDiscount())
+                            {{-- @if ($plan->hasDiscount())
                                 <x-badge class="badge-success badge-sm">
                                     -{{ $plan->discount_percentage_formatted }}%
                                 </x-badge>
@@ -84,11 +84,11 @@
                                     </span>
 
                                 </div>
-                            @else
+                            @else --}}
                                 <span class="text-xl"><x-text>R$</x-text>
                                     {{ number_format($plan->price, 2, ',', '.') }}
                                 </span>
-                            @endif
+                            {{-- @endif --}}
                         </div>
                     </div>
 

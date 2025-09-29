@@ -46,8 +46,8 @@ class Index extends Component
         }
 
         $appointmentDateTime = \Carbon\Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time);
-        $openTime = $appointmentDateTime->subMinutes(10);
-        $now = \Carbon\Carbon::now();
+        $openTime            = $appointmentDateTime->subMinutes(10);
+        $now                 = \Carbon\Carbon::now();
 
         if ($now >= $openTime) {
             return 'Disponível agora';
@@ -56,8 +56,9 @@ class Index extends Component
         $diffInMinutes = $now->diffInMinutes($openTime, false);
 
         if ($diffInMinutes >= 60) {
-            $hours = intval($diffInMinutes / 60);
+            $hours   = intval($diffInMinutes / 60);
             $minutes = $diffInMinutes % 60;
+
             return "Disponível em {$hours}h" . ($minutes > 0 ? " {$minutes}min" : "");
         }
 
@@ -71,6 +72,7 @@ class Index extends Component
         }
 
         $appointmentDateTime = \Carbon\Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time);
+
         return $appointmentDateTime->subMinutes(10); // 10min antes da consulta
     }
 

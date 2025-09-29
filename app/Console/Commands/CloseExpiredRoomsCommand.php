@@ -10,12 +10,13 @@ use Illuminate\Support\Facades\Log;
 class CloseExpiredRoomsCommand extends Command
 {
     protected $signature = 'rooms:close-expired';
+
     protected $description = 'Fecha salas de videochamada que passaram do horário programado';
 
     public function handle()
     {
         $startTime = microtime(true);
-        $now = Carbon::now();
+        $now       = Carbon::now();
 
         $this->info("🔍 Buscando salas expiradas... ({$now->format('Y-m-d H:i:s')})");
 
@@ -30,10 +31,11 @@ class CloseExpiredRoomsCommand extends Command
             ->get();
 
         $closedCount = 0;
-        $errors = 0;
+        $errors      = 0;
 
         if ($expiredRooms->isEmpty()) {
             $this->info("✅ Nenhuma sala expirada encontrada.");
+
             return Command::SUCCESS;
         }
 
@@ -43,14 +45,14 @@ class CloseExpiredRoomsCommand extends Command
             try {
                 // Fechar a sala
                 $room->update([
-                    'status' => 'closed',
+                    'status'    => 'closed',
                     'closed_at' => $now,
                 ]);
 
                 // Se tem appointment vinculado, marcar como completed
                 if ($room->appointment && $room->appointment->status !== 'completed') {
                     $room->appointment->update([
-                        'status' => 'completed'
+                        'status' => 'completed',
                     ]);
 
                     $this->line("  ✅ {$room->code} - Fechada e sessão #{$room->appointment->id} marcada como concluída");
@@ -60,17 +62,17 @@ class CloseExpiredRoomsCommand extends Command
                 }
 
                 $appointmentDateTime = Carbon::parse($room->appointment->appointment_date . ' ' . $room->appointment->appointment_time);
-                $scheduledCloseAt = $appointmentDateTime->addHour();
+                $scheduledCloseAt    = $appointmentDateTime->addHour();
 
                 Log::info('Sala fechada automaticamente', [
-                    'room_id' => $room->id,
-                    'room_code' => $room->code,
-                    'appointment_id' => $room->appointment_id,
+                    'room_id'                    => $room->id,
+                    'room_code'                  => $room->code,
+                    'appointment_id'             => $room->appointment_id,
                     'appointment_status_updated' => $room->appointment ? 'completed' : 'no_appointment',
-                    'appointment_datetime' => $room->appointment->appointment_date . ' ' . $room->appointment->appointment_time,
-                    'scheduled_close_at' => $scheduledCloseAt,
-                    'closed_at' => $now,
-                    'minutes_late' => $now->diffInMinutes($scheduledCloseAt),
+                    'appointment_datetime'       => $room->appointment->appointment_date . ' ' . $room->appointment->appointment_time,
+                    'scheduled_close_at'         => $scheduledCloseAt,
+                    'closed_at'                  => $now,
+                    'minutes_late'               => $now->diffInMinutes($scheduledCloseAt),
                 ]);
 
                 $closedCount++;
@@ -79,9 +81,9 @@ class CloseExpiredRoomsCommand extends Command
                 $this->error("  ❌ {$room->code} - Erro: {$e->getMessage()}");
 
                 Log::error('Erro ao fechar sala automaticamente', [
-                    'room_id' => $room->id,
+                    'room_id'   => $room->id,
                     'room_code' => $room->code,
-                    'error' => $e->getMessage(),
+                    'error'     => $e->getMessage(),
                 ]);
 
                 $errors++;
@@ -94,8 +96,8 @@ class CloseExpiredRoomsCommand extends Command
 
         if ($closedCount > 0) {
             Log::info('Comando rooms:close-expired executado', [
-                'closed_count' => $closedCount,
-                'errors' => $errors,
+                'closed_count'      => $closedCount,
+                'errors'            => $errors,
                 'execution_time_ms' => $executionTime,
             ]);
         }

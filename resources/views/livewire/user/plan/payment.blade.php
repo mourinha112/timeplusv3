@@ -72,9 +72,10 @@
                         </ul>
                     </div>
                     <div class="flex justify-between items-center mt-6">
-                        <x-text>{{ $plan->hasDiscount() ? 'Valor com desconto' : 'Valor do plano' }}</x-text>
+                        {{-- <x-text>{{ $plan->hasDiscount() ? 'Valor com desconto' : 'Valor do plano' }}</x-text> --}}
+                        <x-text>Valor do plano</x-text>
                         <div class="text-right">
-                            @if ($plan->hasDiscount())
+                            {{-- @if ($plan->hasDiscount())
                                 <span class="block text-sm text-base-content/50 line-through">
                                     <x-text>R$</x-text>
                                     {{ number_format($plan->price, 2, ',', '.') }}
@@ -88,12 +89,12 @@
                                         -{{ $plan->discount_percentage_formatted }}%
                                     </x-badge>
                                 </div>
-                            @else
+                            @else --}}
                                 <span class="text-3xl font-bold">
                                     <x-text>R$</x-text>
                                     {{ number_format($plan->price, 2, ',', '.') }}
                                 </span>
-                            @endif
+                            {{-- @endif --}}
                         </div>
                     </div>
                 </x-card-body>
