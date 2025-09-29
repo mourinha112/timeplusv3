@@ -73,11 +73,11 @@ class JitsiService
         $jitsiDomain = config('jitsi.domain');
 
         // Testando para ambiente local sem JWT
-        if (app()->environment('local')) {
-            $sanitizedName = $this->sanitizeDisplayName($displayName);
+        // if (app()->environment('local')) {
+        //     $sanitizedName = $this->sanitizeDisplayName($displayName);
 
-            return "https://meet.jit.si/" . urlencode($roomCode) . "#userInfo.displayName=" . urlencode($sanitizedName);
-        }
+        //     return "https://meet.jit.si/" . urlencode($roomCode) . "#userInfo.displayName=" . urlencode($sanitizedName);
+        // }
 
         // Testando para ambiente prod com JWT
         $jwt = $this->buildJwt($roomCode, $displayName);

@@ -67,8 +67,8 @@ Route::group(['middleware' => 'auth:user'], function () {
     Route::get('perfil', User\Profile\Update::class)->name('user.profile.update');
 
     /* VideoCall */
-    Route::redirect('videochamadas', '/agendamentos')->name('user.videocall.index');
-    Route::get('videochamadas/{code}', User\VideoCall\Show::class)->name('user.videocall.show');
+    Route::redirect('atendimento', '/agendamentos')->name('user.videocall.index');
+    Route::get('atendimento/{code}', User\VideoCall\Show::class)->name('user.videocall.show');
 });
 
 /* ----------------- */
@@ -125,8 +125,8 @@ Route::group(['middleware' => ['auth:specialist', 'onboarding:specialist']], fun
     Route::get('especialista/perfil/dados-profissionais', Specialist\Profile\ProfessionalDetail::class)->name('specialist.profile.professional-details');
 
     /* VideoCall */
-    Route::redirect('especialista/videochamadas', '/especialista/agendamentos')->name('specialist.videocall.index');
-    Route::get('especialista/videochamadas/{code}', Specialist\VideoCall\Show::class)->name('specialist.videocall.show');
+    Route::redirect('especialista/atendimento', '/especialista/agendamentos')->name('specialist.videocall.index');
+    Route::get('especialista/atendimento/{code}', Specialist\VideoCall\Show::class)->name('specialist.videocall.show');
 });
 
 /* ----------------- */
