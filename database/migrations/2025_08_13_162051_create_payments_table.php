@@ -30,6 +30,9 @@ return new class () extends Migration {
                 'partial_refunded',  // Estorno parcial
             ])->default('pending')->index();
 
+            $table->text('pix_key')->nullable();
+            $table->text('pix_qr_code')->nullable();
+
             $table->timestamp('paid_at')->nullable();
             $table->timestamp('expires_at')->nullable();
 

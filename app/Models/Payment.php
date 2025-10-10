@@ -30,6 +30,8 @@ class Payment extends Model
         'discount_percentage',
         'discount',
         'company_plan_name',
+        'pix_key',
+        'pix_qr_code',
     ];
 
     protected $casts = [

@@ -32,7 +32,9 @@
 
     @if($payment_method === 'pix' || $payable->payment?->payment_method === 'pix')
     <livewire:user.checkout.pix :payable="$payable" />
+    aaaaa
     @elseif($payment_method === 'credit_card' || $payable->payment?->payment_method === 'credit_card')
     <livewire:user.checkout.credit-card :payable="$payable" />
+    aaaaa
     @endif
 </div>

@@ -31,14 +31,8 @@ class Pix extends Component
         try {
             $payment = $this->payable->payment;
 
-            if (!$payment?->gateway_payment_id) {
-                return $this->addError('payment', 'Nenhum pagamento encontrado para esta consulta.');
-            }
-
-            $qrCode = $this->getCachedQrCode($payment->gateway_payment_id);
-
-            $this->pixKey    = $qrCode['payload'] ?? null;
-            $this->pixQrCode = isset($qrCode['encodedImage']) ? 'data:image/png;base64,' . $qrCode['encodedImage'] : null;
+            $this->pixKey    = $payment['pix_key'] ?? null;
+            $this->pixQrCode = isset($payment['pix_qr_code']) ? 'data:image/png;base64,' . $payment['pix_qr_code'] : null;
 
             $this->isLoading = false;
         } catch (PagarmeException $e) {
@@ -48,11 +42,25 @@ class Pix extends Component
         }
     }
 
-    protected function getCachedQrCode(string $paymentId): array
+    public function generatePix()
     {
-        return Cache::remember("pix_base64_gateway_payment_id_{$paymentId}", now()->addMinutes(10), function () use ($paymentId) {
-            return Pagarme::payment()->pixQrCode($paymentId);
-        });
+        try {
+            $this->isLoading = true;
+
+            $response = Pagarme::payment()->createWithPix([
+                'amount' => $this->payable->total_amount,
+            ]);
+
+            dd($response);
+
+            $this->loadPixQrCode();
+        } catch (PagarmeException $e) {
+            $this->isLoading = false;
+            return $this->addError('payment', $e->getMessage());
+        } catch (\Exception $e) {
+            $this->isLoading = false;
+            return $this->addError('payment', $e->getMessage());
+        }
     }
 
     public function render()

@@ -216,7 +216,7 @@ class CreditCard extends Component
                 'card_holder'      => $this->card_holder_name,
             ]);
 
-            return $this->addError('payment', 'Erro no pagamento: ' . $e->getMessage());
+            return $this->addError('payment', 'Ocorreu um erro ao realizar o pagamento. Verifique os dados do cartão e tente novamente.');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Erro interno no pagamento com cartão de crédito', [
