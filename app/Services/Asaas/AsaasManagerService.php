@@ -1,12 +1,17 @@
 <?php
 
-namespace App\Services\Pagarme;
+namespace App\Services\Asaas;
 
-class PagarmeManagerService
+class AsaasManagerService
 {
     public function customer(): CustomerService
     {
         return new CustomerService();
+    }
+
+    public function charge(): ChargeService
+    {
+        return new ChargeService();
     }
 
     public function payment(): PaymentService

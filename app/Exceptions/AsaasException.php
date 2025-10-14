@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 
-class PagarmeException extends Exception
+class AsaasException extends Exception
 {
     protected $errors;
 

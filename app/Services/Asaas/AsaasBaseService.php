@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Services\Pagarme;
+namespace App\Services\Asaas;
 
-use App\Exceptions\PagarmeException;
+use App\Exceptions\AsaasException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
-abstract class PagarmeBaseService
+abstract class AsaasBaseService
 {
     /**
-     * Chave de API.
+     * Chave de API do Asaas.
      *
      * @var string
      */
     protected string $apiKey;
 
     /**
-     * URL base da API.
+     * URL base da API do Asaas.
      *
      * @var string
      */
@@ -38,24 +38,24 @@ abstract class PagarmeBaseService
 
     public function __construct()
     {
-        $this->apiKey        = config('services.pagarme.api_key');
-        $this->baseUrl       = config('services.pagarme.base_url');
-        $this->timeout       = config('services.pagarme.timeout');
-        $this->retryAttempts = config('services.pagarme.retry_attempts');
+        $this->apiKey        = config('services.asaas.api_key');
+        $this->baseUrl       = config('services.asaas.base_url');
+        $this->timeout       = config('services.asaas.timeout', 30);
+        $this->retryAttempts = config('services.asaas.retry_attempts', 3);
 
         if (!$this->apiKey) {
-            throw new PagarmeException('API Key não configurada na requisição.');
+            throw new AsaasException('API Key do Asaas não configurado.');
         }
     }
 
     /**
-     * Realiza uma requisição HTTP para a API.
+     * Realiza uma requisição HTTP para a API do Asaas.
      *
      * @param string $method Método HTTP (get, post, put, delete).
      * @param string $endpoint Endpoint da API.
      * @param array $data Dados a serem enviados na requisição.
      * @return array Resposta da API.
-     * @throws PagarmeException
+     * @throws AsaasException
      */
     protected function makeRequest(string $method, string $endpoint, array $data = []): array
     {
@@ -63,10 +63,10 @@ abstract class PagarmeBaseService
 
         try {
             $response = Http::withHeaders([
-                'Accept'        => 'application/json',
-                'Authorization' => "Basic " . base64_encode("{$this->apiKey}:"),
-                'Content-Type'  => 'application/json',
-                'User-Agent'    => 'Laravel-Pagarme-Integration/1.0',
+                'access_token' => $this->apiKey,
+                'Content-Type' => 'application/json',
+                'Accept'       => 'application/json',
+                'User-Agent'   => 'Laravel-Asaas-Integration/1.0',
             ])
             ->timeout($this->timeout)
             ->retry($this->retryAttempts, 1000)
@@ -74,17 +74,21 @@ abstract class PagarmeBaseService
 
             return $this->handleResponse($response);
 
+        } catch (AsaasException $e) {
+            // Re-lança AsaasException sem modificar (mantém code e errors originais)
+            throw $e;
         } catch (\Exception $e) {
-            throw new PagarmeException('Erro de comunicação com a API: ' . $e->getMessage(), 500);
+            // Apenas erros de rede/timeout são encapsulados
+            throw new AsaasException('Erro de comunicação com Asaas:: ' . $e->getMessage(), 500);
         }
     }
 
     /**
-     * Manipula a resposta da API.
+     * Manipula a resposta da API do Asaas.
      *
      * @param Response $response
      * @return array
-     * @throws PagarmeException
+     * @throws AsaasException
      */
     protected function handleResponse(Response $response): array
     {
@@ -95,16 +99,16 @@ abstract class PagarmeBaseService
         }
 
         $errors  = $data['errors'] ?? [];
-        $message = $data['message'] ?? 'Erro na requisição para a API.';
+        $message = $data['message'] ?? 'Erro na requisição para Asaas.';
 
-        throw new PagarmeException($message, $response->status(), $errors);
+        throw new AsaasException($message, $response->status(), $errors);
     }
 
     /**
-     * Métodos HTTP para interagir com a API.
+     * Métodos HTTP para interagir com a API do Asaas.
      * Cada método corresponde a um tipo de requisição.
      */
-    protected function get(string $endpoint, array $params = [], $cached = true): array
+    protected function get(string $endpoint, array $params = []): array
     {
         $queryString = !empty($params) ? '?' . http_build_query($params) : '';
 
