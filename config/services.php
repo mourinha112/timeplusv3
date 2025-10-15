@@ -14,11 +14,12 @@ return [
     |
     */
 
-    'pagarme' => [
-        'api_key'        => env('PAGARME_API_KEY'),
-        'base_url'       => env('PAGARME_BASE_URL'),
-        'timeout'        => env('PAGARME_TIMEOUT', 30),
-        'retry_attempts' => env('PAGARME_RETRY_ATTEMPTS', 3),
+    'asaas' => [
+        'api_key'        => env('ASAAS_API_KEY'),
+        'base_url'       => env('ASAAS_API_URL'),
+        'timeout'        => env('ASAAS_TIMEOUT', 30),
+        'retry_attempts' => env('ASAAS_RETRY_ATTEMPTS', 3),
+        'webhook_token'  => env('ASAAS_WEBHOOK_TOKEN'),
     ],
 
     'sendgrid' => [

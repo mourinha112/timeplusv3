@@ -52,10 +52,10 @@ class ShowTable extends PowerGridComponent
             })
             ->add('status_formatted', function (Payment $model) {
                 return match ($model->status) {
-                    'paid'    => 'Pago',
-                    'pending' => 'Pendente',
-                    'failed'  => 'Falhou',
-                    default   => (string) $model->status,
+                    'paid'            => 'Pago',
+                    'pending_payment' => 'Pendente',
+                    'failed'          => 'Falhou',
+                    default           => (string) $model->status,
                 };
             })
             ->add('amount_formatted', fn (Payment $model) => 'R$ ' . number_format((float) $model->amount, 2, ',', '.'))

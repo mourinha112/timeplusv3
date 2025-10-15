@@ -13,9 +13,11 @@ return new class () extends Migration {
             $table->enum('status', ['open', 'closed'])->default('open');
             $table->string('created_by')->nullable();
             $table->timestamp('closed_at')->nullable();
+            $table->foreignId('appointment_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
+
     public function down(): void
     {
         Schema::dropIfExists('rooms');

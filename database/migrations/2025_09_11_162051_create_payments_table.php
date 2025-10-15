@@ -46,7 +46,16 @@ return new class () extends Migration {
             $table->timestamp('refunded_at')->nullable();
             $table->text('refund_reason')->nullable();
 
+            // Company discount fields
+            $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
+            $table->decimal('discount_value', 10, 2)->nullable()->default(0);
+            $table->decimal('discount_percentage', 5, 2)->nullable()->default(0);
+            $table->string('company_plan_name')->nullable();
+
             $table->timestamps();
+
+            // Índices
+            $table->index('company_id');
         });
     }
 

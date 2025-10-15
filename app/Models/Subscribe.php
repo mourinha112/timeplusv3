@@ -28,4 +28,9 @@ class Subscribe extends Model
     {
         return $this->morphMany(Payment::class, 'payable');
     }
+
+    public function payment()
+    {
+        return $this->morphOne(Payment::class, 'payable')->latest();
+    }
 }

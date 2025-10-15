@@ -32,8 +32,10 @@
                                 <td>{{ $subscribe->plan->name }}</td>
                                 <td>{{ $subscribe->plan->duration_days }} dias</td>
                                 <td>
-                                    @if ($subscribe->end_date > now() && !$subscribe->cancelled_date)
+                                    @if ($subscribe->end_date > now() && !$subscribe->cancelled_date && $subscribe->payment->status === 'paid')
                                         <span class="badge badge-success badge-sm">Ativo</span>
+                                    @elseif($subscribe->payment->status === 'pending_payment')
+                                        <span class="badge badge-warning badge-sm">Pendente</span>
                                     @elseif($subscribe->cancelled_date)
                                         <span class="badge badge-error badge-sm">Cancelado</span>
                                     @else

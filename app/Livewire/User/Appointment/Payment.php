@@ -19,7 +19,9 @@ class Payment extends Component
             $this->appointment = Appointment::where(['id' => $appointment_id, 'user_id' => Auth::id()])->first();
 
             if (!$this->appointment) {
-                return redirect()->route('user.appointment.index');
+                $this->redirect(route('user.appointment.index'), navigate: true);
+
+                return;
             }
         } catch (\Exception $e) {
             Log::error('Erro interno::' . get_class($this), [

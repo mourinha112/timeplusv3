@@ -1,4 +1,4 @@
-<div>
+<div x-data>
     <x-heading>
         <x-title>Planos</x-title>
         <x-subtitle>Escolha o plano que melhor se adapta às suas necessidades.</x-subtitle>
@@ -20,7 +20,8 @@
                                 de desconto</strong>, você não pode contratar planos individuais.
                         </p>
                         <p class="mt-2">
-                            <x-link class="!link-neutral" href="{{ route('user.subscribe.show') }}" wire:navigate>Ver detalhes do plano
+                            <x-link class="!link-neutral" href="{{ route('user.subscribe.show') }}" wire:navigate>Ver
+                                detalhes do plano
                                 empresarial →</x-link>
                         </p>
                     </div>
@@ -43,7 +44,8 @@
                         <p class="mt-1">Entre em contato com sua empresa para mais informações sobre a reativação do
                             plano.</p>
                         <p class="mt-2">
-                            <x-link class="!link-neutral" href="{{ route('user.subscribe.show') }}" wire:navigate>Ver detalhes
+                            <x-link class="!link-neutral" href="{{ route('user.subscribe.show') }}" wire:navigate>Ver
+                                detalhes
                                 →</x-link>
                         </p>
                     </div>
@@ -85,9 +87,9 @@
 
                                 </div>
                             @else --}}
-                                <span class="text-xl"><x-text>R$</x-text>
-                                    {{ number_format($plan->price, 2, ',', '.') }}
-                                </span>
+                            <span class="text-xl"><x-text>R$</x-text>
+                                {{ number_format($plan->price, 2, ',', '.') }}
+                            </span>
                             {{-- @endif --}}
                         </div>
                     </div>
@@ -121,15 +123,37 @@
                                 </button>
                             @endif
                         @else
-                            <x-btn-link class="btn-block"
-                                href="{{ route('user.plan.payment', ['plan_id' => $plan->id]) }}" wire:navigate>
+                            <x-button class="btn-block" wire:click="confirmSubscription({{ $plan->id }})">
                                 Assinar
                                 <x-carbon-checkmark-outline class="w-4 h-4" />
-                            </x-btn-link>
+                            </x-button>
                         @endif
                     </div>
                 </x-card-body>
             </x-card>
         @endforeach
     </div>
+
+    @script
+        <script>
+            $wire.on('swal:confirm', (event) => {
+                const data = event[0];
+                Swal.fire({
+                    icon: data.icon,
+                    title: data.title,
+                    text: data.text,
+                    html: data.html,
+                    showCancelButton: true,
+                    confirmButtonText: data.confirmButtonText,
+                    cancelButtonText: data.cancelButtonText,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $wire.call(data.method, data.params);
+                    }
+                });
+            });
+        </script>
+    @endscript
 </div>

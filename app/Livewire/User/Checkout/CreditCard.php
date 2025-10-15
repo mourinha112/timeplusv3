@@ -2,8 +2,8 @@
 
 namespace App\Livewire\User\Checkout;
 
-use App\Exceptions\PagarmeException;
-use App\Facades\Pagarme;
+use App\Exceptions\AsaasException;
+use App\Facades\Asaas;
 use App\Models\Room;
 use App\Services\JitsiService;
 use Illuminate\Support\Facades\{Auth, DB, Log};
@@ -16,19 +16,19 @@ class CreditCard extends Component
 
     /* Informações do cartão de crédito */
     #[Rule(['required', 'string', 'min:2', 'max:100', 'regex:/^[\p{L}\s]+$/u'])]
-    public ?string $card_holder_name = null;
+    public ?string $card_holder_name = 'DENIS A C DA SILVA';
 
     #[Rule(['required', 'regex:/^[0-9\s\-]+$/', 'min:13', 'max:19'])]
-    public ?string $card_number = null;
+    public ?string $card_number = '1234567812345678';
 
     #[Rule(['required', 'integer', 'between:1,12'])]
-    public ?int $card_expiry_month = null;
+    public ?int $card_expiry_month = 12;
 
     #[Rule(['required', 'integer', 'min:2025', 'max:2045'])]
-    public ?int $card_expiry_year = null;
+    public ?int $card_expiry_year = 2025;
 
     #[Rule(['required', 'digits_between:3,4'])]
-    public ?int $card_cvv = null;
+    public ?int $card_cvv = 123;
 
     public function mount($payable)
     {
@@ -40,11 +40,12 @@ class CreditCard extends Component
         $user = Auth::user();
 
         try {
-            $paymentCalculation = $user->calculatePaymentAmount($this->payable->total_value);
+            $baseAmount         = $this->getBaseAmount();
+            $paymentCalculation = $this->calculateDiscount($user, $baseAmount);
 
             return $paymentCalculation['employee_amount'];
         } catch (\Exception $e) {
-            return $this->payable->total_value;
+            return $this->getBaseAmount();
         }
     }
 
@@ -53,7 +54,8 @@ class CreditCard extends Component
         $user = Auth::user();
 
         try {
-            $paymentCalculation = $user->calculatePaymentAmount($this->payable->total_value);
+            $baseAmount         = $this->getBaseAmount();
+            $paymentCalculation = $this->calculateDiscount($user, $baseAmount);
 
             return $paymentCalculation['has_company_discount'];
         } catch (\Exception $e) {
@@ -66,15 +68,30 @@ class CreditCard extends Component
         $user = Auth::user();
 
         try {
-            return $user->calculatePaymentAmount($this->payable->total_value);
+            $baseAmount = $this->getBaseAmount();
+
+            return $this->calculateDiscount($user, $baseAmount);
         } catch (\Exception $e) {
+            $baseAmount = $this->getBaseAmount();
+
             return [
-                'employee_amount'      => $this->payable->total_value,
+                'employee_amount'      => $baseAmount,
                 'company_amount'       => 0,
                 'discount_percentage'  => 0,
                 'has_company_discount' => false,
             ];
         }
+    }
+
+    protected function getBaseAmount(): float
+    {
+        if ($this->payable instanceof \App\Models\Appointment) {
+            return $this->payable->total_value;
+        } elseif ($this->payable instanceof \App\Models\Subscribe) {
+            return $this->payable->plan->price;
+        }
+
+        return 0;
     }
 
     public function pay()
@@ -95,11 +112,16 @@ class CreditCard extends Component
             $user = Auth::user();
 
             if (!$user->gateway_customer_id) {
-                return $this->addError('payment', 'Cliente não configurado no gateway de pagamento.');
+                $this->addError('payment', 'Cliente não configurado no gateway de pagamento.');
+
+                return;
             }
 
-            // Calcular informações de desconto se o usuário tem empresa
-            $paymentCalculation = $user->calculatePaymentAmount($this->payable->total_value);
+            // Obter valor base do payable
+            $baseAmount = $this->getBaseAmount();
+
+            // Calcular informações de desconto se o usuário tem plano individual ativo
+            $paymentCalculation = $this->calculateDiscount($user, $baseAmount);
             $finalAmount        = $paymentCalculation['employee_amount'];
             $discountValue      = $paymentCalculation['company_amount'] ?? 0;
             $discountPercentage = $paymentCalculation['discount_percentage'] ?? 0;
@@ -109,7 +131,9 @@ class CreditCard extends Component
             if ($finalAmount <= 0) {
                 DB::rollBack();
 
-                return $this->addError('payment', 'Valor de pagamento inválido.');
+                $this->addError('payment', 'Valor de pagamento inválido.');
+
+                return;
             }
 
             // Buscar company_id se há desconto
@@ -128,27 +152,39 @@ class CreditCard extends Component
             if (strlen($cleanCardNumber) < 13 || strlen($cleanCardNumber) > 19) {
                 DB::rollBack();
 
-                return $this->addError('payment', 'Número do cartão inválido.');
+                $this->addError('payment', 'Número do cartão inválido.');
+
+                return;
             }
 
+            // Determinar descrição baseado no tipo
+            $description = $this->payable instanceof \App\Models\Appointment
+                ? 'Pagamento da sessão #' . $this->payable->id
+                : 'Assinatura do plano ' . $this->payable->plan->name;
+
             // Criação do pagamento no gateway
-            $paymentGateway = Pagarme::payment()->createWithCreditCard([
+            $paymentGateway = Asaas::payment()->createWithCreditCard([
                 'card_number' => $cleanCardNumber,
                 'holder_name' => $cleanHolderName,
                 'exp_month'   => $this->card_expiry_month,
                 'exp_year'    => $this->card_expiry_year,
                 'cvv'         => $this->card_cvv,
                 'amount'      => $finalAmount,
-                'description' => 'Pagamento da sessão #' . $this->payable->id,
-                'item_code'   => $this->payable->id,
+                'description' => $description,
+                'item_code'   => $this->payable->id ?? 0,
                 'customer_id' => $user->gateway_customer_id,
+                'email'       => $user->email,
+                'document'    => preg_replace('/[^0-9]/', '', $user->cpf),
+                'phone'       => preg_replace('/[^0-9]/', '', $user->phone_number),
             ]);
 
             // Verifica se o pagamento foi realizado com sucesso
             if ($paymentGateway['status'] !== 'paid') {
                 DB::rollBack();
 
-                return $this->addError('payment', 'Não foi possível realizar o pagamento. Verifique os dados do cartão.');
+                $this->addError('payment', 'Não foi possível realizar o pagamento. Verifique os dados do cartão.');
+
+                return;
             }
 
             // Preparar metadata com informações adicionais
@@ -178,7 +214,7 @@ class CreditCard extends Component
                         now()->parse($paymentGateway['charges'][0]['paid_at']) : now(),
                     'metadata'            => $metadata,
                     'company_id'          => $companyId,
-                    'original_amount'     => $this->payable->total_value,
+                    'original_amount'     => $baseAmount,
                     'discount_value'      => $discountValue,
                     'discount_percentage' => $discountPercentage,
                     'company_plan_name'   => $companyPlanName,
@@ -205,18 +241,19 @@ class CreditCard extends Component
                 session()->flash('success', 'Pagamento realizado com sucesso!');
             }
 
-            return $this->redirect(route('user.appointment.index'));
-        } catch (PagarmeException $e) {
+            $this->redirect(route('user.appointment.index'), navigate: true);
+        } catch (AsaasException $e) {
             DB::rollBack();
-            Log::error('Erro do Pagar.me no pagamento com cartão', [
+            Log::error('Erro do Asaas no pagamento com cartão', [
                 'message'          => $e->getMessage(),
                 'payable_id'       => $this->payable->id,
                 'user_id'          => Auth::id(),
-                'card_last_digits' => substr($cleanCardNumber ?? $this->card_number, -4),
-                'card_holder'      => $this->card_holder_name,
+                'card_last_digits' => substr($cleanCardNumber ?? $this->card_number ?? '', -4),
             ]);
 
-            return $this->addError('payment', 'Ocorreu um erro ao realizar o pagamento. Verifique os dados do cartão e tente novamente.');
+            $this->addError('payment', 'Ocorreu um erro ao realizar o pagamento. Verifique os dados do cartão e tente novamente.');
+
+            return;
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Erro interno no pagamento com cartão de crédito', [
@@ -229,8 +266,68 @@ class CreditCard extends Component
                 'card_last_digits' => substr($cleanCardNumber ?? $this->card_number, -4),
             ]);
 
-            return $this->addError('payment', 'Erro interno: ' . $e->getMessage());
+            $this->addError('payment', 'Erro interno: ' . $e->getMessage());
+
+            return;
         }
+    }
+
+    protected function calculateDiscount($user, $originalAmount)
+    {
+        // 1. Primeiro, verificar CompanyPlan (funcionários de empresa)
+        $activeCompanyPlan = $user->getActiveCompanyPlan();
+
+        if ($activeCompanyPlan && $activeCompanyPlan->companyPlan) {
+            $discountPercentage = $activeCompanyPlan->companyPlan->discount_percentage ?? 0;
+
+            if ($discountPercentage > 0) {
+                $discountAmount = ($originalAmount * $discountPercentage) / 100;
+                $finalAmount = $originalAmount - $discountAmount;
+
+                return [
+                    'employee_amount'      => round($finalAmount, 2),
+                    'company_amount'       => round($discountAmount, 2),
+                    'discount_percentage'  => $discountPercentage,
+                    'has_company_discount' => true,
+                    'company_name'         => $activeCompanyPlan->company->name,
+                    'plan_name'            => $activeCompanyPlan->companyPlan->name,
+                ];
+            }
+        }
+
+        // 2. Se não tem CompanyPlan, verificar Subscribe/Plan (plano individual)
+        $activeSubscribe = $user->subscribes()
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->whereNull('cancelled_date')
+            ->with('plan')
+            ->first();
+
+        if ($activeSubscribe && $activeSubscribe->plan) {
+            $discountPercentage = $activeSubscribe->plan->discount_percentage ?? 0;
+
+            if ($discountPercentage > 0) {
+                $discountAmount = ($originalAmount * $discountPercentage) / 100;
+                $finalAmount = $originalAmount - $discountAmount;
+
+                return [
+                    'employee_amount'      => round($finalAmount, 2),
+                    'company_amount'       => round($discountAmount, 2),
+                    'discount_percentage'  => $discountPercentage,
+                    'has_company_discount' => true,
+                    'company_name'         => $activeSubscribe->plan->name,
+                    'plan_name'            => $activeSubscribe->plan->name,
+                ];
+            }
+        }
+
+        // 3. Sem desconto disponível
+        return [
+            'employee_amount'      => $originalAmount,
+            'company_amount'       => 0,
+            'discount_percentage'  => 0,
+            'has_company_discount' => false,
+        ];
     }
 
     private function createRoomForAppointment($appointment)

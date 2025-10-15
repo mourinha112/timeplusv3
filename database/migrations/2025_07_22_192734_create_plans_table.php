@@ -13,6 +13,7 @@ return new class () extends Migration {
             $table->decimal('price', 10, 2);
             $table->decimal('discount_percentage', 10, 2);
             $table->integer('duration_days');
+            $table->timestamps();
         });
     }
 

@@ -2,7 +2,7 @@
 
 namespace App\Livewire\User\Auth;
 
-use App\Facades\Pagarme;
+use App\Facades\Asaas;
 use App\Models\User;
 use App\Notifications\User\WelcomeNotification;
 use App\Rules\{FormattedCpf, FormattedPhoneNumber, ValidatedCpf};
@@ -55,7 +55,7 @@ class Register extends Component
                 'password'     => bcrypt($this->password),
             ]);
 
-            $gateway = Pagarme::customer()->create([
+            $gateway = Asaas::customer()->create([
                 'code'         => $user->id,
                 'name'         => $user->name,
                 'email'        => $user->email,

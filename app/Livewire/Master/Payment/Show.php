@@ -13,7 +13,7 @@ class Show extends Component
 
     public function mount(Payment $payment): void
     {
-        $this->payment = $payment->load(['payable']);
+        $this->payment = $payment->load(['payable', 'company']);
     }
 
     public function render()

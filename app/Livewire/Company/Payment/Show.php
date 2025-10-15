@@ -21,7 +21,7 @@ class Show extends Component
             abort(403, 'Acesso negado a este pagamento.');
         }
 
-        $this->payment = $payment->load(['payable.user', 'payable.specialist']);
+        $this->payment = $payment->load(['payable.user', 'payable.specialist', 'company']);
     }
 
     public function render()

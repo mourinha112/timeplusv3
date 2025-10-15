@@ -11,12 +11,14 @@ return new class () extends Migration {
             $table->id();
             $table->foreignId('company_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('company_plan_id')->nullable()->constrained()->onDelete('set null');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             // Índices para performance
             $table->index(['company_id', 'is_active']);
             $table->index(['user_id', 'is_active']);
+            $table->index(['company_plan_id', 'is_active']);
 
             // Evitar duplicatas
             $table->unique(['company_id', 'user_id']);

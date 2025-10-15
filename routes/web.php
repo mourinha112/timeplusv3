@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\{Auth, Route};
  */
 Route::get('/', Welcome::class)->name('welcome');
 
+/**
+ * Webhook Routes (sem autenticação)
+ */
+Route::post('asaas/webhook', [App\Http\Controllers\AsaasWebhookController::class, 'handle'])
+    ->name('asaas.webhook');
+
 /* ----------- */
 /* User Routes */
 /* ----------- */

@@ -15,6 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'guest'      => \App\Http\Middleware\Guest::class,
             'onboarding' => \App\Http\Middleware\Onboarding::class,
         ]);
+
+        // Excluir rotas de webhook da proteção CSRF
+        $middleware->validateCsrfTokens(except: [
+            'asaas/webhook',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

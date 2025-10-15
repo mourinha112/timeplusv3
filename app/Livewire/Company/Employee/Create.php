@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Company\Employee;
 
-use App\Facades\Pagarme;
+use App\Facades\Asaas;
 use App\Models\User;
 use Illuminate\Support\Facades\{Auth, DB, Log};
 use Illuminate\Support\Str;
@@ -74,8 +74,8 @@ class Create extends Component
                 'is_active'    => true,
             ]);
 
-            // Criar customer no gateway Pagar.me
-            $gateway = Pagarme::customer()->create([
+            // Criar customer no gateway Asaas
+            $gateway = Asaas::customer()->create([
                 'code'         => $this->user->id,
                 'name'         => $this->user->name,
                 'email'        => $this->user->email,

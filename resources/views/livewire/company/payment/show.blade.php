@@ -110,7 +110,7 @@
                         {{ number_format($payment->amount, 2, ',', '.') }}</x-text>
                 </div>
                 <div class="flex justify-between items-center">
-                    <x-label>Desconto (Cobrado à {{ $payment->company->name }})</x-label>
+                    <x-label>Desconto (Cobrado à {{ $payment->company?->name ?? 'Empresa' }})</x-label>
                     <x-text class="text-xl font-medium text-success">R$
                         {{ number_format($payment->discount_value, 2, ',', '.') }}</x-text>
                 </div>

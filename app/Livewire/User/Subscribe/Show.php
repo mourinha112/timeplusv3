@@ -5,7 +5,7 @@ namespace App\Livewire\User\Subscribe;
 use App\Models\{CompanyUser, User};
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
-use Livewire\Attributes\Layout;
+use Livewire\Attributes\{Computed, Layout};
 use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Assinatura', 'guard' => 'user'])]
@@ -16,6 +16,19 @@ class Show extends Component
     public $companyPlan;
 
     public $hasCompanyPlan = false;
+
+    #[Computed]
+    public function pendingSubscribe()
+    {
+        $user = User::find(Auth::id());
+
+        return $user->subscribes()
+            ->whereHas('payments', function ($query) {
+                $query->whereIn('status', ['pending', 'pending_payment']);
+            })
+            ->with('plan', 'payments')
+            ->first();
+    }
 
     public function mount()
     {

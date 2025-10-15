@@ -59,6 +59,77 @@ class Index extends Component
         }
     }
 
+    public function confirmSubscription($planId)
+    {
+        // Limpar Subscribes pendentes antigos (mais de 30 minutos sem pagamento)
+        Subscribe::where('user_id', Auth::id())
+            ->whereDoesntHave('payments', function ($query) {
+                $query->whereIn('status', ['paid', 'confirmed']);
+            })
+            ->where('created_at', '<', now()->subMinutes(30))
+            ->delete();
+
+        // Verificar se tem algum pagamento pendente recente (com ou sem payment)
+        $pendingSubscribe = Subscribe::where('user_id', Auth::id())
+            ->where(function ($query) {
+                // Sem pagamentos confirmados
+                $query->whereDoesntHave('payments', function ($q) {
+                    $q->whereIn('status', ['paid', 'confirmed']);
+                })
+                // OU com pagamentos pendentes
+                ->orWhereHas('payments', function ($q) {
+                    $q->whereIn('status', ['pending', 'pending_payment']);
+                });
+            })
+            ->first();
+
+        if ($pendingSubscribe) {
+            $this->dispatch('swal:confirm', [
+                'icon'              => 'warning',
+                'title'             => 'Atenção!',
+                'text'              => 'Você já tem uma assinatura aguardando pagamento. Complete o pagamento antes de iniciar outra.',
+                'confirmButtonText' => 'Ir para o pagamento',
+                'cancelButtonText'  => 'Cancelar',
+                'method'            => 'goToPendingPayment',
+                'params'            => ['subscribe_id' => $pendingSubscribe->id],
+            ]);
+
+            return;
+        }
+
+        // Confirmação de assinatura
+        $plan = Plan::findOrFail($planId);
+
+        $this->dispatch('swal:confirm', [
+            'icon'  => 'warning',
+            'title' => 'Confirmar Assinatura',
+            'html'  => "
+                <div class='text-left space-y-2'>
+                    <p><strong>Plano:</strong> {$plan->name}</p>
+                    <p><strong>Valor:</strong> R$ " . number_format($plan->price, 2, ',', '.') . "</p>
+                    <p><strong>Duração:</strong> {$plan->duration_days} dias</p>
+                    <hr class='my-4' />
+                    <p class='text-sm text-warning'>⚠️ Ao continuar, você será direcionado para o pagamento e <strong>deverá finalizar a compra</strong>.</p>
+                </div>
+            ",
+            'confirmButtonText' => 'Continuar para o pagamento',
+            'cancelButtonText'  => 'Cancelar',
+            'method'            => 'proceedToPayment',
+            'params'            => ['plan_id' => $planId],
+        ]);
+    }
+
+    public function goToPendingPayment($data)
+    {
+        $subscribe = Subscribe::findOrFail($data['subscribe_id']);
+        $this->redirect(route('user.plan.payment', ['plan_id' => $subscribe->plan_id]), navigate: true);
+    }
+
+    public function proceedToPayment($data)
+    {
+        $this->redirect(route('user.plan.payment', ['plan_id' => $data['plan_id']]), navigate: true);
+    }
+
     public function render()
     {
         return view('livewire.user.plan.index');

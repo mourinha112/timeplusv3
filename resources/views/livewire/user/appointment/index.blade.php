@@ -64,28 +64,9 @@
                                 <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d/m/Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') }}</td>
                                 <td>
-                                    @if ($this->hasDiscount($appointment))
-                                        @php $discountInfo = $this->getDiscountInfo($appointment); @endphp
-                                        <div class="tooltip"
-                                            data-tip="Desconto aplicado através do plano da empresa {{ $discountInfo['plan_name'] ?? '' }}">
-                                            <div class="space-y-1">
-                                                <div class="text-xs text-base-content/50 line-through">
-                                                    De: R$ {{ number_format($appointment->total_value, 2, ',', '.') }}
-                                                </div>
-                                                <div class="font-semibold text-success">
-                                                    Por: R$
-                                                    {{ number_format($discountInfo['employee_amount'], 2, ',', '.') }}
-                                                </div>
-                                                <div class="badge badge-success badge-xs">
-                                                    {{ $discountInfo['discount_percentage'] }}% OFF
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @else
-                                        <span class="font-semibold text-info">
-                                            R$ {{ number_format($appointment->total_value, 2, ',', '.') }}
-                                        </span>
-                                    @endif
+                                    <span class="font-semibold text-info">
+                                        R$ {{ number_format($appointment->payment->amount, 2, ',', '.') }}
+                                    </span>
                                 </td>
                                 <td>
                                     @if ($appointment->status === 'completed')
@@ -139,9 +120,7 @@
                                         <div class="tooltip" data-tip="Sala será aberta 10 minutos antes da consulta">
                                             <span class="badge badge-warning badge-sm">
                                                 <x-carbon-time class="w-3 h-3 mr-1" />
-                                                <div x-data="countdown('{{ $this->getRoomOpenTime($appointment)?->toISOString() }}')"
-                                                     x-text="timeLeft"
-                                                     class="inline">
+                                                <div x-data="countdown('{{ $this->getRoomOpenTime($appointment)?->toISOString() }}')" x-text="timeLeft" class="inline">
                                                     Carregando...
                                                 </div>
                                             </span>

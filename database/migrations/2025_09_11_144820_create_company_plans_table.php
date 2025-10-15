@@ -10,10 +10,10 @@ return new class () extends Migration {
         Schema::create('company_plans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->constrained()->onDelete('cascade');
-            $table->foreignId('plan_id')->constrained()->onDelete('cascade');
-            $table->integer('duration_days');
-            $table->decimal('price', 10, 2);
+            $table->string('name');
+            $table->integer('employee_count')->default(1);
             $table->decimal('discount_percentage', 5, 2)->default(0);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Company\Employee;
 
-use App\Facades\Pagarme;
+use App\Facades\Asaas;
 use App\Models\{CompanyUser, User};
 use Illuminate\Support\Facades\{Auth, DB, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -69,7 +69,7 @@ class Edit extends Component
 
             // Verificar se o funcionário tem gateway_customer_id, se não, criar
             if (!$this->employee->gateway_customer_id) {
-                $gateway = Pagarme::customer()->create([
+                $gateway = Asaas::customer()->create([
                     'code'         => $this->employee->id,
                     'name'         => $this->employee->name,
                     'email'        => $this->employee->email,

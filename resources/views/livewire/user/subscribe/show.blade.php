@@ -13,6 +13,38 @@
         </div>
     @endif
 
+    @if ($this->pendingSubscribe)
+        <div class="alert alert-warning mb-6">
+            <x-carbon-warning class="w-6 h-6" />
+            <div class="flex-1">
+                <h3 class="font-bold">Pagamento Pendente</h3>
+                <div class="text-sm mt-1">
+                    <p>Você tem uma assinatura do plano
+                        <strong>{{ $this->pendingSubscribe->plan->name }}</strong> aguardando pagamento.
+                    </p>
+                    <p class="mt-1">
+                        <strong>Status:</strong>
+                        @if ($this->pendingSubscribe->payments->first()->payment_method === 'pix')
+                            Aguardando pagamento via PIX
+                        @else
+                            Processando pagamento
+                        @endif
+                    </p>
+                    <p class="mt-1 text-xs text-base-content/70">
+                        Criado em: {{ $this->pendingSubscribe->created_at->format('d/m/Y H:i') }}
+                    </p>
+                </div>
+            </div>
+            <div class="flex-none">
+                <x-btn-link href="{{ route('user.plan.payment', ['plan_id' => $this->pendingSubscribe->plan_id]) }}"
+                    wire:navigate class="btn-sm">
+                    <x-carbon-user class="w-4 h-4" />
+                    Finalizar Pagamento
+                </x-btn-link>
+            </div>
+        </div>
+    @endif
+
     <x-heading>
         <x-title>Plano atual</x-title>
         <x-subtitle>Veja os detalhes do seu plano atual.</x-subtitle>
@@ -50,7 +82,8 @@
                                 <p class="font-bold text-success text-xl">
                                     {{ number_format($companyPlan->companyPlan->discount_percentage, 1) }}%</p>
                                 <p class="text-xs text-base-content/60">A empresa cobre
-                                    {{ number_format($companyPlan->companyPlan->discount_percentage, 1) }}% do valor dos
+                                    {{ number_format($companyPlan->companyPlan->discount_percentage, 1) }}% do valor
+                                    dos
                                     seus serviços</p>
                             </div>
                         </x-card-body>
