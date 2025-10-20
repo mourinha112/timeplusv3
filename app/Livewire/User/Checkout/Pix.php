@@ -110,12 +110,27 @@ class Pix extends Component
                     ? $this->payable->plan->price
                     : 0);
 
-            // Calcular informações de desconto se o usuário tem plano individual ativo
-            $paymentCalculation = $this->calculateDiscount($user, $baseAmount);
-            $finalAmount        = $paymentCalculation['employee_amount'];
-            $discountValue      = $paymentCalculation['company_amount'] ?? 0;
-            $discountPercentage = $paymentCalculation['discount_percentage'] ?? 0;
-            $companyPlanName    = $paymentCalculation['plan_name'] ?? null;
+            // Calcular informações de desconto APENAS para Appointments (sessões)
+            // Planos (Subscribe) NÃO devem ter desconto aplicado
+            $finalAmount        = $baseAmount;
+            $discountValue      = 0;
+            $discountPercentage = 0;
+            $companyPlanName    = null;
+            $companyId          = null;
+
+            if ($this->payable instanceof \App\Models\Appointment) {
+                $paymentCalculation = $this->calculateDiscount($user, $baseAmount);
+                $finalAmount        = $paymentCalculation['employee_amount'];
+                $discountValue      = $paymentCalculation['company_amount'] ?? 0;
+                $discountPercentage = $paymentCalculation['discount_percentage'] ?? 0;
+                $companyPlanName    = $paymentCalculation['plan_name'] ?? null;
+
+                // Buscar company_id se há desconto
+                if ($paymentCalculation['has_company_discount']) {
+                    $activeCompanyPlan = $user->getActiveCompanyPlan();
+                    $companyId         = $activeCompanyPlan ? $activeCompanyPlan->company_id : null;
+                }
+            }
 
             // Validar valor final
             if ($finalAmount <= 0) {
@@ -124,14 +139,6 @@ class Pix extends Component
                 $this->addError('payment', 'Valor de pagamento inválido.');
 
                 return;
-            }
-
-            // Buscar company_id se há desconto
-            $companyId = null;
-
-            if ($paymentCalculation['has_company_discount']) {
-                $activeCompanyPlan = $user->getActiveCompanyPlan();
-                $companyId         = $activeCompanyPlan ? $activeCompanyPlan->company_id : null;
             }
 
             // Determinar descrição baseado no tipo
@@ -153,7 +160,7 @@ class Pix extends Component
                 'user_name'    => $user->name,
                 'payable_type' => get_class($this->payable),
                 'payable_id'   => $this->payable->id,
-                'has_discount' => $paymentCalculation['has_company_discount'],
+                'has_discount' => $discountValue > 0,
                 'payment_date' => now()->toISOString(),
             ];
 
@@ -172,11 +179,9 @@ class Pix extends Component
                     'pix_qr_code'         => $paymentGateway['pix_qr_code'],
                     'metadata'            => $metadata,
                     'company_id'          => $companyId,
-                    'original_amount'     => $baseAmount,
                     'discount_value'      => $discountValue,
                     'discount_percentage' => $discountPercentage,
                     'company_plan_name'   => $companyPlanName,
-                    'discount'            => $discountValue,
                 ]
             );
 
@@ -247,11 +252,14 @@ class Pix extends Component
             }
         }
 
-        // 2. Se não tem CompanyPlan, verificar Subscribe/Plan (plano individual)
+        // 2. Se não tem CompanyPlan, verificar Subscribe/Plan (plano individual COM PAGAMENTO CONFIRMADO)
         $activeSubscribe = $user->subscribes()
             ->whereDate('start_date', '<=', now())
             ->whereDate('end_date', '>=', now())
             ->whereNull('cancelled_date')
+            ->whereHas('payments', function ($query) {
+                $query->where('status', 'paid');
+            })
             ->with('plan')
             ->first();
 

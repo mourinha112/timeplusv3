@@ -21,6 +21,27 @@ class Index extends Component
         return Plan::all();
     }
 
+    #[Computed]
+    public function pendingSubscribe()
+    {
+        $user = User::find(Auth::id());
+
+        return $user->subscribes()
+            ->where(function ($query) {
+                // Assinaturas com pagamentos pendentes
+                $query->whereHas('payments', function ($q) {
+                    $q->whereIn('status', ['pending', 'pending_payment']);
+                })
+                // OU assinaturas criadas mas sem nenhum pagamento confirmado
+                ->orWhereDoesntHave('payments', function ($q) {
+                    $q->whereIn('status', ['paid', 'confirmed']);
+                });
+            })
+            ->with('plan', 'payments')
+            ->orderByDesc('created_at')
+            ->first();
+    }
+
     public function mount()
     {
         $user = User::find(Auth::id());

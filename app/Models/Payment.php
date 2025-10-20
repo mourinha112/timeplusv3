@@ -25,10 +25,8 @@ class Payment extends Model
         'refunded_at',
         'refund_reason',
         'company_id',
-        'original_amount',
         'discount_value',
         'discount_percentage',
-        'discount',
         'company_plan_name',
         'pix_key',
         'pix_qr_code',
@@ -42,10 +40,8 @@ class Payment extends Model
         'refunded_at'         => 'datetime',
         'amount'              => 'decimal:2',
         'refunded_amount'     => 'decimal:2',
-        'original_amount'     => 'decimal:2',
         'discount_value'      => 'decimal:2',
         'discount_percentage' => 'decimal:2',
-        'discount'            => 'decimal:2',
     ];
 
     public function payable()
@@ -75,9 +71,12 @@ class Payment extends Model
             ];
         }
 
+        // Calcula o valor original somando o valor pago pelo funcionário + desconto da empresa
+        $originalAmount = $this->amount + $this->discount_value;
+
         return [
             'has_discount'        => true,
-            'original_amount'     => $this->original_amount,
+            'original_amount'     => $originalAmount,
             'employee_paid'       => $this->amount,
             'company_paid'        => $this->discount_value,
             'discount_percentage' => $this->discount_percentage,

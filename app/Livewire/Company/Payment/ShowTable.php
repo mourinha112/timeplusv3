@@ -72,7 +72,9 @@ class ShowTable extends PowerGridComponent
               return 'N/A';
           })
           ->add('original_amount_formatted', function (Payment $model) {
-              return 'R$ ' . number_format((float) $model->original_amount, 2, ',', '.');
+              // Calcula o valor original somando o valor pago + desconto da empresa
+              $originalAmount = $model->amount + ($model->discount_value ?? 0);
+              return 'R$ ' . number_format((float) $originalAmount, 2, ',', '.');
           })
           ->add('discount_value_formatted', function (Payment $model) {
               return 'R$ ' . number_format((float) $model->discount_value, 2, ',', '.');
@@ -119,7 +121,7 @@ class ShowTable extends PowerGridComponent
             Column::make('Horário', 'session_time')
               ->sortable(),
 
-            Column::make('Valor Original', 'original_amount_formatted', 'original_amount')
+            Column::make('Valor Original', 'original_amount_formatted', 'amount')
               ->sortable(),
 
             Column::make('Desconto', 'discount_percentage_formatted', 'discount_percentage')

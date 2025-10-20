@@ -92,7 +92,7 @@
                 <div class="flex justify-between">
                     <x-label>Valor Original</x-label>
                     <x-text>R$
-                        {{ number_format($payment->original_amount, 2, ',', '.') }}</x-text>
+                        {{ number_format($payment->amount + ($payment->discount_value ?? 0), 2, ',', '.') }}</x-text>
                 </div>
                 @if ($payment->discount_percentage > 0)
                     <div class="flex justify-between">

@@ -54,11 +54,14 @@ class Show extends Component
             }
         }
 
-        // 2. Se não tem CompanyPlan, verificar Subscribe/Plan (plano individual)
+        // 2. Se não tem CompanyPlan, verificar Subscribe/Plan (plano individual COM PAGAMENTO CONFIRMADO)
         $activeSubscribe = $user->subscribes()
             ->whereDate('start_date', '<=', now())
             ->whereDate('end_date', '>=', now())
             ->whereNull('cancelled_date')
+            ->whereHas('payments', function ($query) {
+                $query->where('status', 'paid');
+            })
             ->with('plan')
             ->first();
 

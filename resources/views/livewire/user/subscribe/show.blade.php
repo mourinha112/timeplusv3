@@ -14,33 +14,40 @@
     @endif
 
     @if ($this->pendingSubscribe)
-        <div class="alert alert-warning mb-6">
-            <x-carbon-warning class="w-6 h-6" />
+        <div role="alert" class="alert alert-warning mb-6 shadow-lg border-2 border-warning">
+            <x-carbon-warning class="w-8 h-8 flex-shrink-0" />
             <div class="flex-1">
-                <h3 class="font-bold">Pagamento Pendente</h3>
-                <div class="text-sm mt-1">
+                <h3 class="font-bold text-lg">⚠️ Pagamento Pendente!</h3>
+                <div class="text-sm mt-2 space-y-1">
                     <p>Você tem uma assinatura do plano
-                        <strong>{{ $this->pendingSubscribe->plan->name }}</strong> aguardando pagamento.
+                        <strong class="text-warning-content">{{ $this->pendingSubscribe->plan->name }}</strong> aguardando pagamento.
                     </p>
-                    <p class="mt-1">
+                    <p>
                         <strong>Status:</strong>
-                        @if ($this->pendingSubscribe->payments->first()->payment_method === 'pix')
+                        @if ($this->pendingSubscribe->payments->isNotEmpty() && $this->pendingSubscribe->payments->first()->payment_method === 'pix')
                             Aguardando pagamento via PIX
+                        @elseif ($this->pendingSubscribe->payments->isNotEmpty())
+                            Processando pagamento via {{ strtoupper($this->pendingSubscribe->payments->first()->payment_method) }}
                         @else
-                            Processando pagamento
+                            Aguardando seleção do método de pagamento
                         @endif
                     </p>
-                    <p class="mt-1 text-xs text-base-content/70">
+                    <p class="text-xs opacity-80">
                         Criado em: {{ $this->pendingSubscribe->created_at->format('d/m/Y H:i') }}
+                    </p>
+                    <p class="text-xs font-semibold mt-2 bg-warning/20 p-2 rounded">
+                        💡 Complete o pagamento para ativar sua assinatura. Caso contrário, ela será cancelada automaticamente.
                     </p>
                 </div>
             </div>
             <div class="flex-none">
-                <x-btn-link href="{{ route('user.plan.payment', ['plan_id' => $this->pendingSubscribe->plan_id]) }}"
-                    wire:navigate class="btn-sm">
-                    <x-carbon-user class="w-4 h-4" />
+                <a href="{{ route('user.plan.payment', ['plan_id' => $this->pendingSubscribe->plan_id]) }}"
+                    wire:navigate class="btn btn-warning btn-sm gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                    </svg>
                     Finalizar Pagamento
-                </x-btn-link>
+                </a>
             </div>
         </div>
     @endif
@@ -152,10 +159,9 @@
                     <span class="badge badge-xs badge-info">Plano finaliza em
                         {{ \Carbon\Carbon::parse($subscribe->end_date)->format('d/m/Y') }}</span>
                     @php
+                        // Mostrar o valor que foi efetivamente pago (sem desconto)
                         $latestPayment = $subscribe->payments->first();
-                        $displayAmount =
-                            $latestPayment?->amount ??
-                            ($subscribe->plan?->price_with_discount ?? ($subscribe->plan?->price ?? 0));
+                        $displayAmount = $latestPayment?->amount ?? ($subscribe->plan?->price ?? 0);
                     @endphp
                     <span class="text-xl">
                         <x-text>R$</x-text>

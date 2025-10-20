@@ -23,10 +23,18 @@ class Show extends Component
         $user = User::find(Auth::id());
 
         return $user->subscribes()
-            ->whereHas('payments', function ($query) {
-                $query->whereIn('status', ['pending', 'pending_payment']);
+            ->where(function ($query) {
+                // Assinaturas com pagamentos pendentes
+                $query->whereHas('payments', function ($q) {
+                    $q->whereIn('status', ['pending', 'pending_payment']);
+                })
+                // OU assinaturas criadas mas sem nenhum pagamento confirmado
+                ->orWhereDoesntHave('payments', function ($q) {
+                    $q->whereIn('status', ['paid', 'confirmed']);
+                });
             })
             ->with('plan', 'payments')
+            ->orderByDesc('created_at')
             ->first();
     }
 
@@ -34,7 +42,7 @@ class Show extends Component
     {
         $user = User::find(Auth::id());
 
-        // Verificar se tem assinatura individual ativa
+        // Verificar se tem assinatura individual ativa (com pagamento confirmado)
         $this->subscribe = $user->subscribes()
             ->with([
                 'plan',
@@ -45,6 +53,9 @@ class Show extends Component
                 },
             ])
             ->where('end_date', '>', now())
+            ->whereHas('payments', function ($query) {
+                $query->where('status', 'paid');
+            })
             ->orderByDesc('end_date')
             ->first();
 

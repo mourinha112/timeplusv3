@@ -64,9 +64,15 @@
                                 <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d/m/Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') }}</td>
                                 <td>
-                                    <span class="font-semibold text-info">
-                                        R$ {{ number_format($appointment->payment->amount, 2, ',', '.') }}
-                                    </span>
+                                    @if($appointment->payment)
+                                        <span class="font-semibold text-info">
+                                            R$ {{ number_format($appointment->payment->amount, 2, ',', '.') }}
+                                        </span>
+                                    @else
+                                        <span class="font-semibold text-warning">
+                                            R$ {{ number_format($this->getDisplayValue($appointment), 2, ',', '.') }}
+                                        </span>
+                                    @endif
                                 </td>
                                 <td>
                                     @if ($appointment->status === 'completed')
