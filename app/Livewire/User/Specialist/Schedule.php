@@ -3,6 +3,8 @@
 namespace App\Livewire\User\Specialist;
 
 use App\Models\{Appointment, Availability};
+use App\Notifications\Specialist\AppointmentScheduledNotification as SpecialistAppointmentScheduledNotification;
+use App\Notifications\User\AppointmentScheduledNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\{Auth, DB, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -181,6 +183,10 @@ class Schedule extends Component
                 'appointment_time' => $this->selectedTime,
                 'status'           => 'scheduled',
             ]);
+
+            // Enviar notificações de agendamento
+            Auth::user()->notify(new AppointmentScheduledNotification($appointment));
+            $this->specialist->notify(new SpecialistAppointmentScheduledNotification($appointment));
 
             LivewireAlert::title('Agendamento Confirmado')
                 ->text('Seu agendamento foi realizado com sucesso!')

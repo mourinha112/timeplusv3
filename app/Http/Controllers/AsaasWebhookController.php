@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Appointment, Payment, Room};
+use App\Models\Appointment;
+use App\Models\Payment;
+use App\Models\Room;
+use App\Models\Subscribe;
+use App\Notifications\User\PaymentApprovedNotification;
+use App\Notifications\User\SubscriptionActiveNotification;
 use App\Services\JitsiService;
 use Illuminate\Http\{JsonResponse, Request};
 use Illuminate\Support\Facades\Log;
@@ -145,9 +150,31 @@ class AsaasWebhookController extends Controller
             'payment_method'   => $payment->payment_method,
         ]);
 
-        // Se for um appointment, criar sala automaticamente
+        // Se for um appointment, criar sala automaticamente e enviar notificação
         if ($payment->payable_type === 'App\Models\Appointment' && $payment->payable instanceof Appointment) {
-            $this->createRoomForAppointment($payment->payable);
+            $appointment = $payment->payable;
+            $this->createRoomForAppointment($appointment);
+
+            // Enviar notificação de pagamento aprovado ao usuário
+            try {
+                $appointment->user->notify(new PaymentApprovedNotification($appointment, $payment));
+            } catch (\Exception $e) {
+                Log::error('Webhook Asaas: Erro ao enviar notificação de pagamento aprovado', [
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        // Se for uma assinatura, enviar notificação
+        if ($payment->payable_type === 'App\Models\Subscribe' && $payment->payable instanceof Subscribe) {
+            try {
+                $subscribe = $payment->payable;
+                $subscribe->user->notify(new SubscriptionActiveNotification($subscribe, $payment));
+            } catch (\Exception $e) {
+                Log::error('Webhook Asaas: Erro ao enviar notificação de assinatura ativa', [
+                    'error' => $e->getMessage(),
+                ]);
+            }
         }
     }
 

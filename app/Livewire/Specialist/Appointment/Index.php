@@ -3,6 +3,8 @@
 namespace App\Livewire\Specialist\Appointment;
 
 use App\Models\Appointment;
+use App\Notifications\Specialist\AppointmentCancelledNotification as SpecialistAppointmentCancelledNotification;
+use App\Notifications\User\AppointmentCancelledNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -88,6 +90,16 @@ class Index extends Component
         if ($appointment) {
             // Se existe agendamento, remover
             $appointment->update(['status' => 'cancelled']);
+
+            // Enviar notificações de cancelamento
+            try {
+                $appointment->user->notify(new AppointmentCancelledNotification($appointment));
+                Auth::guard('specialist')->user()->notify(new SpecialistAppointmentCancelledNotification($appointment));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Erro ao enviar notificações de cancelamento', [
+                    'error' => $e->getMessage(),
+                ]);
+            }
         }
 
         LivewireAlert::title('Agendamento cancelado!')
