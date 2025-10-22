@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Master\Dashboard\Charts;
 
-use App\Models\{Payment, Plan};
+use App\Models\{Payment, Subscribe};
 use Carbon\{Carbon, CarbonPeriod};
 use IcehouseVentures\LaravelChartjs\Facades\Chartjs;
 use Livewire\Component;
@@ -11,25 +11,31 @@ class PlansInvoiceChart extends Component
 {
     public function render()
     {
-        $start  = Carbon::parse(Payment::min("created_at")) ?? Carbon::now()->subYear();
-        $end    = Carbon::now();
-        $period = CarbonPeriod::create($start, "1 month", $end);
+        // Últimos 15 dias
+        $start = Carbon::now()->subDays(14)->startOfDay();
+        $end   = Carbon::now()->endOfDay();
+
+        // Criar período diário
+        $period = CarbonPeriod::create($start, '1 day', $end);
 
         $planPaymentsPerMonth = collect($period)->map(function ($date) {
-            $startDate = $date->copy()->startOfMonth();
-            $endDate   = $date->copy()->endOfMonth();
+            $startOfDay = $date->copy()->startOfDay();
+            $endOfDay   = $date->copy()->endOfDay();
 
             return [
-                "count" => Payment::where('payable_type', Plan::class)
-                    ->whereBetween("created_at", [$startDate, $endDate])
+                "count" => Payment::where('payable_type', Subscribe::class)
                     ->where('status', 'paid')
+                    ->whereBetween('paid_at', [$startOfDay, $endOfDay])
                     ->count(),
-                "month" => $endDate->format("Y-m-d"),
+                "day" => $date->format("d/m"),
             ];
         });
 
         $data   = $planPaymentsPerMonth->pluck("count")->toArray();
-        $labels = $planPaymentsPerMonth->pluck("month")->toArray();
+        $labels = $planPaymentsPerMonth->pluck("day")->toArray();
+
+        // Verificar se há dados reais
+        $hasData = array_sum($data) > 0;
 
         $chart = Chartjs::build()
             ->name("PlansInvoiceChart")
@@ -40,10 +46,9 @@ class PlansInvoiceChart extends Component
                 [
                     "label"           => "Vendas de Planos",
                     "backgroundColor" => "#00bafe",
-                    // "borderColor" => "#ccc",
-                    "data" => $data,
-                    "fill" => true,
-
+                    "data"            => $data,
+                    "fill"            => true,
+                    "tension"         => 0.4,
                 ],
             ])
             ->options([
@@ -51,14 +56,20 @@ class PlansInvoiceChart extends Component
                 'maintainAspectRatio' => false,
                 'scales'              => [
                     'x' => [
-                        'type' => 'time',
-                        'time' => [
-                            'unit' => 'month',
+                        'display' => true,
+                        'offset'  => false,
+                        'ticks'   => [
+                            'autoSkip'    => false,
+                            'maxRotation' => 0,
+                            'minRotation' => 0,
                         ],
-                        'min' => $start->format("Y-m-d"),
                     ],
                     'y' => [
                         'beginAtZero' => true,
+                        'ticks'       => [
+                            'stepSize'  => 1,
+                            'precision' => 0,
+                        ],
                     ],
                 ],
                 'plugins' => [
@@ -69,6 +80,6 @@ class PlansInvoiceChart extends Component
                 ],
             ]);
 
-        return view('livewire.master.dashboard.charts.plans-invoice-chart', compact('chart'));
+        return view('livewire.master.dashboard.charts.plans-invoice-chart', compact('chart', 'hasData'));
     }
 }

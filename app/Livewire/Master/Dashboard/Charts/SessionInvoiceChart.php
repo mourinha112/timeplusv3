@@ -11,22 +11,28 @@ class SessionInvoiceChart extends Component
 {
     public function render()
     {
-        $start  = Carbon::parse(Appointment::min("created_at")) ?? Carbon::now()->subYear();
-        $end    = Carbon::now();
-        $period = CarbonPeriod::create($start, "1 month", $end);
+        // Últimos 15 dias
+        $start = Carbon::now()->subDays(14)->startOfDay();
+        $end   = Carbon::now()->endOfDay();
+
+        // Criar período diário
+        $period = CarbonPeriod::create($start, '1 day', $end);
 
         $appointmentsPerMonth = collect($period)->map(function ($date) {
-            $startDate = $date->copy()->startOfMonth();
-            $endDate   = $date->copy()->endOfMonth();
+            $startOfDay = $date->copy()->startOfDay();
+            $endOfDay   = $date->copy()->endOfDay();
 
             return [
-                "count" => Appointment::whereBetween("created_at", [$startDate, $endDate])->count(),
-                "month" => $endDate->format("Y-m-d"),
+                "count" => Appointment::whereBetween("created_at", [$startOfDay, $endOfDay])->count(),
+                "day"   => $date->format("d/m"),
             ];
         });
 
         $data   = $appointmentsPerMonth->pluck("count")->toArray();
-        $labels = $appointmentsPerMonth->pluck("month")->toArray();
+        $labels = $appointmentsPerMonth->pluck("day")->toArray();
+
+        // Verificar se há dados reais
+        $hasData = array_sum($data) > 0;
 
         $chart = Chartjs::build()
             ->name("SessionInvoiceChart")
@@ -37,9 +43,9 @@ class SessionInvoiceChart extends Component
                 [
                     "label"           => "Vendas de Sessões",
                     "backgroundColor" => "#00bafe",
-                    // "borderColor" => "#ccc",
-                    "data" => $data,
-                    "fill" => true,
+                    "data"            => $data,
+                    "fill"            => true,
+                    "tension"         => 0.4,
                 ],
             ])
             ->options([
@@ -47,14 +53,14 @@ class SessionInvoiceChart extends Component
                 'maintainAspectRatio' => false,
                 'scales'              => [
                     'x' => [
-                        'type' => 'time',
-                        'time' => [
-                            'unit' => 'month',
-                        ],
-                        'min' => $start->format("Y-m-d"),
+                        'display' => true,
                     ],
                     'y' => [
                         'beginAtZero' => true,
+                        'ticks'       => [
+                            'stepSize'  => 1,
+                            'precision' => 0,
+                        ],
                     ],
                 ],
                 'plugins' => [
@@ -65,6 +71,6 @@ class SessionInvoiceChart extends Component
                 ],
             ]);
 
-        return view('livewire.master.dashboard.charts.session-invoice-chart', compact('chart'));
+        return view('livewire.master.dashboard.charts.session-invoice-chart', compact('chart', 'hasData'));
     }
 }
