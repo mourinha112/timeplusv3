@@ -154,6 +154,8 @@ class Pix extends Component
                 'customer_id' => $user->gateway_customer_id,
             ]);
 
+            dd($paymentGateway);
+
             // Preparar metadata
             $metadata = [
                 'user_id'      => $user->id,
