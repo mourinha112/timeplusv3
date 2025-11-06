@@ -52,8 +52,6 @@ class ProfessionalDetail extends Component
                 'ip'      => request()->ip(),
             ]);
 
-            dd($e->getMessage());
-
             LivewireAlert::title('Erro!')
                 ->text('Ocorreu um erro ao tentar salvar os dados.')
                 ->error()
