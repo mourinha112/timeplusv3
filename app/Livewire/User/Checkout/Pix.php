@@ -191,6 +191,7 @@ class Pix extends Component
 
             $this->loadPixQrCode();
         } catch (AsaasException $e) {
+            dd($e);
             DB::rollBack();
             $this->isLoading = false;
             Log::error('Erro do Asaas no pagamento PIX', [
