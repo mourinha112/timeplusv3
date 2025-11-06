@@ -154,8 +154,6 @@ class Pix extends Component
                 'customer_id' => $user->gateway_customer_id,
             ]);
 
-            dd($paymentGateway);
-
             // Preparar metadata
             $metadata = [
                 'user_id'      => $user->id,
@@ -191,7 +189,6 @@ class Pix extends Component
 
             $this->loadPixQrCode();
         } catch (AsaasException $e) {
-            dd($e);
             DB::rollBack();
             $this->isLoading = false;
             Log::error('Erro do Asaas no pagamento PIX', [
