@@ -65,7 +65,7 @@ class JitsiService
             ],
         ];
 
-        return JWT::encode($payload, $secret, 'HS256');
+        return JWT::encode($payload, $secret, 'RS256');
     }
 
     public function buildEmbedUrl(string $roomCode, string $displayName): string
