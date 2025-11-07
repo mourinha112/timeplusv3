@@ -54,18 +54,18 @@ class JitsiService
         $sanitizedName = $this->sanitizeDisplayName($displayName);
 
         $payload = [
-            'aud'     => 'jitsi',
             'iss'     => $appId,
+            'aud'     => $appId,
             'sub'     => config('jitsi.domain'),
-            'room'    => $roomCode,
             'exp'     => $now + $ttl,
-            'nbf'     => $now - 10,
+            'room'    => $roomCode,
+            // 'nbf'     => $now - 10,
             'context' => [
                 'user' => ['name' => $sanitizedName],
             ],
         ];
 
-        return JWT::encode($payload, $secret, 'RS256');
+        return JWT::encode($payload, $secret, 'HS256');
     }
 
     public function buildEmbedUrl(string $roomCode, string $displayName): string
