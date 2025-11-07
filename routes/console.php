@@ -8,3 +8,6 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('telescope:prune --hours=72')->daily();
+
+Schedule::command('rooms:open-scheduled')->everyMinute();
+Schedule::command('rooms:close-expired')->everyMinute();
