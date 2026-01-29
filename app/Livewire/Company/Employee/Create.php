@@ -99,11 +99,24 @@ class Create extends Component
             $this->userName     = $user->name;
 
             // Enviar email com credenciais para o funcionário
-            $user->notify(new EmployeeCredentialsNotification(
-                companyName: $company->name,
-                email: $user->email,
-                password: $password
-            ));
+            try {
+                $user->notify(new EmployeeCredentialsNotification(
+                    companyName: $company->name,
+                    email: $user->email,
+                    password: $password
+                ));
+                Log::info('Email de credenciais enviado com sucesso', [
+                    'user_id'    => $user->id,
+                    'user_email' => $user->email,
+                    'company'    => $company->name,
+                ]);
+            } catch (\Exception $emailError) {
+                Log::error('Erro ao enviar email de credenciais', [
+                    'user_id'    => $user->id,
+                    'user_email' => $user->email,
+                    'error'      => $emailError->getMessage(),
+                ]);
+            }
 
             // Mostrar modal com informações
             $this->showCredentialsModal = true;
