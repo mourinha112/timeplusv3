@@ -18,13 +18,13 @@ class Import extends Component
     use WithFileUploads;
 
     #[Locked]
-    public int $companyId;
+    public ?int $companyId = null;
 
     public $file = null;
 
     public array $preview = [];
 
-    public array $errors = [];
+    public array $importErrors = [];
 
     public array $results = [];
 
@@ -38,7 +38,13 @@ class Import extends Component
 
     public function mount(): void
     {
-        $this->companyId = Auth::guard('company')->id();
+        $company = Auth::guard('company')->user();
+        
+        if (!$company) {
+            abort(403, 'Acesso não autorizado');
+        }
+        
+        $this->companyId = $company->id;
     }
 
     public function updatedFile(): void
@@ -47,8 +53,8 @@ class Import extends Component
             'file' => 'required|file|mimes:csv,txt|max:2048',
         ]);
 
-        $this->preview = [];
-        $this->errors  = [];
+        $this->preview      = [];
+        $this->importErrors = [];
 
         try {
             $path    = $this->file->getRealPath();
@@ -60,7 +66,7 @@ class Import extends Component
             $missingHeaders  = array_diff($requiredHeaders, array_map('strtolower', array_map('trim', $headers)));
 
             if (!empty($missingHeaders)) {
-                $this->errors[] = 'Colunas obrigatórias faltando: ' . implode(', ', $missingHeaders);
+                $this->importErrors[] = 'Colunas obrigatórias faltando: ' . implode(', ', $missingHeaders);
                 fclose($handle);
 
                 return;
@@ -96,7 +102,7 @@ class Import extends Component
             fclose($handle);
 
         } catch (\Exception $e) {
-            $this->errors[] = 'Erro ao ler arquivo: ' . $e->getMessage();
+            $this->importErrors[] = 'Erro ao ler arquivo: ' . $e->getMessage();
         }
     }
 
@@ -245,7 +251,7 @@ class Import extends Component
     {
         $this->file         = null;
         $this->preview      = [];
-        $this->errors       = [];
+        $this->importErrors = [];
         $this->results      = [];
         $this->showResults  = false;
         $this->successCount = 0;

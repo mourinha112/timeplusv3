@@ -84,15 +84,15 @@
                     @enderror
                 </div>
 
-                {{-- Erros --}}
-                @if (!empty($errors))
+                {{-- Erros de Importação --}}
+                @if (!empty($importErrors))
                     <div class="alert alert-error mb-6">
                         <x-carbon-warning class="w-5 h-5" />
                         <div>
                             <h4 class="font-semibold">Erros encontrados:</h4>
                             <ul class="list-disc list-inside text-sm">
-                                @foreach ($errors as $error)
-                                    <li>{{ $error }}</li>
+                                @foreach ($importErrors as $importError)
+                                    <li>{{ $importError }}</li>
                                 @endforeach
                             </ul>
                         </div>
