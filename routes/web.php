@@ -211,6 +211,7 @@ Route::group(['middleware' => ['auth:company']], function () {
     /* Employees */
     Route::get('empresa/funcionarios', App\Livewire\Company\Employee\Index::class)->name('company.employee.index');
     Route::get('empresa/funcionarios/criar', App\Livewire\Company\Employee\Create::class)->name('company.employee.create');
+    Route::get('empresa/funcionarios/importar', App\Livewire\Company\Employee\Import::class)->name('company.employee.import');
     Route::get('empresa/funcionarios/{employee}/editar', App\Livewire\Company\Employee\Edit::class)->name('company.employee.edit');
     Route::get('empresa/funcionarios/{employee}', App\Livewire\Company\Employee\Show::class)->name('company.employee.show');
 

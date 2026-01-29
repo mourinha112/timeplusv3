@@ -10,9 +10,16 @@
         </x-subtitle>
     </x-heading>
 
-
-
     <div class="flex gap-2">
+        {{-- Botão Importar com Tooltip --}}
+        <div class="tooltip tooltip-bottom"
+            data-tip="Importe vários funcionários de uma vez usando um arquivo CSV. O arquivo deve conter: nome, cpf, email, telefone e data_nascimento.">
+            <a wire:navigate href="{{ route('company.employee.import') }}" class="btn btn-soft btn-success">
+                <x-carbon-upload class="w-4 h-4" />
+                Importar em Massa
+            </a>
+        </div>
+
         <a wire:navigate href="{{ route('company.employee.create') }}" class="btn btn-info">
             <x-carbon-add class="w-4 h-4" />
             Novo Funcionário
