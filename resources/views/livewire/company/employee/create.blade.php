@@ -24,12 +24,8 @@
                     </x-form-group>
 
                     <x-form-group>
-                        <x-label>E-mail</x-label>
-                        <div class="bg-base-200 px-3 py-2 rounded-lg text-sm text-base-content/70">
-                            📧 Será gerado automaticamente: <code>xxxxxxxx@timeplus.com.br</code>
-                        </div>
-                        <small class="text-base-content/60">O funcionário poderá alterar para email pessoal
-                            posteriormente</small>
+                        <x-label required>E-mail</x-label>
+                        <x-input type="email" wire:model="email" placeholder="funcionario@email.com" />
                     </x-form-group>
 
                     <x-form-group>

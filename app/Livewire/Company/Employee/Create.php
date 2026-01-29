@@ -29,7 +29,8 @@ class Create extends Component
     #[Rule('required|date_format:d/m/Y')]
     public $birth_date = '';
 
-    // Email será gerado automaticamente, não precisa de validação do usuário
+    #[Rule('required|email|max:255|unique:users,email')]
+    public $email = '';
 
     public $showCredentialsModal = false;
 
@@ -51,25 +52,16 @@ class Create extends Component
         try {
             DB::beginTransaction();
 
-            // Gerar email interno fake
-            $random         = Str::random(16);
-            $generatedEmail = $random . '@timeplus.com.br';
-
-            // Garantir que o email é único
-            while (User::where('email', $generatedEmail)->exists()) {
-                $random         = Str::random(16);
-                $generatedEmail = $random . '@timeplus.com.br';
-            }
-
-            // Criar novo usuário com email interno
+            // Gerar senha temporária
             $password = Str::random(12);
 
+            // Criar novo usuário com email informado
             $this->user = User::create([
                 'name'         => $this->name,
                 'cpf'          => $this->cpf,
                 'phone_number' => $this->phone_number,
                 'birth_date'   => $this->birth_date,
-                'email'        => $generatedEmail,
+                'email'        => $this->email,
                 'password'     => bcrypt($password),
                 'is_active'    => true,
             ]);
