@@ -4,6 +4,7 @@ namespace App\Livewire\Company\Employee;
 
 use App\Facades\Asaas;
 use App\Models\User;
+use App\Notifications\EmployeeCredentialsNotification;
 use Illuminate\Support\Facades\{Auth, DB, Log};
 use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -90,6 +91,13 @@ class Create extends Component
             }
 
             DB::commit();
+
+            // Enviar email com credenciais para o funcionário
+            $this->user->notify(new EmployeeCredentialsNotification(
+                companyName: $this->company->name,
+                email: $this->user->email,
+                password: $password
+            ));
 
             // Mostrar modal com informações
             $this->showCredentialsModal = true;
