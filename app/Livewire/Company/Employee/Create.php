@@ -3,61 +3,65 @@
 namespace App\Livewire\Company\Employee;
 
 use App\Facades\Asaas;
+use App\Models\Company;
 use App\Models\User;
 use App\Notifications\EmployeeCredentialsNotification;
 use Illuminate\Support\Facades\{Auth, DB, Log};
 use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
-use Livewire\Attributes\{Layout, Rule};
+use Livewire\Attributes\{Layout, Locked, Rule};
 use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Adicionar Funcionário', 'guard' => 'company'])]
 class Create extends Component
 {
-    public $company = null;
-
-    public $user = null;
+    #[Locked]
+    public int $companyId;
 
     #[Rule('required|string|max:255')]
-    public $name = '';
+    public string $name = '';
 
     #[Rule('required|string|size:14')]
-    public $cpf = '';
+    public string $cpf = '';
 
     #[Rule('required|string|max:20')]
-    public $phone_number = '';
+    public string $phone_number = '';
 
     #[Rule('required|date_format:d/m/Y')]
-    public $birth_date = '';
+    public string $birth_date = '';
 
     #[Rule('required|email|max:255|unique:users,email')]
-    public $email = '';
+    public string $email = '';
 
-    public $showCredentialsModal = false;
+    public bool $showCredentialsModal = false;
 
-    public $userEmail = '';
+    public string $userEmail = '';
 
-    public $userPassword = '';
+    public string $userPassword = '';
 
-    public $userExists = false;
+    public string $userName = '';
 
-    public function mount()
+    public bool $userExists = false;
+
+    public function mount(): void
     {
-        $this->company = Auth::guard('company')->user();
+        $this->companyId = Auth::guard('company')->id();
     }
 
-    public function save()
+    public function save(): void
     {
         $this->validate();
 
         try {
             DB::beginTransaction();
 
+            $company = Company::findOrFail($this->companyId);
+
             // Gerar senha temporária
             $password = Str::random(12);
 
             // Criar novo usuário com email informado
-            $this->user = User::create([
+            $user = User::create([
                 'name'         => $this->name,
                 'cpf'          => $this->cpf,
                 'phone_number' => $this->phone_number,
@@ -69,45 +73,48 @@ class Create extends Component
 
             // Criar customer no gateway Asaas
             $gateway = Asaas::customer()->create([
-                'code'         => $this->user->id,
-                'name'         => $this->user->name,
-                'email'        => $this->user->email,
-                'document'     => $this->user->cpf,
-                'mobile_phone' => $this->user->phone_number,
+                'code'         => $user->id,
+                'name'         => $user->name,
+                'email'        => $user->email,
+                'document'     => $user->cpf,
+                'mobile_phone' => $user->phone_number,
             ]);
 
-            $this->user->update(['gateway_customer_id' => $gateway['id']]);
-
-            $this->userExists   = false;
-            $this->userEmail    = $this->user->email;
-            $this->userPassword = $password;
+            $user->update(['gateway_customer_id' => $gateway['id']]);
 
             // Verificar se já não está vinculado à empresa
-            if (!$this->company->employees()->where('user_id', $this->user->id)->exists()) {
+            if (!$company->employees()->where('user_id', $user->id)->exists()) {
                 // Vincular usuário à empresa
-                $this->company->employees()->attach($this->user->id, [
+                $company->employees()->attach($user->id, [
                     'is_active' => true,
                 ]);
             }
 
             DB::commit();
 
+            // Guardar dados para o modal (apenas strings simples)
+            $this->userExists   = false;
+            $this->userEmail    = $user->email;
+            $this->userPassword = $password;
+            $this->userName     = $user->name;
+
             // Enviar email com credenciais para o funcionário
-            $this->user->notify(new EmployeeCredentialsNotification(
-                companyName: $this->company->name,
-                email: $this->user->email,
+            $user->notify(new EmployeeCredentialsNotification(
+                companyName: $company->name,
+                email: $user->email,
                 password: $password
             ));
 
             // Mostrar modal com informações
             $this->showCredentialsModal = true;
+
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Erro interno::' . get_class($this), [
                 'message' => $e->getMessage(),
                 'name'    => $this->name,
                 'cpf'     => $this->cpf,
-                'company' => $this->company->id,
+                'company' => $this->companyId,
                 'ip'      => request()->ip(),
             ]);
 
