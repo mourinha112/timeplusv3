@@ -130,6 +130,9 @@ Route::group(['middleware' => ['auth:specialist', 'onboarding:specialist']], fun
     Route::get('especialista/perfil/dados-pessoais', Specialist\Profile\PersonalDetail::class)->name('specialist.profile.personal-details');
     Route::get('especialista/perfil/dados-profissionais', Specialist\Profile\ProfessionalDetail::class)->name('specialist.profile.professional-details');
 
+    /* Finance */
+    Route::get('especialista/financeiro/dados-pagamento', Specialist\Finance\PaymentData::class)->name('specialist.finance.payment-data');
+
     /* VideoCall */
     Route::redirect('especialista/atendimento', '/especialista/agendamentos')->name('specialist.videocall.index');
     Route::get('especialista/atendimento/{code}', Specialist\VideoCall\Show::class)->name('specialist.videocall.show');

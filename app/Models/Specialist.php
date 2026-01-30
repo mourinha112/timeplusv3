@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasOne};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -107,5 +107,18 @@ class Specialist extends Authenticatable
     public function state(): BelongsTo
     {
         return $this->belongsTo(State::class);
+    }
+
+    public function paymentProfile(): HasOne
+    {
+        return $this->hasOne(SpecialistPaymentProfile::class);
+    }
+
+    /**
+     * Verifica se o especialista tem dados de pagamento cadastrados
+     */
+    public function hasPaymentProfile(): bool
+    {
+        return $this->paymentProfile()->exists();
     }
 }
