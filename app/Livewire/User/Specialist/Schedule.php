@@ -105,10 +105,11 @@ class Schedule extends Component
             })
             ->toArray();
 
-        /* Garantir os próximos 5 dias (hoje + 4) */
+        /* Próximos 30 dias (hoje + 29) para o paciente ver horários mais à frente */
         $result = [];
+        $daysAhead = 30;
 
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < $daysAhead; $i++) {
             $date          = Carbon::today()->addDays($i)->toDateString();
             $result[$date] = $availabilities[$date] ?? [];
         }

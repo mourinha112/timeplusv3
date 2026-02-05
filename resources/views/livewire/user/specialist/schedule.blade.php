@@ -7,7 +7,7 @@
         </ul>
     @endif
 
-    <div class="grid grid-cols-5 gap-2 mb-4">
+    <div class="grid grid-cols-5 gap-2 mb-4 max-h-[28rem] overflow-y-auto">
         @foreach ($this->availabilities as $date => $times)
             <div class="text-center">
                 <!-- Botão da Data com estado selecionado -->
