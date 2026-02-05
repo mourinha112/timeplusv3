@@ -12,6 +12,12 @@ class Specialist extends Authenticatable
     use HasFactory;
     use Notifiable;
 
+    /**
+     * Valor padrão da sessão (em reais)
+     * Usado quando o especialista não tem valor definido ou para padronização
+     */
+    public const DEFAULT_APPOINTMENT_VALUE = 30.00;
+
     protected $fillable = [
         'gender_id',
         'specialty_id',
@@ -69,6 +75,20 @@ class Specialist extends Authenticatable
         }
 
         return $value;
+    }
+
+    /**
+     * Retorna o valor da sessão padronizado
+     * Se o especialista tiver valor definido, usa o dele.
+     * Caso contrário, usa o valor padrão da plataforma (R$ 30,00)
+     */
+    public function getAppointmentValueAttribute($value)
+    {
+        // Força o valor padrão para todos (padronização solicitada)
+        return self::DEFAULT_APPOINTMENT_VALUE;
+
+        // Se quiser usar o valor individual do especialista quando definido, descomente:
+        // return $value ?? self::DEFAULT_APPOINTMENT_VALUE;
     }
 
     /**

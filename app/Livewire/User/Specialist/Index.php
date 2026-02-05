@@ -12,7 +12,13 @@ class Index extends Component
     #[Computed()]
     public function specialists()
     {
-        return Specialist::with(['specialty', 'reasons'])->orderBy('name')->get();
+        return Specialist::with(['specialty', 'reasons'])
+            ->where('is_active', true)
+            ->whereHas('availabilities', function ($query) {
+                $query->where('available_date', '>=', now()->toDateString());
+            })
+            ->orderBy('name')
+            ->get();
     }
 
     public function render()
