@@ -7,7 +7,7 @@
         </ul>
     @endif
 
-    <div class="grid grid-cols-5 gap-2 mb-4 max-h-[28rem] overflow-y-auto">
+    <div class="grid grid-cols-5 gap-2 mb-4">
         @foreach ($this->availabilities as $date => $times)
             <div class="text-center">
                 <!-- Botão da Data com estado selecionado -->
@@ -26,8 +26,7 @@
                     </div>
                 </button>
 
-                <div
-                    class="mt-2 space-y-1 {{ max(5, max(array_map('count', $this->availabilities))) > 8 ? 'h-64 overflow-y-auto' : 'min-h-fit' }}">
+                <div class="mt-2 space-y-1 max-h-48 overflow-y-auto">
                     @if (count($times) > 0)
                         {{-- Horários disponíveis --}}
                         @foreach ($times as $time)
@@ -40,14 +39,6 @@
                                 {{ \Carbon\Carbon::parse($time)->format('H:i') }}
                             </button>
                         @endforeach
-
-                        {{-- Preencher com campos vazios até atingir o máximo (mínimo 5) --}}
-                        @for ($i = count($times); $i < max(5, max(array_map('count', $this->availabilities))); $i++)
-                            <div class="btn btn-block font-normal text-sm bg-gray-100 text-gray-400 cursor-not-allowed opacity-50"
-                                disabled>
-
-                            </div>
-                        @endfor
                     @else
                         {{-- Quando não há horários disponíveis --}}
                         <div class="flex flex-col items-center justify-center py-4 text-center">
@@ -61,13 +52,6 @@
                             <p class="text-xs text-gray-500 font-medium">Sem horários</p>
                             <p class="text-xs text-gray-400">disponíveis</p>
                         </div>
-
-                        {{-- Preencher com campos vazios (mínimo 5 linhas menos 1 da mensagem) --}}
-                        {{-- @for ($i = 0; $i < $maxTimes; $i++)
-                    <div class="btn btn-block font-normal text-sm bg-gray-100 text-gray-400 cursor-not-allowed opacity-50" disabled>
-
-                    </div>
-                    @endfor --}}
                     @endif
                 </div>
             </div>
