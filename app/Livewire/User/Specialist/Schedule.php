@@ -32,6 +32,13 @@ class Schedule extends Component
         'company_plan_name'       => null,
     ];
 
+    /** Página atual da agenda (0 = primeiros 5 dias, 1 = próximos 5, etc.) */
+    public int $dayPage = 0;
+
+    private const DAYS_PER_PAGE = 5;
+
+    private const TOTAL_DAYS = 30;
+
     public function mount()
     {
         $this->calculatePricingForDisplay();
@@ -105,16 +112,50 @@ class Schedule extends Component
             })
             ->toArray();
 
-        /* Próximos 30 dias (hoje + 29) para o paciente ver horários mais à frente */
+        /* Próximos 30 dias (hoje + 29) — navegação por setas mostra 5 por vez */
         $result = [];
-        $daysAhead = 30;
 
-        for ($i = 0; $i < $daysAhead; $i++) {
+        for ($i = 0; $i < self::TOTAL_DAYS; $i++) {
             $date          = Carbon::today()->addDays($i)->toDateString();
             $result[$date] = $availabilities[$date] ?? [];
         }
 
         return $result;
+    }
+
+    /** Retorna apenas os 5 dias da página atual para exibir na agenda */
+    #[Computed]
+    public function paginatedAvailabilities(): array
+    {
+        $all = $this->availabilities;
+
+        return array_slice($all, $this->dayPage * self::DAYS_PER_PAGE, self::DAYS_PER_PAGE, true);
+    }
+
+    public function previousDays(): void
+    {
+        if ($this->canGoPrevious()) {
+            $this->dayPage--;
+        }
+    }
+
+    public function nextDays(): void
+    {
+        if ($this->canGoNext()) {
+            $this->dayPage++;
+        }
+    }
+
+    public function canGoPrevious(): bool
+    {
+        return $this->dayPage > 0;
+    }
+
+    public function canGoNext(): bool
+    {
+        $totalPages = (int) ceil(self::TOTAL_DAYS / self::DAYS_PER_PAGE);
+
+        return $this->dayPage < $totalPages - 1;
     }
 
     public function selectDate($date)
