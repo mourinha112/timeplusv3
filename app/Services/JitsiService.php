@@ -72,16 +72,16 @@ class JitsiService
     {
         $jitsiDomain = config('jitsi.domain');
 
-        // Testando para ambiente local sem JWT
+        // Produção: usar Jitsi privado com JWT autenticado (sem limite de tempo)
         if (app()->environment('production')) {
-            $sanitizedName = $this->sanitizeDisplayName($displayName);
+            $jwt = $this->buildJwt($roomCode, $displayName);
 
-            return "https://meet.jit.si/" . urlencode($roomCode) . "#userInfo.displayName=" . urlencode($sanitizedName);
+            return "https://{$jitsiDomain}/" . urlencode($roomCode) . '?jwt=' . urlencode($jwt);
         }
 
-        // Testando para ambiente prod com JWT
-        $jwt = $this->buildJwt($roomCode, $displayName);
+        // Local/dev: usar meet.jit.si gratuito para testes
+        $sanitizedName = $this->sanitizeDisplayName($displayName);
 
-        return "https://{$jitsiDomain}/" . urlencode($roomCode) . '?jwt=' . urlencode($jwt);
+        return "https://meet.jit.si/" . urlencode($roomCode) . "#userInfo.displayName=" . urlencode($sanitizedName);
     }
 }
