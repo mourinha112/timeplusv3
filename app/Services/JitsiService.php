@@ -57,9 +57,10 @@ class JitsiService
             'iss'     => $appId,
             'aud'     => $appId,
             'sub'     => config('jitsi.domain'),
+            'iat'     => $now,
+            'nbf'     => $now - 10,
             'exp'     => $now + $ttl,
-            'room'    => $roomCode,
-            // 'nbf'     => $now - 10,
+            'room'    => strtolower($roomCode),
             'context' => [
                 'user' => ['name' => $sanitizedName],
             ],
@@ -71,17 +72,21 @@ class JitsiService
     public function buildEmbedUrl(string $roomCode, string $displayName): string
     {
         $jitsiDomain = config('jitsi.domain');
+        $secret      = config('jitsi.secret');
 
-        // Produção: usar Jitsi privado com JWT autenticado (sem limite de tempo)
-        if (app()->environment('production')) {
+        // Normalizar room code para lowercase (Prosody/Jitsi usa lowercase internamente)
+        $roomCodeLower = strtolower($roomCode);
+
+        // Sempre usar Jitsi privado quando domínio e secret estiverem configurados (VPS/produção)
+        if ($jitsiDomain && $secret !== '' && $secret !== null) {
             $jwt = $this->buildJwt($roomCode, $displayName);
 
-            return "https://{$jitsiDomain}/" . urlencode($roomCode) . '?jwt=' . urlencode($jwt);
+            return "https://{$jitsiDomain}/" . urlencode($roomCodeLower) . '?jwt=' . urlencode($jwt);
         }
 
-        // Local/dev: usar meet.jit.si gratuito para testes
+        // Fallback: meet.jit.si só quando não houver config (ex.: dev local sem .env)
         $sanitizedName = $this->sanitizeDisplayName($displayName);
 
-        return "https://meet.jit.si/" . urlencode($roomCode) . "#userInfo.displayName=" . urlencode($sanitizedName);
+        return "https://meet.jit.si/" . urlencode($roomCodeLower) . "#userInfo.displayName=" . urlencode($sanitizedName);
     }
 }
