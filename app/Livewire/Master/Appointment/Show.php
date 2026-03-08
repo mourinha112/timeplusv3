@@ -13,7 +13,20 @@ class Show extends Component
 
     public function mount(Appointment $appointment): void
     {
-        $this->appointment = $appointment->load(['user', 'specialist', 'payment']);
+        $this->appointment = $appointment->load(['user', 'specialist', 'payment', 'room']);
+    }
+
+    public function cancelAppointment(): void
+    {
+        $this->appointment->update(['status' => 'cancelled']);
+
+        if ($this->appointment->room) {
+            $this->appointment->room->update(['status' => 'closed', 'closed_at' => now()]);
+        }
+
+        session()->flash('message', 'Agendamento cancelado com sucesso!');
+
+        $this->redirect(route('master.appointment.show', ['appointment' => $this->appointment->id]));
     }
 
     public function render()

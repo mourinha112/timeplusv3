@@ -17,12 +17,8 @@ class ShowTable extends PowerGridComponent
     public function setUp(): array
     {
         return [
-            PowerGrid::header()
-                ->showSearchInput(),
-
-            PowerGrid::footer()
-                ->showPerPage()
-                ->showRecordCount(),
+            PowerGrid::header()->showSearchInput(),
+            PowerGrid::footer()->showPerPage()->showRecordCount(),
         ];
     }
 
@@ -40,15 +36,14 @@ class ShowTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('avatar_formatted', function (Specialist $model) {
-                return $model->avatar
-                    ? '<img src="' . asset('storage/' . $model->avatar) . '" class="w-10 h-10 rounded-full" />'
-                    : '<img src="' . asset('images/avatar.png') . '" class="w-10 h-10 rounded-full" />';
-            })
             ->add('name')
             ->add('email')
             ->add('crp')
-            // ->add('is_active_formatted', fn(Specialist $model) => $model->is_active ? 'Ativo' : 'Inativo')
+            ->add('status_indicator', function (Specialist $model) {
+                return $model->is_active
+                    ? '<span class="badge badge-success badge-sm">Ativo</span>'
+                    : '<span class="badge badge-error badge-sm">Inativo</span>';
+            })
             ->add('created_at_formatted', fn (Specialist $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
     }
 
@@ -59,9 +54,8 @@ class ShowTable extends PowerGridComponent
             Column::make('Nome', 'name')->searchable()->sortable(),
             Column::make('E-mail', 'email')->searchable(),
             Column::make('CRP', 'crp')->searchable(),
-            // Column::make('Situação', 'is_active_formatted', 'is_active')->sortable(),
-            Column::make('Cadastrado em', 'created_at_formatted', 'created_at')
-                ->sortable(),
+            Column::make('Situação', 'status_indicator', 'is_active'),
+            Column::make('Cadastrado em', 'created_at_formatted', 'created_at')->sortable(),
             Column::action('Ações'),
         ];
     }
@@ -73,6 +67,20 @@ class ShowTable extends PowerGridComponent
         $this->redirect(route('master.specialist.personal-data.show', ['specialist' => $specialist->id]));
     }
 
+    #[\Livewire\Attributes\On('master::specialist-edit')]
+    public function edit($rowId): void
+    {
+        $specialist = Specialist::findOrFail($rowId);
+        $this->redirect(route('master.specialist.edit', ['specialist' => $specialist->id]));
+    }
+
+    #[\Livewire\Attributes\On('master::specialist-toggle')]
+    public function toggleActive($rowId): void
+    {
+        $specialist = Specialist::findOrFail($rowId);
+        $specialist->update(['is_active' => !$specialist->is_active]);
+    }
+
     public function actions(Specialist $row): array
     {
         return [
@@ -81,6 +89,18 @@ class ShowTable extends PowerGridComponent
                 ->id()
                 ->class('btn btn-info btn-sm')
                 ->dispatch('master::specialist-show', ['rowId' => $row->id]),
+
+            Button::add('edit')
+                ->slot('Editar')
+                ->id()
+                ->class('btn btn-warning btn-sm')
+                ->dispatch('master::specialist-edit', ['rowId' => $row->id]),
+
+            Button::add('toggle')
+                ->slot($row->is_active ? 'Desativar' : 'Ativar')
+                ->id()
+                ->class($row->is_active ? 'btn btn-error btn-sm' : 'btn btn-success btn-sm')
+                ->dispatch('master::specialist-toggle', ['rowId' => $row->id]),
         ];
     }
 }

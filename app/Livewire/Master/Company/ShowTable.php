@@ -45,8 +45,8 @@ class ShowTable extends PowerGridComponent
             ->add('is_active')
             ->add('status_indicator', function (Company $model) {
                 return $model->is_active
-                    ? '<span class="inline-flex w-3 h-3 bg-green-500 rounded-full"></span>'
-                    : '<span class="inline-flex w-3 h-3 bg-red-500 rounded-full"></span>';
+                    ? '<span class="badge badge-success badge-sm">Ativa</span>'
+                    : '<span class="badge badge-error badge-sm">Inativa</span>';
             })
             ->add('created_at_formatted', fn (Company $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
     }
@@ -59,8 +59,7 @@ class ShowTable extends PowerGridComponent
             Column::make('CNPJ', 'cnpj')->searchable(),
             Column::make('E-mail', 'email')->searchable(),
             Column::make('Cidade', 'city')->searchable(),
-            Column::make('Situação', 'status_indicator', 'is_active')
-                ->bodyAttribute('class', 'text-center'),
+            Column::make('Situação', 'status_indicator', 'is_active'),
             Column::make('Cadastrada em', 'created_at_formatted', 'created_at')->sortable(),
             Column::action('Ações'),
         ];
@@ -80,6 +79,13 @@ class ShowTable extends PowerGridComponent
         $this->redirect(route('master.company.edit', ['company' => $company->id]));
     }
 
+    #[\Livewire\Attributes\On('master::company-toggle')]
+    public function toggleActive($rowId): void
+    {
+        $company = Company::findOrFail($rowId);
+        $company->update(['is_active' => !$company->is_active]);
+    }
+
     public function actions(Company $row): array
     {
         return [
@@ -94,6 +100,12 @@ class ShowTable extends PowerGridComponent
                 ->id()
                 ->class('btn btn-soft btn-info btn-sm')
                 ->dispatch('master::company-edit', ['rowId' => $row->id]),
+
+            Button::add('toggle')
+                ->slot($row->is_active ? 'Desativar' : 'Ativar')
+                ->id()
+                ->class($row->is_active ? 'btn btn-error btn-sm' : 'btn btn-success btn-sm')
+                ->dispatch('master::company-toggle', ['rowId' => $row->id]),
         ];
     }
 }

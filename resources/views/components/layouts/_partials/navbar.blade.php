@@ -352,59 +352,63 @@
                                     Início
                                 </a>
                             </li>
-                            <!-- Gestão de Usuários -->
                             <li>
-                                <h3
-                                    class="menu-title text-xs font-semibold text-base-content/60 px-3 py-2">
-                                    Gestão
-                                    de Usuários</h3>
+                                <h3 class="menu-title text-xs font-semibold text-base-content/60 px-3 py-2">Gestão de Usuários</h3>
                             </li>
                             <li class="ml-2">
-                                <a href="{{ route('master.user.index') }}"
-                                    class="{{ !Route::is('master.user.index', 'master.user.personal-data.show') ?: 'border bg-base-200 font-semibold' }}">
-                                    <x-carbon-user class="w-4 h-4" />
-                                    Usuários
+                                <a href="{{ route('master.user.index') }}" class="{{ !Route::is('master.user.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-user class="w-4 h-4" /> Usuários
                                 </a>
                             </li>
                             <li class="ml-2">
-                                <a href="{{ route('master.company.index') }}"
-                                    class="{{ !Route::is('master.company.index', 'master.company.show', 'master.company.create', 'master.company.edit') ?: 'border bg-base-200 font-semibold' }}">
-                                    <x-carbon-enterprise class="w-4 h-4" />
-                                    Empresas
+                                <a href="{{ route('master.company.index') }}" class="{{ !Route::is('master.company.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-enterprise class="w-4 h-4" /> Empresas
                                 </a>
                             </li>
                             <li class="ml-2">
-                                <a href="{{ route('master.specialist.index') }}"
-                                    class="{{ !Route::is('master.specialist.index', 'master.specialist.personal-data.show') ?: 'border bg-base-200 font-semibold' }}">
-                                    <x-carbon-reminder-medical class="w-4 h-4" />
-                                    Especialistas
+                                <a href="{{ route('master.specialist.index') }}" class="{{ !Route::is('master.specialist.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-reminder-medical class="w-4 h-4" /> Especialistas
                                 </a>
                             </li>
-                            <!-- Gerenciamento Interno -->
                             <li>
-                                <h3
-                                    class="menu-title text-xs font-semibold text-base-content/60 px-3 py-2">
-                                    Gerenciamento Interno</h3>
+                                <h3 class="menu-title text-xs font-semibold text-base-content/60 px-3 py-2">Gerenciamento Interno</h3>
                             </li>
                             <li class="ml-2">
-                                <a href="{{ route('master.appointment.index') }}"
-                                    class="{{ !Route::is('master.appointment.index', 'master.appointment.show') ?: 'border bg-base-200 font-semibold' }}">
-                                    <x-carbon-calendar-heat-map class="w-4 h-4" />
-                                    Agendamentos
+                                <a href="{{ route('master.appointment.index') }}" class="{{ !Route::is('master.appointment.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-calendar-heat-map class="w-4 h-4" /> Agendamentos
                                 </a>
                             </li>
                             <li class="ml-2">
-                                <a href="{{ route('master.payment.index') }}"
-                                    class="{{ !Route::is('master.payment.index', 'master.payment.show') ?: 'border bg-base-200 font-semibold' }}">
-                                    <x-carbon-money class="w-4 h-4" />
-                                    Pagamentos
+                                <a href="{{ route('master.payment.index') }}" class="{{ !Route::is('master.payment.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-money class="w-4 h-4" /> Pagamentos
                                 </a>
                             </li>
                             <li class="ml-2">
-                                <a href="{{ route('master.plan.index') }}"
-                                    class="{{ !Route::is('master.plan.index', 'master.plan.show', 'master.plan.edit') ?: 'border bg-base-200 font-semibold' }}">
-                                    <x-carbon-plan class="w-4 h-4" />
-                                    Planos
+                                <a href="{{ route('master.plan.index') }}" class="{{ !Route::is('master.plan.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-plan class="w-4 h-4" /> Planos
+                                </a>
+                            </li>
+                            <li>
+                                <h3 class="menu-title text-xs font-semibold text-base-content/60 px-3 py-2">Configurações</h3>
+                            </li>
+                            <li class="ml-2">
+                                <a href="{{ route('master.specialty.index') }}" class="{{ !Route::is('master.specialty.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-catalog class="w-4 h-4" /> Especialidades
+                                </a>
+                            </li>
+                            <li class="ml-2">
+                                <a href="{{ route('master.reason.index') }}" class="{{ !Route::is('master.reason.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-list-checked class="w-4 h-4" /> Motivos
+                                </a>
+                            </li>
+                            <li class="ml-2">
+                                <a href="{{ route('master.gender.index') }}" class="{{ !Route::is('master.gender.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-gender-female class="w-4 h-4" /> Gêneros
+                                </a>
+                            </li>
+                            <li class="ml-2">
+                                <a href="{{ route('master.training-type.index') }}" class="{{ !Route::is('master.training-type.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-education class="w-4 h-4" /> Tipos de Formação
                                 </a>
                             </li>
                         </ul>
@@ -424,31 +428,25 @@
                         <!-- Dropdown Gestão de Usuários -->
                         <li class="dropdown dropdown-bottom">
                             <button tabindex="0"
-                                class="btn btn-ghost {{ Route::is('master.user.index', 'master.user.personal-data.show', 'master.company.index', 'master.company.show', 'master.company.create', 'master.company.edit', 'master.specialist.index', 'master.specialist.personal-data.show') ? 'border bg-base-200 font-semibold' : 'font-light' }}">
+                                class="btn btn-ghost {{ Route::is('master.user.*', 'master.company.*', 'master.specialist.*') ? 'border bg-base-200 font-semibold' : 'font-light' }}">
                                 <x-carbon-user-multiple class="w-5" />
                                 Gestão de Usuários
                             </button>
                             <ul tabindex="0"
                                 class="dropdown-content menu bg-base-100 text-base-content rounded-box shadow-md z-10 w-52 p-2 border border-base-300">
                                 <li>
-                                    <a href="{{ route('master.user.index') }}"
-                                        class="{{ !Route::is('master.user.index', 'master.user.personal-data.show') ?: 'bg-base-200 font-semibold' }}">
-                                        <x-carbon-user class="w-4" />
-                                        Usuários
+                                    <a href="{{ route('master.user.index') }}" class="{{ !Route::is('master.user.*') ?: 'bg-base-200 font-semibold' }}">
+                                        <x-carbon-user class="w-4" /> Usuários
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('master.company.index') }}"
-                                        class="{{ !Route::is('master.company.index', 'master.company.show', 'master.company.create', 'master.company.edit') ?: 'bg-base-200 font-semibold' }}">
-                                        <x-carbon-enterprise class="w-4" />
-                                        Empresas
+                                    <a href="{{ route('master.company.index') }}" class="{{ !Route::is('master.company.*') ?: 'bg-base-200 font-semibold' }}">
+                                        <x-carbon-enterprise class="w-4" /> Empresas
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('master.specialist.index') }}"
-                                        class="{{ !Route::is('master.specialist.index', 'master.specialist.personal-data.show') ?: 'bg-base-200 font-semibold' }}">
-                                        <x-carbon-reminder-medical class="w-4" />
-                                        Especialistas
+                                    <a href="{{ route('master.specialist.index') }}" class="{{ !Route::is('master.specialist.*') ?: 'bg-base-200 font-semibold' }}">
+                                        <x-carbon-reminder-medical class="w-4" /> Especialistas
                                     </a>
                                 </li>
                             </ul>
@@ -457,31 +455,57 @@
                         <!-- Dropdown Gerenciamento Interno -->
                         <li class="dropdown dropdown-bottom">
                             <button tabindex="0"
-                                class="btn btn-ghost {{ Route::is('master.appointment.index', 'master.appointment.show', 'master.payment.index', 'master.payment.show', 'master.plan.index', 'master.plan.show', 'master.plan.edit') ? 'border bg-base-200 font-semibold' : 'font-light' }}">
+                                class="btn btn-ghost {{ Route::is('master.appointment.*', 'master.payment.*', 'master.plan.*') ? 'border bg-base-200 font-semibold' : 'font-light' }}">
                                 <x-carbon-settings class="w-5 h-5" />
-                                Gerenciamento Interno
+                                Gerenciamento
                             </button>
                             <ul tabindex="0"
                                 class="dropdown-content menu bg-base-100 text-base-content rounded-box shadow-md z-10 w-52 p-2 border border-base-300">
                                 <li>
-                                    <a href="{{ route('master.appointment.index') }}"
-                                        class="{{ !Route::is('master.appointment.index', 'master.appointment.show') ?: 'bg-base-200 font-semibold' }}">
-                                        <x-carbon-calendar-heat-map class="w-4 h-4" />
-                                        Agendamentos
+                                    <a href="{{ route('master.appointment.index') }}" class="{{ !Route::is('master.appointment.*') ?: 'bg-base-200 font-semibold' }}">
+                                        <x-carbon-calendar-heat-map class="w-4 h-4" /> Agendamentos
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('master.payment.index') }}"
-                                        class="{{ !Route::is('master.payment.index', 'master.payment.show') ?: 'bg-base-200 font-semibold' }}">
-                                        <x-carbon-money class="w-4 h-4" />
-                                        Pagamentos
+                                    <a href="{{ route('master.payment.index') }}" class="{{ !Route::is('master.payment.*') ?: 'bg-base-200 font-semibold' }}">
+                                        <x-carbon-money class="w-4 h-4" /> Pagamentos
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('master.plan.index') }}"
-                                        class="{{ !Route::is('master.plan.index', 'master.plan.show', 'master.plan.edit') ?: 'bg-base-200 font-semibold' }}">
-                                        <x-carbon-plan class="w-4 h-4" />
-                                        Planos
+                                    <a href="{{ route('master.plan.index') }}" class="{{ !Route::is('master.plan.*') ?: 'bg-base-200 font-semibold' }}">
+                                        <x-carbon-plan class="w-4 h-4" /> Planos
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Dropdown Configurações -->
+                        <li class="dropdown dropdown-bottom">
+                            <button tabindex="0"
+                                class="btn btn-ghost {{ Route::is('master.specialty.*', 'master.reason.*', 'master.gender.*', 'master.training-type.*') ? 'border bg-base-200 font-semibold' : 'font-light' }}">
+                                <x-carbon-settings-adjust class="w-5 h-5" />
+                                Configurações
+                            </button>
+                            <ul tabindex="0"
+                                class="dropdown-content menu bg-base-100 text-base-content rounded-box shadow-md z-10 w-56 p-2 border border-base-300">
+                                <li>
+                                    <a href="{{ route('master.specialty.index') }}" class="{{ !Route::is('master.specialty.*') ?: 'bg-base-200 font-semibold' }}">
+                                        <x-carbon-catalog class="w-4 h-4" /> Especialidades
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('master.reason.index') }}" class="{{ !Route::is('master.reason.*') ?: 'bg-base-200 font-semibold' }}">
+                                        <x-carbon-list-checked class="w-4 h-4" /> Motivos de Consulta
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('master.gender.index') }}" class="{{ !Route::is('master.gender.*') ?: 'bg-base-200 font-semibold' }}">
+                                        <x-carbon-gender-female class="w-4 h-4" /> Gêneros
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('master.training-type.index') }}" class="{{ !Route::is('master.training-type.*') ?: 'bg-base-200 font-semibold' }}">
+                                        <x-carbon-education class="w-4 h-4" /> Tipos de Formação
                                     </a>
                                 </li>
                             </ul>
@@ -490,10 +514,24 @@
                 </div>
 
                 <div class="navbar-end">
-                    <a href="{{ route('master.auth.logout') }}" class="btn btn-ghost btn-sm">
-                        <x-carbon-logout class="w-4 h-4" />
-                        Sair
-                    </a>
+                    <div class="dropdown dropdown-end">
+                        <div tabindex="0" role="button" class="btn btn-ghost btn-sm">
+                            <x-carbon-user class="w-4 h-4" />
+                            {{ Auth::guard('master')->user()->name }}
+                        </div>
+                        <ul tabindex="0" class="dropdown-content menu bg-base-100 text-base-content rounded-box shadow-md z-10 w-48 p-2 border border-base-300">
+                            <li>
+                                <a href="{{ route('master.profile.edit') }}">
+                                    <x-carbon-user class="w-4 h-4" /> Meu Perfil
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('master.auth.logout') }}">
+                                    <x-carbon-logout class="w-4 h-4" /> Sair
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             @endauth
 </div>

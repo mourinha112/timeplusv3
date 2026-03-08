@@ -163,6 +163,9 @@ Route::group(['middleware' => ['auth:master']], function () {
         return redirect()->route('master.auth.login');
     })->name('master.auth.logout');
 
+    /* Profile */
+    Route::get('master/perfil', Master\Profile\Edit::class)->name('master.profile.edit');
+
     /* Tables (Index components na pasta principal) */
     Route::get('master/usuarios', Master\User\Index::class)->name('master.user.index');
     Route::get('master/especialistas', Master\Specialist\Index::class)->name('master.specialist.index');
@@ -171,9 +174,39 @@ Route::group(['middleware' => ['auth:master']], function () {
     Route::get('master/pagamentos', Master\Payment\Index::class)->name('master.payment.index');
     Route::get('master/planos', Master\Plan\Index::class)->name('master.plan.index');
 
+    /* CRUD Users */
+    Route::get('master/usuarios/{user}/editar', Master\User\Edit::class)->name('master.user.edit');
+
+    /* CRUD Specialists */
+    Route::get('master/especialistas/{specialist}/editar', Master\Specialist\Edit::class)->name('master.specialist.edit');
+
     /* CRUD Companies */
     Route::get('master/empresas/criar', Master\Company\Create::class)->name('master.company.create');
     Route::get('master/empresas/{company}/editar', Master\Company\Edit::class)->name('master.company.edit');
+
+    /* CRUD Plans */
+    Route::get('master/planos/criar', Master\Plan\Create::class)->name('master.plan.create');
+    Route::get('master/planos/{plan}/editar', Master\Plan\Edit::class)->name('master.plan.edit');
+
+    /* CRUD Specialties */
+    Route::get('master/especialidades', Master\Specialty\Index::class)->name('master.specialty.index');
+    Route::get('master/especialidades/criar', Master\Specialty\Create::class)->name('master.specialty.create');
+    Route::get('master/especialidades/{specialty}/editar', Master\Specialty\Edit::class)->name('master.specialty.edit');
+
+    /* CRUD Reasons */
+    Route::get('master/motivos', Master\Reason\Index::class)->name('master.reason.index');
+    Route::get('master/motivos/criar', Master\Reason\Create::class)->name('master.reason.create');
+    Route::get('master/motivos/{reason}/editar', Master\Reason\Edit::class)->name('master.reason.edit');
+
+    /* CRUD Genders */
+    Route::get('master/generos', Master\Gender\Index::class)->name('master.gender.index');
+    Route::get('master/generos/criar', Master\Gender\Create::class)->name('master.gender.create');
+    Route::get('master/generos/{gender}/editar', Master\Gender\Edit::class)->name('master.gender.edit');
+
+    /* CRUD Training Types */
+    Route::get('master/tipos-formacao', Master\TrainingType\Index::class)->name('master.training-type.index');
+    Route::get('master/tipos-formacao/criar', Master\TrainingType\Create::class)->name('master.training-type.create');
+    Route::get('master/tipos-formacao/{trainingType}/editar', Master\TrainingType\Edit::class)->name('master.training-type.edit');
 
     /* Details */
     Route::get('master/usuarios/{user}', Master\User\PersonalData\Show::class)->name('master.user.personal-data.show');
@@ -182,7 +215,6 @@ Route::group(['middleware' => ['auth:master']], function () {
     Route::get('master/agendamentos/{appointment}', Master\Appointment\Show::class)->name('master.appointment.show');
     Route::get('master/pagamentos/{payment}', Master\Payment\Show::class)->name('master.payment.show');
     Route::get('master/planos/{plan}', Master\Plan\Show::class)->name('master.plan.show');
-    Route::get('master/planos/{plan}/editar', Master\Plan\Edit::class)->name('master.plan.edit');
 });
 
 /* ----------------- */

@@ -1,12 +1,12 @@
 <div>
-    <div class="space-y-6">
-        <x-heading>
-            <h1 class="text-xl font-bold text-base-content flex items-center gap-3">
-                <x-carbon-plan class="w-8 text-info" />
-                Planos
-            </h1>
-        </x-heading>
-
-        <livewire:master.plan.show-table />
+    <x-heading>
+        <x-title>Planos da Plataforma</x-title>
+        <x-subtitle>Gerencie os planos disponíveis para os usuários.</x-subtitle>
+    </x-heading>
+    <div class="flex justify-end mb-4">
+        <a wire:navigate href="{{ route('master.plan.create') }}" class="btn btn-info btn-sm">
+            <x-carbon-add class="w-4 h-4" /> Novo Plano
+        </a>
     </div>
+    <livewire:master.plan.show-table />
 </div>

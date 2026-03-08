@@ -17,11 +17,8 @@ class ShowTable extends PowerGridComponent
     public function setUp(): array
     {
         return [
-            PowerGrid::header()
-                ->showSearchInput(),
-            PowerGrid::footer()
-                ->showPerPage()
-                ->showRecordCount(),
+            PowerGrid::header()->showSearchInput(),
+            PowerGrid::footer()->showPerPage()->showRecordCount(),
         ];
     }
 
@@ -40,18 +37,9 @@ class ShowTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('name')
-            ->add('price')
-            ->add('price_formatted', function (Plan $model) {
-                return 'R$ ' . number_format($model->price, 2, ',', '.');
-            })
-            ->add('discount_percentage')
-            ->add('discount_badge', function (Plan $model) {
-                return $model->discount_percentage . '%';
-            })
-            ->add('duration_days')
-            ->add('duration_formatted', function (Plan $model) {
-                return $model->duration_days . ' dia' . ($model->duration_days > 1 ? 's' : '');
-            })
+            ->add('price_formatted', fn (Plan $model) => 'R$ ' . number_format($model->price, 2, ',', '.'))
+            ->add('discount_badge', fn (Plan $model) => $model->discount_percentage . '%')
+            ->add('duration_formatted', fn (Plan $model) => $model->duration_days . ' dia' . ($model->duration_days > 1 ? 's' : ''))
             ->add('created_at_formatted', fn (Plan $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
     }
 
@@ -60,22 +48,25 @@ class ShowTable extends PowerGridComponent
         return [
             Column::make('ID', 'id')->sortable(),
             Column::make('Nome', 'name')->searchable()->sortable(),
-            Column::make('Preço', 'price_formatted', 'price')
-                ->bodyAttribute('class', 'text-center')->sortable(),
-            Column::make('Desconto', 'discount_badge', 'discount_percentage')
-                ->bodyAttribute('class', 'text-center')->sortable(),
-            Column::make('Duração', 'duration_formatted', 'duration_days')
-                ->bodyAttribute('class', 'text-center')->sortable(),
+            Column::make('Preco', 'price_formatted', 'price')->bodyAttribute('class', 'text-center')->sortable(),
+            Column::make('Desconto', 'discount_badge', 'discount_percentage')->bodyAttribute('class', 'text-center')->sortable(),
+            Column::make('Duracao', 'duration_formatted', 'duration_days')->bodyAttribute('class', 'text-center')->sortable(),
             Column::make('Criado em', 'created_at_formatted', 'created_at')->sortable(),
-            Column::action('Ações'),
+            Column::action('Acoes'),
         ];
     }
 
     #[\Livewire\Attributes\On('master::plan-show')]
     public function show($rowId): void
     {
+        $this->redirect(route('master.plan.show', ['plan' => $rowId]));
+    }
+
+    #[\Livewire\Attributes\On('master::plan-delete')]
+    public function delete($rowId): void
+    {
         $plan = Plan::findOrFail($rowId);
-        $this->redirect(route('master.plan.show', ['plan' => $plan->id]));
+        $plan->delete();
     }
 
     public function actions(Plan $row): array
@@ -92,6 +83,12 @@ class ShowTable extends PowerGridComponent
                 ->id()
                 ->class('btn btn-warning btn-sm')
                 ->route('master.plan.edit', ['plan' => $row->id]),
+
+            Button::add('delete')
+                ->slot('Excluir')
+                ->id()
+                ->class('btn btn-error btn-sm')
+                ->dispatch('master::plan-delete', ['rowId' => $row->id]),
         ];
     }
 }

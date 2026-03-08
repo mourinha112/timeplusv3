@@ -38,6 +38,12 @@ class ShowTable extends PowerGridComponent
             ->add('id')
             ->add('name')
             ->add('email')
+            ->add('phone_number')
+            ->add('status_indicator', function (User $model) {
+                return $model->is_active
+                    ? '<span class="badge badge-success badge-sm">Ativo</span>'
+                    : '<span class="badge badge-error badge-sm">Inativo</span>';
+            })
             ->add('created_at_formatted', fn (User $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
     }
 
@@ -47,6 +53,7 @@ class ShowTable extends PowerGridComponent
             Column::make('ID', 'id')->sortable(),
             Column::make('Nome', 'name')->searchable()->sortable(),
             Column::make('E-mail', 'email')->searchable(),
+            Column::make('Situação', 'status_indicator', 'is_active'),
             Column::make('Cadastrado em', 'created_at_formatted', 'created_at')->sortable(),
             Column::action('Ações'),
         ];
@@ -59,6 +66,20 @@ class ShowTable extends PowerGridComponent
         $this->redirect(route('master.user.personal-data.show', ['user' => $user->id]));
     }
 
+    #[\Livewire\Attributes\On('master::user-edit')]
+    public function edit($rowId): void
+    {
+        $user = User::findOrFail($rowId);
+        $this->redirect(route('master.user.edit', ['user' => $user->id]));
+    }
+
+    #[\Livewire\Attributes\On('master::user-toggle')]
+    public function toggleActive($rowId): void
+    {
+        $user = User::findOrFail($rowId);
+        $user->update(['is_active' => !$user->is_active]);
+    }
+
     public function actions(User $row): array
     {
         return [
@@ -67,6 +88,18 @@ class ShowTable extends PowerGridComponent
                 ->id()
                 ->class('btn btn-info btn-sm')
                 ->dispatch('master::user-show', ['rowId' => $row->id]),
+
+            Button::add('edit')
+                ->slot('Editar')
+                ->id()
+                ->class('btn btn-warning btn-sm')
+                ->dispatch('master::user-edit', ['rowId' => $row->id]),
+
+            Button::add('toggle')
+                ->slot($row->is_active ? 'Desativar' : 'Ativar')
+                ->id()
+                ->class($row->is_active ? 'btn btn-error btn-sm' : 'btn btn-success btn-sm')
+                ->dispatch('master::user-toggle', ['rowId' => $row->id]),
         ];
     }
 }
