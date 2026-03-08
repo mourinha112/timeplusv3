@@ -146,6 +146,13 @@
                                     Clientes
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('specialist.finance.payment-data') }}"
+                                    class="{{ !Route::is('specialist.finance.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-wallet class="w-4 h-4" />
+                                    Financeiro
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -171,6 +178,13 @@
                                 class="{{ !Route::is('specialist.client.index') ?: 'border bg-base-200 font-semibold' }}">
                                 <x-carbon-user-feedback class="w-5 h-5" />
                                 Clientes
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('specialist.finance.payment-data') }}"
+                                class="{{ !Route::is('specialist.finance.*') ?: 'border bg-base-200 font-semibold' }}">
+                                <x-carbon-wallet class="w-5 h-5" />
+                                Financeiro
                             </a>
                         </li>
                     </ul>
@@ -388,6 +402,26 @@
                                     <x-carbon-plan class="w-4 h-4" /> Planos
                                 </a>
                             </li>
+                            <li class="ml-2">
+                                <a href="{{ route('master.subscribe.index') }}" class="{{ !Route::is('master.subscribe.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-license class="w-4 h-4" /> Assinaturas
+                                </a>
+                            </li>
+                            <li class="ml-2">
+                                <a href="{{ route('master.room.index') }}" class="{{ !Route::is('master.room.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-video class="w-4 h-4" /> Salas
+                                </a>
+                            </li>
+                            <li class="ml-2">
+                                <a href="{{ route('master.availability.index') }}" class="{{ !Route::is('master.availability.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-calendar-tools class="w-4 h-4" /> Disponibilidades
+                                </a>
+                            </li>
+                            <li class="ml-2">
+                                <a href="{{ route('master.finance.index') }}" class="{{ !Route::is('master.finance.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-wallet class="w-4 h-4" /> Financeiro
+                                </a>
+                            </li>
                             <li>
                                 <h3 class="menu-title text-xs font-semibold text-base-content/60 px-3 py-2">Configurações</h3>
                             </li>
@@ -455,12 +489,12 @@
                         <!-- Dropdown Gerenciamento Interno -->
                         <li class="dropdown dropdown-bottom">
                             <button tabindex="0"
-                                class="btn btn-ghost {{ Route::is('master.appointment.*', 'master.payment.*', 'master.plan.*') ? 'border bg-base-200 font-semibold' : 'font-light' }}">
+                                class="btn btn-ghost {{ Route::is('master.appointment.*', 'master.payment.*', 'master.plan.*', 'master.subscribe.*', 'master.room.*', 'master.availability.*') ? 'border bg-base-200 font-semibold' : 'font-light' }}">
                                 <x-carbon-settings class="w-5 h-5" />
                                 Gerenciamento
                             </button>
                             <ul tabindex="0"
-                                class="dropdown-content menu bg-base-100 text-base-content rounded-box shadow-md z-10 w-52 p-2 border border-base-300">
+                                class="dropdown-content menu bg-base-100 text-base-content rounded-box shadow-md z-10 w-56 p-2 border border-base-300">
                                 <li>
                                     <a href="{{ route('master.appointment.index') }}" class="{{ !Route::is('master.appointment.*') ?: 'bg-base-200 font-semibold' }}">
                                         <x-carbon-calendar-heat-map class="w-4 h-4" /> Agendamentos
@@ -476,7 +510,31 @@
                                         <x-carbon-plan class="w-4 h-4" /> Planos
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ route('master.subscribe.index') }}" class="{{ !Route::is('master.subscribe.*') ?: 'bg-base-200 font-semibold' }}">
+                                        <x-carbon-license class="w-4 h-4" /> Assinaturas
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('master.room.index') }}" class="{{ !Route::is('master.room.*') ?: 'bg-base-200 font-semibold' }}">
+                                        <x-carbon-video class="w-4 h-4" /> Salas
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('master.availability.index') }}" class="{{ !Route::is('master.availability.*') ?: 'bg-base-200 font-semibold' }}">
+                                        <x-carbon-calendar-tools class="w-4 h-4" /> Disponibilidades
+                                    </a>
+                                </li>
                             </ul>
+                        </li>
+
+                        <!-- Financeiro -->
+                        <li>
+                            <a href="{{ route('master.finance.index') }}"
+                                class="btn btn-ghost {{ Route::is('master.finance.*') ? 'border bg-base-200 font-semibold' : 'font-light' }}">
+                                <x-carbon-wallet class="w-5 h-5" />
+                                Financeiro
+                            </a>
                         </li>
 
                         <!-- Dropdown Configurações -->

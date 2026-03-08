@@ -208,6 +208,19 @@ Route::group(['middleware' => ['auth:master']], function () {
     Route::get('master/tipos-formacao/criar', Master\TrainingType\Create::class)->name('master.training-type.create');
     Route::get('master/tipos-formacao/{trainingType}/editar', Master\TrainingType\Edit::class)->name('master.training-type.edit');
 
+    /* Subscribes */
+    Route::get('master/assinaturas', Master\Subscribe\Index::class)->name('master.subscribe.index');
+
+    /* Rooms */
+    Route::get('master/salas', Master\Room\Index::class)->name('master.room.index');
+
+    /* Availabilities */
+    Route::get('master/disponibilidades', Master\Availability\Index::class)->name('master.availability.index');
+
+    /* Finance */
+    Route::get('master/financeiro', Master\Finance\Index::class)->name('master.finance.index');
+    Route::get('master/financeiro/{specialist}', Master\Finance\Show::class)->name('master.finance.show');
+
     /* Details */
     Route::get('master/usuarios/{user}', Master\User\PersonalData\Show::class)->name('master.user.personal-data.show');
     Route::get('master/especialistas/{specialist}', Master\Specialist\PersonalData\Show::class)->name('master.specialist.personal-data.show');
