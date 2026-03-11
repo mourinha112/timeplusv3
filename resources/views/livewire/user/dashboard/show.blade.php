@@ -3,6 +3,52 @@
         Dê o primeiro passo agora! 👋🏻
     </x-subtitle>
 
+    @if ($this->nextAppointment)
+        <x-card class="border-info/30 bg-info/5">
+            <x-card-body>
+                <div class="flex items-center gap-3 mb-3">
+                    <x-carbon-calendar-heat-map class="w-6 h-6 text-info" />
+                    <x-card-title>Próxima sessão</x-card-title>
+                </div>
+
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div class="space-y-1">
+                        <div class="text-lg font-semibold">
+                            {{ \Carbon\Carbon::parse($this->nextAppointment->appointment_date)->format('d/m/Y') }}
+                            - {{ \Carbon\Carbon::parse($this->nextAppointment->appointment_time)->format('H\h') }}
+                        </div>
+                        <div class="text-base-content/70">
+                            <x-carbon-reminder-medical class="w-4 h-4 inline" />
+                            {{ $this->nextAppointment->specialist->name }}
+                        </div>
+                    </div>
+
+                    <div>
+                        @if ($this->hasRoom($this->nextAppointment))
+                            <a href="{{ route('user.videocall.show', $this->nextAppointment->room->code) }}"
+                                wire:navigate class="btn btn-info btn-sm">
+                                <x-carbon-video class="w-4 h-4" />
+                                Entrar na sala {{ $this->nextAppointment->room->code }}
+                            </a>
+                        @elseif ($this->hasScheduledRoom($this->nextAppointment))
+                            <span class="badge badge-warning badge-sm py-3">
+                                <x-carbon-time class="w-3 h-3 mr-1" />
+                                <span x-data="countdown('{{ $this->getRoomOpenTime($this->nextAppointment)?->toISOString() }}')" x-text="timeLeft">
+                                    Carregando...
+                                </span>
+                            </span>
+                        @else
+                            <a href="{{ route('user.appointment.index') }}" wire:navigate class="btn btn-info btn-sm">
+                                <x-carbon-calendar-heat-map class="w-4 h-4" />
+                                Ver sessões
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            </x-card-body>
+        </x-card>
+    @endif
+
     <x-card>
         <x-card-body class="flex justify-between sm:items-center sm:flex-row">
 
@@ -35,3 +81,44 @@
         </x-card-body>
     </x-card>
 </div>
+
+<script>
+    function countdown(targetDateTime) {
+        return {
+            timeLeft: 'Carregando...',
+
+            init() {
+                if (!targetDateTime) {
+                    this.timeLeft = 'Horário não disponível';
+                    return;
+                }
+
+                this.updateTime();
+                setInterval(() => this.updateTime(), 1000);
+            },
+
+            updateTime() {
+                const now = new Date();
+                const target = new Date(targetDateTime);
+                const diff = target - now;
+
+                if (diff <= 0) {
+                    this.timeLeft = 'Disponível agora';
+                    return;
+                }
+
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                if (hours > 0) {
+                    this.timeLeft = `Disponível em ${hours}h ${minutes}m ${seconds}s`;
+                } else if (minutes > 0) {
+                    this.timeLeft = `Disponível em ${minutes}m ${seconds}s`;
+                } else {
+                    this.timeLeft = `Disponível em ${seconds}s`;
+                }
+            }
+        }
+    }
+</script>
