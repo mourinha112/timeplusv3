@@ -6,11 +6,11 @@
     @if ($this->nextAppointment)
         <x-card class="{{ $this->isPaid($this->nextAppointment) ? 'border-info/30 bg-info/5' : 'border-warning/30 bg-warning/5' }}">
             <x-card-body>
-                <div class="flex items-center gap-3 mb-3">
+                <div class="flex flex-wrap items-center gap-2 mb-3">
                     <x-carbon-calendar-heat-map class="w-6 h-6 {{ $this->isPaid($this->nextAppointment) ? 'text-info' : 'text-warning' }}" />
                     <x-card-title>Próxima sessão</x-card-title>
                     @if (!$this->isPaid($this->nextAppointment))
-                        <span class="badge badge-warning badge-sm">Aguardando pagamento</span>
+                        <span class="badge badge-warning badge-xs sm:badge-sm">Pendente</span>
                     @endif
                 </div>
 
