@@ -4,11 +4,14 @@
     </x-subtitle>
 
     @if ($this->nextAppointment)
-        <x-card class="border-info/30 bg-info/5">
+        <x-card class="{{ $this->isPaid($this->nextAppointment) ? 'border-info/30 bg-info/5' : 'border-warning/30 bg-warning/5' }}">
             <x-card-body>
                 <div class="flex items-center gap-3 mb-3">
-                    <x-carbon-calendar-heat-map class="w-6 h-6 text-info" />
+                    <x-carbon-calendar-heat-map class="w-6 h-6 {{ $this->isPaid($this->nextAppointment) ? 'text-info' : 'text-warning' }}" />
                     <x-card-title>Próxima sessão</x-card-title>
+                    @if (!$this->isPaid($this->nextAppointment))
+                        <span class="badge badge-warning badge-sm">Aguardando pagamento</span>
+                    @endif
                 </div>
 
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -24,7 +27,13 @@
                     </div>
 
                     <div>
-                        @if ($this->hasRoom($this->nextAppointment))
+                        @if (!$this->isPaid($this->nextAppointment))
+                            <a href="{{ route('user.appointment.payment', ['appointment_id' => $this->nextAppointment->id]) }}"
+                                wire:navigate class="btn btn-warning btn-sm">
+                                <x-carbon-purchase class="w-4 h-4" />
+                                Pagar Agora
+                            </a>
+                        @elseif ($this->hasRoom($this->nextAppointment))
                             <a href="{{ route('user.videocall.show', $this->nextAppointment->room->code) }}"
                                 wire:navigate class="btn btn-info btn-sm">
                                 <x-carbon-video class="w-4 h-4" />

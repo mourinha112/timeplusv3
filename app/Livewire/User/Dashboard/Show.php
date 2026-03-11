@@ -15,6 +15,7 @@ class Show extends Component
         return Auth::user()->appointments()
             ->with(['specialist', 'payment', 'room'])
             ->where('status', '!=', 'cancelled')
+            ->where('status', '!=', 'completed')
             ->where(function ($query) {
                 $query->where('appointment_date', '>', now()->toDateString())
                     ->orWhere(function ($q) {
@@ -22,12 +23,14 @@ class Show extends Component
                             ->where('appointment_time', '>=', now()->format('H:i:s'));
                     });
             })
-            ->whereHas('payment', function ($query) {
-                $query->where('status', 'paid');
-            })
             ->orderBy('appointment_date', 'asc')
             ->orderBy('appointment_time', 'asc')
             ->first();
+    }
+
+    public function isPaid($appointment)
+    {
+        return $appointment->payment && $appointment->payment->status === 'paid';
     }
 
     public function hasRoom($appointment)
