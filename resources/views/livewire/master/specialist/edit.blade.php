@@ -80,6 +80,22 @@
                         </div>
                     </div>
 
+                    <div>
+                        <h3 class="text-lg font-semibold text-base-content mb-4">Alterar Senha</h3>
+                        <p class="text-sm text-base-content/60 mb-4">Deixe em branco para manter a senha atual.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <x-form-group>
+                                <x-label>Nova Senha</x-label>
+                                <x-input type="password" wire:model="password" placeholder="Minimo 8 caracteres" />
+                            </x-form-group>
+
+                            <x-form-group>
+                                <x-label>Confirmar Senha</x-label>
+                                <x-input type="password" wire:model="password_confirmation" placeholder="Repita a senha" />
+                            </x-form-group>
+                        </div>
+                    </div>
+
                     <x-form-group>
                         <x-checkbox wire:model="is_active">
                             Especialista ativo

@@ -3,6 +3,7 @@
 namespace App\Livewire\Master\User;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
@@ -29,6 +30,11 @@ class Edit extends Component
     #[Rule('boolean')]
     public $is_active = true;
 
+    #[Rule('nullable|string|min:8|confirmed')]
+    public $password = '';
+
+    public $password_confirmation = '';
+
     public function mount(User $user)
     {
         $this->user = $user;
@@ -45,14 +51,20 @@ class Edit extends Component
     {
         $this->validate();
 
-        $this->user->update([
+        $data = [
             'name'         => $this->name,
             'email'        => $this->email,
             'phone_number' => $this->phone_number,
             'cpf'          => $this->cpf,
             'birth_date'   => $this->birth_date,
             'is_active'    => $this->is_active,
-        ]);
+        ];
+
+        if (!empty($this->password)) {
+            $data['password'] = Hash::make($this->password);
+        }
+
+        $this->user->update($data);
 
         session()->flash('message', 'Usuário atualizado com sucesso!');
 

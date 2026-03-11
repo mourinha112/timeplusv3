@@ -3,6 +3,7 @@
 namespace App\Livewire\Master\Specialist;
 
 use App\Models\{Specialist, Specialty, Gender, State};
+use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
@@ -41,6 +42,11 @@ class Edit extends Component
     #[Rule('boolean')]
     public $is_active = true;
 
+    #[Rule('nullable|string|min:8|confirmed')]
+    public $password = '';
+
+    public $password_confirmation = '';
+
     public function mount(Specialist $specialist)
     {
         $this->specialist = $specialist;
@@ -61,7 +67,7 @@ class Edit extends Component
     {
         $this->validate();
 
-        $this->specialist->update([
+        $data = [
             'name'              => $this->name,
             'email'             => $this->email,
             'phone_number'      => $this->phone_number,
@@ -72,7 +78,13 @@ class Edit extends Component
             'state_id'          => $this->state_id ?: null,
             'appointment_value' => $this->appointment_value,
             'is_active'         => $this->is_active,
-        ]);
+        ];
+
+        if (!empty($this->password)) {
+            $data['password'] = Hash::make($this->password);
+        }
+
+        $this->specialist->update($data);
 
         session()->flash('message', 'Especialista atualizado com sucesso!');
 
