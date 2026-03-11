@@ -15,22 +15,22 @@
     </div>
 
     <div class="card card-xl bg-base-100 shadow-lg border border-gray-200 rounded-xl p-4">
+        <!-- Day Headers (fixos) -->
+        <div class="grid grid-cols-[auto_repeat(7,1fr)] gap-1 lg:gap-2 mb-1">
+            <div></div>
+            @foreach ($weekDays as $dayInfo)
+                <div class="text-center">
+                    <div class="w-full p-1 lg:p-2 rounded border border-base-content/20 text-base-content">
+                        <p class="text-xs uppercase font-medium">{{ $dayInfo['dayOfWeek'] }}</p>
+                        <p class="text-sm font-bold">{{ $dayInfo['day'] }}</p>
+                        <p class="text-xs uppercase">{{ $dayInfo['month'] }}</p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
         <div class="max-h-120 overflow-y-auto pr-2">
             <div class="grid grid-cols-[auto_repeat(7,1fr)] gap-1 lg:gap-2">
-                <!-- Top-left empty cell -->
-                <div></div>
-
-                <!-- Day Headers -->
-                @foreach ($weekDays as $dayInfo)
-                    <div class="text-center">
-                        <div class="w-full p-1 lg:p-2 rounded border border-base-content/20 text-base-content">
-                            <p class="text-xs uppercase font-medium">{{ $dayInfo['dayOfWeek'] }}</p>
-                            <p class="text-sm font-bold">{{ $dayInfo['day'] }}</p>
-                            <p class="text-xs uppercase">{{ $dayInfo['month'] }}</p>
-                        </div>
-                    </div>
-                @endforeach
-
                 <!-- Time labels and slots, row by row -->
                 @foreach ($timeSlots as $time)
                     <!-- Time Label -->
