@@ -56,7 +56,7 @@ class Register extends Component
 
             $specialist->notify(new WelcomeNotification());
 
-            $this->redirectRoute('specialist.appointment.index');
+            $this->redirectRoute('specialist.dashboard.show');
         } catch (\Exception $e) {
             Log::error('Erro interno::' . get_class($this), [
                 'message' => $e->getMessage(),

@@ -47,7 +47,7 @@ class Login extends Component
                 return;
             }
 
-            $this->redirect(route('specialist.appointment.index'), true);
+            $this->redirect(route('specialist.dashboard.show'), true);
         } catch (\Exception $e) {
             Log::error('Erro interno::' . get_class($this), [
                 'message' => $e->getMessage(),

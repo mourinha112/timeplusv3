@@ -16,7 +16,7 @@ class Onboarding
 
         $currentRoute   = $request->route()->getName();
         $expectedRoute  = "$guard.onboarding.$currentStep";
-        $dashboardRoute = $guard === 'user' ? "$guard.dashboard.show" : "$guard.appointment.index";
+        $dashboardRoute = "$guard.dashboard.show";
 
         if ($currentStep !== 'completed' && $currentRoute !== $expectedRoute) {
             abort_unless(Route::has($expectedRoute), 500, "Route $expectedRoute does not exist.");

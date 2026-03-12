@@ -50,7 +50,7 @@ class PersonalDetail extends Component
                 'onboarding_step'     => 'professional-details',
             ]);
 
-            return $this->redirect(route('specialist.appointment.index'), true);
+            return $this->redirect(route('specialist.dashboard.show'), true);
         } catch (\Exception $e) {
             Log::error('Erro interno::' . get_class($this), [
                 'message' => $e->getMessage(),

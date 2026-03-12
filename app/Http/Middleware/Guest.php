@@ -14,7 +14,7 @@ class Guest
         if (Auth::guard($guard)->check()) {
             match ($guard) {
                 'user'    => $dashboardRoute = "$guard.dashboard.show",
-                'specialist'   => $dashboardRoute = "$guard.appointment.index",
+                'specialist'   => $dashboardRoute = "$guard.dashboard.show",
                 'master'  => $dashboardRoute = "$guard.dashboard.show",
                 'company' => $dashboardRoute = "$guard.dashboard.show",
                 default   => throw new \InvalidArgumentException("Unknown guard: $guard"),
