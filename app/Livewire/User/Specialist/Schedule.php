@@ -2,7 +2,7 @@
 
 namespace App\Livewire\User\Specialist;
 
-use App\Models\{Appointment, Availability};
+use App\Models\{Appointment, Availability, Payment};
 use App\Notifications\Specialist\AppointmentScheduledNotification as SpecialistAppointmentScheduledNotification;
 use App\Notifications\User\AppointmentScheduledNotification;
 use Carbon\Carbon;
@@ -99,11 +99,11 @@ class Schedule extends Component
                 // Filtrar horários já agendados
                 $filteredTimes = array_values(array_diff($availableTimes, $scheduled));
 
-                // Se for hoje, filtrar horários que já passaram
+                // Se for hoje, filtrar horários com menos de 2h de antecedência
                 if ($date === now()->toDateString()) {
-                    $currentTime   = now()->format('H:i');
-                    $filteredTimes = array_filter($filteredTimes, function ($time) use ($currentTime) {
-                        return $time > $currentTime;
+                    $minTime       = now()->addHours(2)->format('H:i');
+                    $filteredTimes = array_filter($filteredTimes, function ($time) use ($minTime) {
+                        return $time >= $minTime;
                     });
                     $filteredTimes = array_values($filteredTimes); // Reindexar array
                 }
@@ -196,6 +196,36 @@ class Schedule extends Component
     public function schedule()
     {
         $this->validate();
+
+        // Verificar antecedência mínima de 2 horas
+        $appointmentDateTime = Carbon::parse($this->selectedDate . ' ' . $this->selectedTime);
+        if (now()->diffInHours($appointmentDateTime, false) < 2) {
+            LivewireAlert::title('Horário muito próximo')
+                ->text('O agendamento deve ser feito com no mínimo 2 horas de antecedência.')
+                ->warning()
+                ->show();
+
+            $this->clearSelection();
+
+            return;
+        }
+
+        // Verificar se o usuário tem agendamento pendente de pagamento
+        $unpaidAppointment = Appointment::where('user_id', Auth::id())
+            ->where('status', 'scheduled')
+            ->whereDoesntHave('payment', function ($query) {
+                $query->where('status', 'paid');
+            })
+            ->first();
+
+        if ($unpaidAppointment) {
+            LivewireAlert::title('Agendamento Pendente')
+                ->text('Você já possui uma sessão aguardando pagamento. Finalize o pagamento antes de agendar uma nova sessão.')
+                ->warning()
+                ->show();
+
+            return;
+        }
 
         try {
             DB::beginTransaction();

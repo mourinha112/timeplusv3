@@ -2,7 +2,11 @@
 
 namespace App\Livewire\User\Appointment;
 
-use Illuminate\Support\Facades\Auth;
+use App\Notifications\Specialist\AppointmentCancelledNotification as SpecialistAppointmentCancelledNotification;
+use App\Notifications\User\AppointmentCancelledNotification;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\{Auth, Log};
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Computed, Layout};
 use Livewire\Component;
 
@@ -117,6 +121,59 @@ class Index extends Component
                 'discount_percentage'  => 0,
                 'has_company_discount' => false,
             ];
+        }
+    }
+
+    /* Verifica se o cliente pode cancelar (mínimo 24h de antecedência) */
+    public function canCancel($appointment): bool
+    {
+        if ($appointment->status !== 'scheduled') {
+            return false;
+        }
+
+        $appointmentDateTime = Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time);
+
+        return now()->diffInHours($appointmentDateTime, false) >= 24;
+    }
+
+    /* Cancelamento pelo cliente com regra de 24h */
+    public function cancelAppointment($appointmentId)
+    {
+        $appointment = Auth::user()->appointments()->with('specialist')->find($appointmentId);
+
+        if (!$appointment) {
+            return;
+        }
+
+        if (!$this->canCancel($appointment)) {
+            LivewireAlert::title('Não é possível cancelar')
+                ->text('O cancelamento deve ser feito com no mínimo 24 horas de antecedência.')
+                ->error()
+                ->show();
+
+            return;
+        }
+
+        try {
+            $appointment->update(['status' => 'cancelled']);
+
+            Auth::user()->notify(new AppointmentCancelledNotification($appointment));
+            $appointment->specialist->notify(new SpecialistAppointmentCancelledNotification($appointment));
+
+            LivewireAlert::title('Sessão cancelada')
+                ->text('Sua sessão foi cancelada com sucesso.')
+                ->success()
+                ->show();
+        } catch (\Exception $e) {
+            Log::error('Erro ao cancelar agendamento::' . get_class($this), [
+                'message' => $e->getMessage(),
+                'ip'      => request()->ip(),
+            ]);
+
+            LivewireAlert::title('Erro!')
+                ->text('Ocorreu um erro ao cancelar a sessão.')
+                ->error()
+                ->show();
         }
     }
 

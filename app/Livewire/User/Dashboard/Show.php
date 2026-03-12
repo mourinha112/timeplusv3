@@ -20,7 +20,7 @@ class Show extends Component
                 $query->where('appointment_date', '>', now()->toDateString())
                     ->orWhere(function ($q) {
                         $q->where('appointment_date', now()->toDateString())
-                            ->where('appointment_time', '>=', now()->format('H:i:s'));
+                            ->whereRaw("ADDTIME(appointment_time, '01:00:00') >= ?", [now()->format('H:i:s')]);
                     });
             })
             ->orderBy('appointment_date', 'asc')

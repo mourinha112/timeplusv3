@@ -144,24 +144,38 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($this->needsPayment($appointment) && $appointment->status !== 'cancelled')
-                                        <div class="tooltip" data-tip="Clique para finalizar o pagamento da sessão">
-                                            <a href="{{ route('user.appointment.payment', ['appointment_id' => $appointment->id]) }}"
-                                                class="btn btn-sm btn-info hover:btn-info-focus transition-all duration-200">
-                                                <x-carbon-purchase class="w-4 h-4 mr-1" />
-                                                Pagar Agora
-                                            </a>
-                                        </div>
-                                    @elseif($this->isPaid($appointment))
-                                        <div class="tooltip" data-tip="Pagamento realizado com sucesso">
-                                            <span class="badge badge-success badge-sm">
-                                                <x-carbon-checkmark class="w-3 h-3 mr-1" />
-                                                Confirmado
-                                            </span>
-                                        </div>
-                                    @else
-                                        <span class="text-base-content/50 text-sm">-</span>
-                                    @endif
+                                    <div class="flex flex-wrap items-center gap-1">
+                                        @if ($this->needsPayment($appointment) && $appointment->status !== 'cancelled')
+                                            <div class="tooltip" data-tip="Clique para finalizar o pagamento da sessão">
+                                                <a href="{{ route('user.appointment.payment', ['appointment_id' => $appointment->id]) }}"
+                                                    class="btn btn-sm btn-info hover:btn-info-focus transition-all duration-200">
+                                                    <x-carbon-purchase class="w-4 h-4 mr-1" />
+                                                    Pagar Agora
+                                                </a>
+                                            </div>
+                                        @elseif($this->isPaid($appointment))
+                                            <div class="tooltip" data-tip="Pagamento realizado com sucesso">
+                                                <span class="badge badge-success badge-sm">
+                                                    <x-carbon-checkmark class="w-3 h-3 mr-1" />
+                                                    Confirmado
+                                                </span>
+                                            </div>
+                                        @else
+                                            <span class="text-base-content/50 text-sm">-</span>
+                                        @endif
+
+                                        @if ($this->canCancel($appointment))
+                                            <div class="tooltip" data-tip="Cancelar sessão (mínimo 24h de antecedência)">
+                                                <button
+                                                    wire:click="cancelAppointment({{ $appointment->id }})"
+                                                    wire:confirm="Tem certeza que deseja cancelar esta sessão?"
+                                                    class="btn btn-sm btn-error btn-outline">
+                                                    <x-carbon-close class="w-4 h-4" />
+                                                    Cancelar
+                                                </button>
+                                            </div>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
