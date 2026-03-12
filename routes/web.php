@@ -117,6 +117,9 @@ Route::group(['middleware' => ['auth:specialist', 'onboarding:specialist']], fun
     Route::get('especialista/primeiros-passos/dados-pessoais', Specialist\Onboarding\PersonalDetail::class)->name('specialist.onboarding.personal-details');
     Route::get('especialista/primeiros-passos/dados-profissionais', Specialist\Onboarding\ProfessionalDetail::class)->name('specialist.onboarding.professional-details');
 
+    /* Dashboard */
+    Route::get('especialista', Specialist\Dashboard\Show::class)->name('specialist.dashboard.show');
+
     /* Appointments */
     Route::get('especialista/agendamentos', Specialist\Appointment\Index::class)->name('specialist.appointment.index');
 

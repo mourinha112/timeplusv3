@@ -126,6 +126,13 @@
                         <ul tabindex="0"
                             class="menu menu-sm dropdown-content bg-base-100 text-base-content rounded-box z-1 mt-3 w-52 p-2 shadow border border-base-300">
                             <li>
+                                <a href="{{ route('specialist.dashboard.show') }}"
+                                    class="{{ !Route::is('specialist.dashboard.show') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-home class="w-4 h-4" />
+                                    Início
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('specialist.appointment.index') }}"
                                     class="{{ !Route::is('specialist.appointment.index') ?: 'border bg-base-200 font-semibold' }}">
                                     <x-carbon-calendar-heat-map class="w-4 h-4" />
@@ -159,6 +166,13 @@
 
                 <div class="navbar-center hidden sm:flex">
                     <ul class="menu menu-horizontal px-1">
+                        <li>
+                            <a href="{{ route('specialist.dashboard.show') }}"
+                                class="{{ !Route::is('specialist.dashboard.show') ?: 'border bg-base-200 font-semibold' }}">
+                                <x-carbon-home class="w-5 h-5" />
+                                Início
+                            </a>
+                        </li>
                         <li>
                             <a href="{{ route('specialist.appointment.index') }}"
                                 class="{{ !Route::is('specialist.appointment.index') ?: 'border bg-base-200 font-semibold' }}">
