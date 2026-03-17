@@ -119,7 +119,7 @@ class Update extends Component
 
         try {
             $this->user->update([
-                'password' => bcrypt($this->password),
+                'password' => $this->password,
             ]);
 
             $this->reset(['password', 'password_confirmation']);

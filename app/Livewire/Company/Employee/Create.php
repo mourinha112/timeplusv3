@@ -67,7 +67,7 @@ class Create extends Component
                 'phone_number' => $this->phone_number,
                 'birth_date'   => $this->birth_date,
                 'email'        => $this->email,
-                'password'     => bcrypt($password),
+                'password'     => $password,
                 'is_active'    => true,
             ]);
 

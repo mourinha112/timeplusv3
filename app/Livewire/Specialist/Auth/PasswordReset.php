@@ -43,7 +43,7 @@ class PasswordReset extends Component
         $this->validate();
 
         try {
-            $this->specialist->password = bcrypt($this->password);
+            $this->specialist->password = $this->password;
 
             $this->specialist->recovery_password_token            = null;
             $this->specialist->recovery_password_token_expires_at = null;

@@ -89,7 +89,7 @@ class Edit extends Component
             $employee = User::findOrFail($this->employeeId);
 
             $employee->update([
-                'password' => bcrypt($this->newPassword),
+                'password' => $this->newPassword,
             ]);
 
             // Enviar email com nova senha se solicitado

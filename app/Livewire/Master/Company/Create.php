@@ -55,7 +55,7 @@ class Create extends Component
             'name'      => $this->name,
             'cnpj'      => $this->cnpj,
             'email'     => $this->email,
-            'password'  => bcrypt($password),
+            'password'  => $password,
             'phone'     => preg_replace('/\D/', '', $this->phone), // Remove formatação
             'address'   => $this->address,
             'city'      => $this->city,

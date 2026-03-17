@@ -52,7 +52,7 @@ class Register extends Component
                 'cpf'          => $this->cpf,
                 'phone_number' => $this->phone_number,
                 'birth_date'   => $this->birth_date,
-                'password'     => bcrypt($this->password),
+                'password'     => $this->password,
             ]);
 
             $gateway = Asaas::customer()->create([

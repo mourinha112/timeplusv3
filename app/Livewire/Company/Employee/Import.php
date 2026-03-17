@@ -181,7 +181,7 @@ class Import extends Component
                     'phone_number' => $item['telefone'],
                     'birth_date'   => $item['data_nascimento'],
                     'email'        => $item['email'],
-                    'password'     => bcrypt($password),
+                    'password'     => $password,
                     'is_active'    => true,
                 ]);
 
