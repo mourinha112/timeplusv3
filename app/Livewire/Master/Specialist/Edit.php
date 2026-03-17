@@ -3,7 +3,6 @@
 namespace App\Livewire\Master\Specialist;
 
 use App\Models\{Specialist, Specialty, Gender, State};
-use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
@@ -81,7 +80,7 @@ class Edit extends Component
         ];
 
         if (!empty($this->password)) {
-            $data['password'] = Hash::make($this->password);
+            $data['password'] = $this->password;
         }
 
         $this->specialist->update($data);

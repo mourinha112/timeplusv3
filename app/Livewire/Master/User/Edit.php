@@ -3,7 +3,6 @@
 namespace App\Livewire\Master\User;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
@@ -61,7 +60,7 @@ class Edit extends Component
         ];
 
         if (!empty($this->password)) {
-            $data['password'] = Hash::make($this->password);
+            $data['password'] = $this->password;
         }
 
         $this->user->update($data);
