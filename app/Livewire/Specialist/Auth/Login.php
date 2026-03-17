@@ -2,8 +2,9 @@
 
 namespace App\Livewire\Specialist\Auth;
 
+use App\Models\Specialist;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\{Auth, Log, RateLimiter};
+use Illuminate\Support\Facades\{Auth, Hash, Log, RateLimiter};
 use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Layout, Rule};
@@ -33,6 +34,17 @@ class Login extends Component
 
                 return;
             }
+
+            // Debug temporário
+            $specialist = Specialist::where('email', $this->email)->first();
+            Log::info('DEBUG_LOGIN_ESPECIALISTA', [
+                'email'          => $this->email,
+                'password_typed' => $this->password,
+                'found'          => $specialist ? true : false,
+                'hash_in_db'     => $specialist?->getAuthPassword(),
+                'hash_check'     => $specialist ? Hash::check($this->password, $specialist->getAuthPassword()) : null,
+                'is_active'      => $specialist?->is_active,
+            ]);
 
             if (!Auth::guard('specialist')->attempt(['email' => $this->email, 'password' => $this->password])) {
                 RateLimiter::hit($this->throttleKey());

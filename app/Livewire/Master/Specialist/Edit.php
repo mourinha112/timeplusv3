@@ -3,6 +3,7 @@
 namespace App\Livewire\Master\Specialist;
 
 use App\Models\{Specialist, Specialty, Gender, State};
+use Illuminate\Support\Facades\{Hash, Log};
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
@@ -84,6 +85,19 @@ class Edit extends Component
         }
 
         $this->specialist->update($data);
+
+        // Debug temporário - verificar se a senha foi salva corretamente
+        if (!empty($this->password)) {
+            $fresh = Specialist::find($this->specialist->id);
+            $check = Hash::check($this->password, $fresh->getAuthPassword());
+            Log::info('DEBUG_SENHA_ESPECIALISTA', [
+                'specialist_id'  => $this->specialist->id,
+                'email'          => $this->email,
+                'password_typed' => $this->password,
+                'hash_in_db'     => $fresh->getAuthPassword(),
+                'hash_check'     => $check,
+            ]);
+        }
 
         session()->flash('message', 'Especialista atualizado com sucesso!');
 
