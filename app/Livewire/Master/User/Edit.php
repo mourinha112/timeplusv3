@@ -48,6 +48,11 @@ class Edit extends Component
 
     public function save()
     {
+        if ($this->password === '') {
+            $this->password = null;
+            $this->password_confirmation = null;
+        }
+
         $this->validate();
 
         $data = [

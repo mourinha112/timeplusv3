@@ -28,6 +28,11 @@ class Edit extends Component
 
     public function save()
     {
+        if ($this->password === '') {
+            $this->password = null;
+            $this->password_confirmation = null;
+        }
+
         $this->validate();
 
         $master = auth('master')->user();
@@ -36,14 +41,11 @@ class Edit extends Component
             'email' => $this->email,
         ];
 
-        if ($this->password) {
+        if (!empty($this->password)) {
             $data['password'] = $this->password;
         }
 
         $master->update($data);
-
-        $this->password = '';
-        $this->password_confirmation = '';
 
         session()->flash('message', 'Perfil atualizado com sucesso!');
 
