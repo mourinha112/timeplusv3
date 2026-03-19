@@ -64,13 +64,7 @@ class Edit extends Component
 
     public function save()
     {
-        // Converte string vazia para null para que a regra 'nullable' funcione
-        if ($this->password === '') {
-            $this->password = null;
-            $this->password_confirmation = null;
-        }
-
-        $this->validate();
+        $this->validate(empty($this->password) ? ['password' => 'nullable'] : []);
 
         $data = [
             'name'              => $this->name,

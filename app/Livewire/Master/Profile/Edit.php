@@ -28,12 +28,7 @@ class Edit extends Component
 
     public function save()
     {
-        if ($this->password === '') {
-            $this->password = null;
-            $this->password_confirmation = null;
-        }
-
-        $this->validate();
+        $this->validate(empty($this->password) ? ['password' => 'nullable'] : []);
 
         $master = auth('master')->user();
         $data = [
