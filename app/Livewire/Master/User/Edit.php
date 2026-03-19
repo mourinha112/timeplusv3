@@ -3,7 +3,7 @@
 namespace App\Livewire\Master\User;
 
 use App\Models\User;
-use Livewire\Attributes\{Layout, Rule};
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Editar Usuário', 'guard' => 'master'])]
@@ -11,27 +11,13 @@ class Edit extends Component
 {
     public User $user;
 
-    #[Rule('required|string|max:255')]
     public $name = '';
-
-    #[Rule('required|email')]
     public $email = '';
-
-    #[Rule('nullable|string|max:15')]
     public $phone_number = '';
-
-    #[Rule('nullable|string|max:14')]
     public $cpf = '';
-
-    #[Rule('nullable|date')]
     public $birth_date = '';
-
-    #[Rule('boolean')]
     public $is_active = true;
-
-    #[Rule('nullable|string|min:8|confirmed')]
     public $password = '';
-
     public $password_confirmation = '';
 
     public function mount(User $user)
@@ -48,7 +34,20 @@ class Edit extends Component
 
     public function save()
     {
-        $this->validate(empty($this->password) ? ['password' => 'nullable'] : []);
+        $rules = [
+            'name'         => 'required|string|max:255',
+            'email'        => 'required|email',
+            'phone_number' => 'nullable|string|max:15',
+            'cpf'          => 'nullable|string|max:14',
+            'birth_date'   => 'nullable|date',
+            'is_active'    => 'boolean',
+        ];
+
+        if (!empty($this->password)) {
+            $rules['password'] = 'string|min:8|confirmed';
+        }
+
+        $this->validate($rules);
 
         $data = [
             'name'         => $this->name,

@@ -3,7 +3,7 @@
 namespace App\Livewire\Master\Specialist;
 
 use App\Models\{Specialist, Specialty, Gender, State};
-use Livewire\Attributes\{Layout, Rule};
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Editar Especialista', 'guard' => 'master'])]
@@ -11,39 +11,17 @@ class Edit extends Component
 {
     public Specialist $specialist;
 
-    #[Rule('required|string|max:255')]
     public $name = '';
-
-    #[Rule('required|email')]
     public $email = '';
-
-    #[Rule('nullable|string|max:15')]
     public $phone_number = '';
-
-    #[Rule('nullable|string|max:14')]
     public $cpf = '';
-
-    #[Rule('nullable|string|max:20')]
     public $crp = '';
-
-    #[Rule('nullable|exists:specialties,id')]
     public $specialty_id = '';
-
-    #[Rule('nullable|exists:genders,id')]
     public $gender_id = '';
-
-    #[Rule('nullable|exists:states,id')]
     public $state_id = '';
-
-    #[Rule('nullable|numeric|min:0')]
     public $appointment_value = '';
-
-    #[Rule('boolean')]
     public $is_active = true;
-
-    #[Rule('nullable|string|min:8|confirmed')]
     public $password = '';
-
     public $password_confirmation = '';
 
     public function mount(Specialist $specialist)
@@ -64,7 +42,24 @@ class Edit extends Component
 
     public function save()
     {
-        $this->validate(empty($this->password) ? ['password' => 'nullable'] : []);
+        $rules = [
+            'name'              => 'required|string|max:255',
+            'email'             => 'required|email',
+            'phone_number'      => 'nullable|string|max:15',
+            'cpf'               => 'nullable|string|max:14',
+            'crp'               => 'nullable|string|max:20',
+            'specialty_id'      => 'nullable|exists:specialties,id',
+            'gender_id'         => 'nullable|exists:genders,id',
+            'state_id'          => 'nullable|exists:states,id',
+            'appointment_value' => 'nullable|numeric|min:0',
+            'is_active'         => 'boolean',
+        ];
+
+        if (!empty($this->password)) {
+            $rules['password'] = 'string|min:8|confirmed';
+        }
+
+        $this->validate($rules);
 
         $data = [
             'name'              => $this->name,

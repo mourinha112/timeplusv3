@@ -2,21 +2,15 @@
 
 namespace App\Livewire\Master\Profile;
 
-use Livewire\Attributes\{Layout, Rule};
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Meu Perfil', 'guard' => 'master'])]
 class Edit extends Component
 {
-    #[Rule('required|string|max:255')]
     public $name = '';
-
-    #[Rule('required|email')]
     public $email = '';
-
-    #[Rule('nullable|string|min:8|confirmed')]
     public $password = '';
-
     public $password_confirmation = '';
 
     public function mount()
@@ -28,7 +22,16 @@ class Edit extends Component
 
     public function save()
     {
-        $this->validate(empty($this->password) ? ['password' => 'nullable'] : []);
+        $rules = [
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email',
+        ];
+
+        if (!empty($this->password)) {
+            $rules['password'] = 'string|min:8|confirmed';
+        }
+
+        $this->validate($rules);
 
         $master = auth('master')->user();
         $data = [
