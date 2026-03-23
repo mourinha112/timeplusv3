@@ -99,14 +99,14 @@ class Schedule extends Component
                 // Filtrar horários já agendados
                 $filteredTimes = array_values(array_diff($availableTimes, $scheduled));
 
-                // Se for hoje, filtrar horários com menos de 2h de antecedência
-                if ($date === now()->toDateString()) {
-                    $minTime       = now()->addHours(2)->format('H:i');
-                    $filteredTimes = array_filter($filteredTimes, function ($time) use ($minTime) {
-                        return $time >= $minTime;
-                    });
-                    $filteredTimes = array_values($filteredTimes); // Reindexar array
-                }
+                // TEMPORARIAMENTE DESABILITADO - Se for hoje, filtrar horários com menos de 2h de antecedência
+                // if ($date === now()->toDateString()) {
+                //     $minTime       = now()->addHours(2)->format('H:i');
+                //     $filteredTimes = array_filter($filteredTimes, function ($time) use ($minTime) {
+                //         return $time >= $minTime;
+                //     });
+                //     $filteredTimes = array_values($filteredTimes); // Reindexar array
+                // }
 
                 return $filteredTimes;
             })
