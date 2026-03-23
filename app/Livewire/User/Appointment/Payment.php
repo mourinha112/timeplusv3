@@ -23,6 +23,19 @@ class Payment extends Component
 
                 return;
             }
+
+            // Bloquear pagamento de sessão que já passou
+            $appointmentDateTime = \Carbon\Carbon::parse($this->appointment->appointment_date . ' ' . $this->appointment->appointment_time);
+            if ($appointmentDateTime->isPast()) {
+                LivewireAlert::title('Sessão expirada')
+                    ->text('Não é possível pagar uma sessão que já passou. Agende uma nova sessão.')
+                    ->warning()
+                    ->show();
+
+                $this->redirect(route('user.appointment.index'), navigate: true);
+
+                return;
+            }
         } catch (\Exception $e) {
             Log::error('Erro interno::' . get_class($this), [
                 'message' => $e->getMessage(),

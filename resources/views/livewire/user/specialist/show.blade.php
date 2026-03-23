@@ -93,7 +93,7 @@
                             <div class="p-4 bg-base-200/20 rounded-lg">
                                 <div class="text-xs uppercase text-base-content/50">Sessão</div>
                                 <div class="text-base font-medium text-base-content">
-                                    50 minutos
+                                    {{ $specialist->session_duration ?? 50 }} minutos
                                 </div>
                             </div>
                         </div>

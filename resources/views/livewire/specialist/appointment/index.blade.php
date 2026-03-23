@@ -74,7 +74,7 @@
                                                 Sessão concluída
                                             </a></li>
                                     @elseif ($this->hasRoom($appointment))
-                                        <li><a href="{{ route('specialist.videocall.show', $appointment->room->code) }}" wire:navigate>
+                                        <li><a href="{{ route('specialist.videocall.show', $appointment->room->code) }}" target="_blank">
                                                 <x-carbon-video-chat class="w-4 h-4" />
                                                 Iniciar atendimento
                                             </a></li>

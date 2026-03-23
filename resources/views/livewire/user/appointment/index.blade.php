@@ -117,7 +117,7 @@
                                     @elseif ($this->hasRoom($appointment))
                                         <div class="tooltip" data-tip="Clique para entrar na sala de videochamada">
                                             <a href="{{ route('user.videocall.show', $appointment->room->code) }}"
-                                                wire:navigate class="btn btn-sm btn-info">
+                                                target="_blank" class="btn btn-sm btn-info">
                                                 <x-carbon-video class="w-4 h-4 mr-1" />
                                                 {{ $appointment->room->code }}
                                             </a>
@@ -146,13 +146,22 @@
                                 <td>
                                     <div class="flex flex-wrap items-center gap-1">
                                         @if ($this->needsPayment($appointment) && $appointment->status !== 'cancelled')
-                                            <div class="tooltip" data-tip="Clique para finalizar o pagamento da sessão">
-                                                <a href="{{ route('user.appointment.payment', ['appointment_id' => $appointment->id]) }}"
-                                                    class="btn btn-sm btn-info hover:btn-info-focus transition-all duration-200">
-                                                    <x-carbon-purchase class="w-4 h-4 mr-1" />
-                                                    Pagar Agora
-                                                </a>
-                                            </div>
+                                            @if (\Carbon\Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time)->isPast())
+                                                <div class="tooltip" data-tip="Sessão expirada - não é possível pagar">
+                                                    <span class="badge badge-error badge-sm">
+                                                        <x-carbon-time class="w-3 h-3 mr-1" />
+                                                        Expirado
+                                                    </span>
+                                                </div>
+                                            @else
+                                                <div class="tooltip" data-tip="Clique para finalizar o pagamento da sessão">
+                                                    <a href="{{ route('user.appointment.payment', ['appointment_id' => $appointment->id]) }}"
+                                                        class="btn btn-sm btn-info hover:btn-info-focus transition-all duration-200">
+                                                        <x-carbon-purchase class="w-4 h-4 mr-1" />
+                                                        Pagar Agora
+                                                    </a>
+                                                </div>
+                                            @endif
                                         @elseif($this->isPaid($appointment))
                                             <div class="tooltip" data-tip="Pagamento realizado com sucesso">
                                                 <span class="badge badge-success badge-sm">
@@ -165,7 +174,7 @@
                                         @endif
 
                                         @if ($this->canCancel($appointment))
-                                            <div class="tooltip" data-tip="Cancelar sessão (mínimo 24h de antecedência)">
+                                            <div class="tooltip" data-tip="{{ $this->needsPayment($appointment) ? 'Cancelar reserva' : 'Cancelar sessão (mínimo 24h de antecedência)' }}">
                                                 <button
                                                     wire:click="cancelAppointment({{ $appointment->id }})"
                                                     wire:confirm="Tem certeza que deseja cancelar esta sessão?"

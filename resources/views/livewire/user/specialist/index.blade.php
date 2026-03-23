@@ -1,6 +1,10 @@
 <section class="px-4 sm:px-6 lg:px-8">
-    <div class="flex flex-row space-x-2 mb-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
         <h2 class="text-base-content">Encontramos <strong>{{ $this->specialists->count() }}</strong> especialistas disponíveis para você.</h2>
+        <input type="text"
+            wire:model.live.debounce.300ms="search"
+            placeholder="Buscar por nome..."
+            class="input input-bordered input-sm w-full sm:w-64" />
     </div>
 
     @foreach($this->specialists as $specialist)

@@ -11,3 +11,5 @@ Schedule::command('telescope:prune --hours=72')->daily();
 
 Schedule::command('rooms:open-scheduled')->everyMinute();
 Schedule::command('rooms:close-expired')->everyMinute();
+Schedule::command('appointments:expire-unpaid')->everyFiveMinutes();
+Schedule::command('appointments:send-reminders')->everyFiveMinutes();

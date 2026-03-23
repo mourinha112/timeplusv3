@@ -124,13 +124,19 @@ class Index extends Component
         }
     }
 
-    /* Verifica se o cliente pode cancelar (mínimo 24h de antecedência) */
+    /* Verifica se o cliente pode cancelar */
     public function canCancel($appointment): bool
     {
         if ($appointment->status !== 'scheduled') {
             return false;
         }
 
+        // Se não pagou, pode cancelar a qualquer momento (liberar o horário)
+        if ($this->needsPayment($appointment)) {
+            return true;
+        }
+
+        // Se já pagou, precisa de 24h de antecedência
         $appointmentDateTime = Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time);
 
         return now()->diffInHours($appointmentDateTime, false) >= 24;

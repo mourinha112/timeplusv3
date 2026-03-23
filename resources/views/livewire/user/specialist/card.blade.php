@@ -60,28 +60,10 @@
         </p>
     </div>
 
-    <!-- Informações de Avaliação e Atendimentos -->
-    <div class="flex items-center gap-6 mb-1">
-        <div class="flex items-center justify-center gap-1">
-            <x-carbon-star-filled class="w-5 text-info" />
-            <span class="text-xs font-extrabold text-base-content/70">5.0</span>
-            <span class="text-xs text-base-content/70">({{ $this->reviews }} avaliações)</span>
-        </div>
-        <div class="flex items-center justify-center gap-1">
-            <x-carbon-user-feedback class="w-5 text-info" />
-            <span class="text-xs font-extrabold text-base-content/70">{{ $this->appointments }}</span>
-            <span class="text-xs font-base text-base-content/70">atendimentos</span>
-        </div>
-    </div>
-
     <div class="divider"></div>
 
-    <!-- Footer com Sessão e Preço -->
+    <!-- Footer com Preço -->
     <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-            <x-carbon-time class="w-5 text-base-content/70" />
-            <span class="text-xs text-base-content/70">Sessão 50 min</span>
-        </div>
         <div class="badge badge-info badge-soft font-bold">R$
             {{ number_format($specialist->appointment_value, 2, ',', '.') }}</div>
     </div>
