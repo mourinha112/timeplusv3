@@ -197,18 +197,18 @@ class Schedule extends Component
     {
         $this->validate();
 
-        // Verificar antecedência mínima de 2 horas
-        $appointmentDateTime = Carbon::parse($this->selectedDate . ' ' . $this->selectedTime);
-        if (now()->diffInHours($appointmentDateTime, false) < 2) {
-            LivewireAlert::title('Horário muito próximo')
-                ->text('O agendamento deve ser feito com no mínimo 2 horas de antecedência.')
-                ->warning()
-                ->show();
-
-            $this->clearSelection();
-
-            return;
-        }
+        // TEMPORARIAMENTE DESABILITADO - Verificar antecedência mínima de 2 horas
+        // $appointmentDateTime = Carbon::parse($this->selectedDate . ' ' . $this->selectedTime);
+        // if (now()->diffInHours($appointmentDateTime, false) < 2) {
+        //     LivewireAlert::title('Horário muito próximo')
+        //         ->text('O agendamento deve ser feito com no mínimo 2 horas de antecedência.')
+        //         ->warning()
+        //         ->show();
+        //
+        //     $this->clearSelection();
+        //
+        //     return;
+        // }
 
         // Verificar se o usuário tem agendamento pendente de pagamento
         $unpaidAppointment = Appointment::where('user_id', Auth::id())
