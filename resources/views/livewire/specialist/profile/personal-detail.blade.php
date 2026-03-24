@@ -14,19 +14,43 @@
     {{-- Foto de perfil --}}
     <x-card>
         <x-card-body class="items-center justify-center">
-            @if ($currentAvatar)
-                {{-- Avatar atual --}}
-                <img src="{{ Storage::url($currentAvatar) }}" class="w-25 h-25 rounded-full">
-            @else
-                {{-- Avatar padrão --}}
-                <img src="{{ asset('images/avatar.png') }}" class="w-25 h-25 rounded-full">
-            @endif
+            <div class="flex flex-col items-center gap-4">
+                {{-- Avatar com overlay clicável --}}
+                <label for="avatar-upload" class="relative cursor-pointer group">
+                    <div class="w-28 h-28 rounded-full overflow-hidden ring-2 ring-base-300 group-hover:ring-primary transition-all">
+                        @if ($currentAvatar)
+                            <img src="{{ Storage::url($currentAvatar) }}" class="w-full h-full object-cover">
+                        @else
+                            <img src="{{ asset('images/avatar.png') }}" class="w-full h-full object-cover">
+                        @endif
+                    </div>
 
-            <x-form-group>
-                <x-label>Foto de perfil</x-label>
-                <x-input-file wire:model="avatar" accept="image/*" />
-                <x-input-description>Imagem deve conter no máximo 2MB.</x-input-description>
-            </x-form-group>
+                    {{-- Overlay de hover --}}
+                    <div class="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <x-carbon-camera class="w-8 h-8 text-white" />
+                    </div>
+
+                    {{-- Loading indicator --}}
+                    <div wire:loading wire:target="avatar" class="absolute inset-0 rounded-full bg-black/60 flex items-center justify-center">
+                        <span class="loading loading-spinner loading-md text-white"></span>
+                    </div>
+                </label>
+
+                {{-- Input de arquivo oculto --}}
+                <input type="file" id="avatar-upload" wire:model="avatar" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml" class="hidden" />
+
+                <div class="text-center">
+                    <label for="avatar-upload" class="btn btn-sm btn-outline btn-primary cursor-pointer">
+                        <x-carbon-upload class="w-4 h-4" />
+                        Alterar foto
+                    </label>
+                    <p class="text-xs text-base-content/60 mt-1">JPG, PNG ou GIF. Máximo 2MB.</p>
+                </div>
+
+                @error('avatar')
+                    <small class="text-red-600 text-xs">{{ $message }}</small>
+                @enderror
+            </div>
         </x-card-body>
     </x-card>
 
