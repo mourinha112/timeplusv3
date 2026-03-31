@@ -47,7 +47,7 @@ class PasswordRecovery extends Component
             }
 
             $user->recovery_password_token            = Str::random(60);
-            $user->recovery_password_token_expires_at = now()->addMinutes(3);
+            $user->recovery_password_token_expires_at = now()->addMinutes(30);
 
             $user->save();
 

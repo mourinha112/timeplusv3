@@ -8,9 +8,11 @@ class Plan extends Model
 {
     protected $fillable = [
         'name',
+        'description',
         'price',
         'duration_days',
         'discount_percentage',
+        'max_sessions',
     ];
 
     protected $casts = [

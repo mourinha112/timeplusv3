@@ -24,7 +24,7 @@ class ShowTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return User::query();
+        return User::query()->with('companies');
     }
 
     public function relationSearch(): array
@@ -39,6 +39,11 @@ class ShowTable extends PowerGridComponent
             ->add('name')
             ->add('email')
             ->add('phone_number')
+            ->add('cpf')
+            ->add('company_name', function (User $model) {
+                $company = $model->companies->first();
+                return $company ? $company->name : '<span class="text-base-content/40">—</span>';
+            })
             ->add('status_indicator', function (User $model) {
                 return $model->is_active
                     ? '<span class="badge badge-success badge-sm">Ativo</span>'
@@ -53,6 +58,8 @@ class ShowTable extends PowerGridComponent
             Column::make('ID', 'id')->sortable(),
             Column::make('Nome', 'name')->searchable()->sortable(),
             Column::make('E-mail', 'email')->searchable(),
+            Column::make('CPF', 'cpf')->searchable(),
+            Column::make('Empresa', 'company_name'),
             Column::make('Situação', 'status_indicator', 'is_active'),
             Column::make('Cadastrado em', 'created_at_formatted', 'created_at')->sortable(),
             Column::action('Ações'),

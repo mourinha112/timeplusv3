@@ -97,6 +97,7 @@
                                 <x-label required>Tipo de Chave PIX</x-label>
                                 <x-select wire:model.live="pix_key_type">
                                     <option value="cpf">CPF</option>
+                                    <option value="cnpj">CNPJ</option>
                                     <option value="email">E-mail</option>
                                     <option value="phone">Telefone</option>
                                     <option value="random">Chave Aleatória</option>
@@ -111,6 +112,9 @@
                                 @if ($pix_key_type === 'cpf')
                                     <x-input type="text" wire:model="pix_key" placeholder="000.000.000-00"
                                         x-mask="999.999.999-99" />
+                                @elseif ($pix_key_type === 'cnpj')
+                                    <x-input type="text" wire:model="pix_key" placeholder="00.000.000/0000-00"
+                                        x-mask="99.999.999/9999-99" />
                                 @elseif ($pix_key_type === 'phone')
                                     <x-input type="text" wire:model="pix_key" placeholder="(11) 99999-9999"
                                         x-mask="(99) 99999-9999" />
@@ -189,11 +193,10 @@
                         <div>
                             <h4 class="font-semibold text-base-content mb-1">Como funciona o repasse?</h4>
                             <ul class="text-sm text-base-content/70 space-y-1">
-                                <li>• O valor da sessão é recebido pela plataforma quando o paciente efetua o
+                                <li>O valor da sessão é recebido pela plataforma quando o paciente efetua o
                                     pagamento.</li>
-                                <li>• Após a confirmação do pagamento, o repasse é processado automaticamente.</li>
-                                <li>• Você receberá o valor líquido diretamente na conta/PIX cadastrado.</li>
-                                <li>• É possível acompanhar todos os repasses na seção "Minhas Finanças".</li>
+                                <li>Após a confirmação do pagamento, o repasse é processado.</li>
+                                <li>Você receberá o valor líquido diretamente na conta/PIX cadastrado.</li>
                             </ul>
                         </div>
                     </div>

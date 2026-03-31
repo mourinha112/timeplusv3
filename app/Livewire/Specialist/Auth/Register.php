@@ -28,8 +28,10 @@ class Register extends Component
     #[Rule(['required', 'max:255', 'email', 'unique:specialists,email'])]
     public ?string $email = null;
 
-    #[Rule(['required', 'min:8', 'max:255'])]
+    #[Rule(['required', 'min:8', 'max:255', 'confirmed'])]
     public ?string $password = null;
+
+    public ?string $password_confirmation = null;
 
     public function rules(): array
     {

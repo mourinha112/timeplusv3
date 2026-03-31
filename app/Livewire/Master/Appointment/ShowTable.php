@@ -37,7 +37,9 @@ class ShowTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('user_name', fn (Appointment $model) => $model->user?->name)
+            ->add('user_cpf', fn (Appointment $model) => $model->user?->cpf ?? '—')
             ->add('specialist_name', fn (Appointment $model) => $model->specialist?->name)
+            ->add('specialist_crp', fn (Appointment $model) => $model->specialist?->crp ?? '—')
             ->add('appointment_date_formatted', fn (Appointment $model) => $model->appointment_date ? Carbon::parse($model->appointment_date)->format('d/m/Y') : '-')
             ->add('appointment_time')
             ->add('status_formatted', function (Appointment $model) {
@@ -57,7 +59,9 @@ class ShowTable extends PowerGridComponent
         return [
             Column::make('ID', 'id')->sortable(),
             Column::make('Cliente', 'user_name')->searchable()->sortable(),
+            Column::make('CPF Cliente', 'user_cpf')->searchable(),
             Column::make('Especialista', 'specialist_name')->searchable()->sortable(),
+            Column::make('CRP', 'specialist_crp')->searchable(),
             Column::make('Data', 'appointment_date_formatted', 'appointment_date')->sortable(),
             Column::make('Hora', 'appointment_time')->sortable(),
             Column::make('Situação', 'status_formatted', 'status')->sortable(),

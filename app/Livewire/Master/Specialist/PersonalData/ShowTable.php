@@ -24,7 +24,7 @@ class ShowTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Specialist::query();
+        return Specialist::query()->with('paymentProfile');
     }
 
     public function relationSearch(): array
@@ -38,7 +38,13 @@ class ShowTable extends PowerGridComponent
             ->add('id')
             ->add('name')
             ->add('email')
+            ->add('cpf')
             ->add('crp')
+            ->add('payment_data', function (Specialist $model) {
+                return $model->paymentProfile
+                    ? '<span class="badge badge-success badge-sm">Cadastrado</span>'
+                    : '<span class="badge badge-warning badge-sm">Pendente</span>';
+            })
             ->add('status_indicator', function (Specialist $model) {
                 return $model->is_active
                     ? '<span class="badge badge-success badge-sm">Ativo</span>'
@@ -53,7 +59,9 @@ class ShowTable extends PowerGridComponent
             Column::make('ID', 'id')->sortable(),
             Column::make('Nome', 'name')->searchable()->sortable(),
             Column::make('E-mail', 'email')->searchable(),
+            Column::make('CPF', 'cpf')->searchable(),
             Column::make('CRP', 'crp')->searchable(),
+            Column::make('Pagamento', 'payment_data'),
             Column::make('Situação', 'status_indicator', 'is_active'),
             Column::make('Cadastrado em', 'created_at_formatted', 'created_at')->sortable(),
             Column::action('Ações'),

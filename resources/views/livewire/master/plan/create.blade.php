@@ -24,6 +24,13 @@
                     </x-form-group>
 
                     <x-form-group>
+                        <x-label>Descrição do Plano</x-label>
+                        <textarea class="textarea textarea-bordered w-full" rows="3" wire:model="description"
+                            placeholder="Descreva os benefícios do plano..."></textarea>
+                        @error('description') <div class="text-error text-sm mt-1">{{ $message }}</div> @enderror
+                    </x-form-group>
+
+                    <x-form-group>
                         <x-label required>Preco (R$)</x-label>
                         <x-input type="number" step="0.01" min="0.01" wire:model="price" placeholder="Ex: 49.99" />
                         @error('price') <div class="text-error text-sm mt-1">{{ $message }}</div> @enderror
@@ -39,6 +46,13 @@
                         <x-label required>Duracao (dias)</x-label>
                         <x-input type="number" min="1" wire:model="duration_days" placeholder="Ex: 30, 180, 365" />
                         @error('duration_days') <div class="text-error text-sm mt-1">{{ $message }}</div> @enderror
+                    </x-form-group>
+
+                    <x-form-group>
+                        <x-label>Quantidade de Sessões</x-label>
+                        <x-input type="number" min="1" wire:model="max_sessions" placeholder="Ex: 1, 2, 4..." />
+                        <x-text class="mt-1">Número máximo de sessões incluídas no plano (deixe vazio para ilimitado)</x-text>
+                        @error('max_sessions') <div class="text-error text-sm mt-1">{{ $message }}</div> @enderror
                     </x-form-group>
                 </div>
 

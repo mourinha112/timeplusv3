@@ -14,6 +14,9 @@ class Edit extends Component
     #[Rule('required|string|max:255')]
     public $name = '';
 
+    #[Rule('nullable|string|max:1000')]
+    public $description = '';
+
     #[Rule('required|numeric|min:0.01')]
     public $price = '';
 
@@ -23,15 +26,20 @@ class Edit extends Component
     #[Rule('required|integer|min:1')]
     public $duration_days = '';
 
+    #[Rule('nullable|integer|min:1')]
+    public $max_sessions = null;
+
     public function mount(Plan $plan): void
     {
         $this->plan = $plan;
 
         // Preencher os campos com os dados atuais
         $this->name                = $this->plan->name;
+        $this->description         = $this->plan->description;
         $this->price               = $this->plan->price;
         $this->discount_percentage = $this->plan->discount_percentage;
         $this->duration_days       = $this->plan->duration_days;
+        $this->max_sessions        = $this->plan->max_sessions;
     }
 
     public function save()
@@ -40,9 +48,11 @@ class Edit extends Component
 
         $this->plan->update([
             'name'                => $this->name,
+            'description'         => $this->description,
             'price'               => $this->price,
             'discount_percentage' => $this->discount_percentage,
             'duration_days'       => $this->duration_days,
+            'max_sessions'        => $this->max_sessions,
         ]);
 
         session()->flash('success', 'Plano atualizado com sucesso!');

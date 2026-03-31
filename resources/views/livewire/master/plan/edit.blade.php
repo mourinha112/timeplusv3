@@ -32,6 +32,18 @@
                     </x-form-group>
 
                     <x-form-group>
+                        <x-label>Descrição do Plano</x-label>
+                        <textarea class="textarea textarea-bordered w-full" rows="3" wire:model="description"
+                            placeholder="Descreva os benefícios do plano..."></textarea>
+                        <x-text class="mt-1">
+                            Descrição que será exibida para os usuários ao visualizar o plano
+                        </x-text>
+                        @error('description')
+                            <div class="text-error text-sm mt-1">{{ $message }}</div>
+                        @enderror
+                    </x-form-group>
+
+                    <x-form-group>
                         <x-label required>Preço (R$)</x-label>
                         <x-input type="number" step="0.01" min="0.01" wire:model="price"
                             placeholder="Ex: 49.99" />
@@ -63,6 +75,18 @@
                             Duração do plano em dias (30 = Mensal, 180 = Semestral, 365 = Anual)
                         </x-text>
                         @error('duration_days')
+                            <div class="text-error text-sm mt-1">{{ $message }}</div>
+                        @enderror
+                    </x-form-group>
+
+                    <x-form-group>
+                        <x-label>Quantidade de Sessões</x-label>
+                        <x-input type="number" min="1" wire:model="max_sessions"
+                            placeholder="Ex: 1, 2, 4..." />
+                        <x-text class="mt-1">
+                            Número máximo de sessões incluídas no plano (deixe vazio para ilimitado)
+                        </x-text>
+                        @error('max_sessions')
                             <div class="text-error text-sm mt-1">{{ $message }}</div>
                         @enderror
                     </x-form-group>

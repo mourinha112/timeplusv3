@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Master\Payment;
 
-use App\Models\{Appointment, Payment, Plan};
+use App\Models\{Appointment, Payment, Plan, Subscribe};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
@@ -24,7 +24,7 @@ class ShowTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Payment::query();
+        return Payment::query()->with(['payable', 'company']);
     }
 
     public function relationSearch(): array
@@ -36,9 +36,22 @@ class ShowTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
+            ->add('user_name', function (Payment $model) {
+                if ($model->payable_type === Appointment::class && $model->payable) {
+                    return $model->payable->user?->name ?? '—';
+                }
+                if ($model->payable_type === Subscribe::class && $model->payable) {
+                    return $model->payable->user?->name ?? '—';
+                }
+                return '—';
+            })
+            ->add('company_name', function (Payment $model) {
+                return $model->company?->name ?? '—';
+            })
             ->add('tipo_formatted', function (Payment $model) {
                 return match ($model->payable_type) {
                     Appointment::class => 'Sessão',
+                    Subscribe::class   => 'Assinatura',
                     Plan::class        => 'Plano',
                     default            => class_basename((string) $model->payable_type),
                 };
@@ -52,9 +65,9 @@ class ShowTable extends PowerGridComponent
             })
             ->add('status_formatted', function (Payment $model) {
                 return match ($model->status) {
-                    'paid'            => 'Pago',
-                    'pending_payment' => 'Pendente',
-                    'failed'          => 'Falhou',
+                    'paid'            => '<span class="badge badge-success badge-sm">Pago</span>',
+                    'pending_payment' => '<span class="badge badge-warning badge-sm">Pendente</span>',
+                    'failed'          => '<span class="badge badge-error badge-sm">Falhou</span>',
                     default           => (string) $model->status,
                 };
             })
@@ -67,12 +80,13 @@ class ShowTable extends PowerGridComponent
     {
         return [
             Column::make('ID', 'id')->sortable(),
-            Column::make('Tipo', 'tipo_formatted')->searchable()->sortable(),
+            Column::make('Usuário', 'user_name'),
+            Column::make('Empresa', 'company_name'),
+            Column::make('Tipo', 'tipo_formatted')->sortable(),
             Column::make('Método', 'payment_method_formatted', 'payment_method')->sortable(),
             Column::make('Status', 'status_formatted', 'status')->sortable(),
             Column::make('Valor', 'amount_formatted', 'amount')->sortable(),
             Column::make('Pago em', 'paid_at_formatted', 'paid_at')->sortable(),
-            Column::make('Cadastrado em', 'created_at_formatted', 'created_at')->sortable(),
             Column::action('Ações'),
         ];
     }

@@ -6,7 +6,7 @@ use App\Models\Availability;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
-use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Column, Facades\Filter, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 
 #[Layout('components.layouts.app', ['title' => 'Disponibilidades', 'guard' => 'master'])]
@@ -62,8 +62,17 @@ class ShowTable extends PowerGridComponent
             Column::make('Especialista', 'specialist_name')->searchable()->sortable(),
             Column::make('Data', 'available_date_formatted', 'availabilities.available_date')->sortable(),
             Column::make('Dia', 'day_of_week'),
-            Column::make('Horario', 'available_time_formatted', 'availabilities.available_time')->sortable(),
+            Column::make('Horário', 'available_time_formatted', 'availabilities.available_time')->sortable(),
             Column::make('Status', 'status_badge')->bodyAttribute('class', 'text-center'),
+        ];
+    }
+
+    public function filters(): array
+    {
+        return [
+            Filter::datepicker('available_date_formatted', 'availabilities.available_date'),
+            Filter::inputText('specialist_name', 'specialists.name')
+                ->placeholder('Nome do especialista'),
         ];
     }
 }

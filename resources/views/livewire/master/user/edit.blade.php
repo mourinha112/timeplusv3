@@ -35,7 +35,17 @@
 
                             <x-form-group>
                                 <x-label>Data de Nascimento</x-label>
-                                <x-input type="date" wire:model="birth_date" />
+                                <x-input type="date" wire:model="birth_date_input" />
+                            </x-form-group>
+
+                            <x-form-group>
+                                <x-label>Empresa</x-label>
+                                <select class="select select-bordered w-full" wire:model="company_id">
+                                    <option value="">Sem empresa vinculada</option>
+                                    @foreach ($companies as $company)
+                                        <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                    @endforeach
+                                </select>
                             </x-form-group>
                         </div>
                     </div>

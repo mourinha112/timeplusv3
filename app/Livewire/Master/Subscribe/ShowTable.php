@@ -27,7 +27,7 @@ class ShowTable extends PowerGridComponent
         return Subscribe::query()
             ->join('users', 'subscribes.user_id', '=', 'users.id')
             ->join('plans', 'subscribes.plan_id', '=', 'plans.id')
-            ->select('subscribes.*', 'users.name as user_name', 'plans.name as plan_name', 'plans.price as plan_price');
+            ->select('subscribes.*', 'users.name as user_name', 'users.cpf as user_cpf', 'plans.name as plan_name', 'plans.price as plan_price');
     }
 
     public function relationSearch(): array
@@ -40,6 +40,7 @@ class ShowTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('user_name')
+            ->add('user_cpf')
             ->add('plan_name')
             ->add('plan_price_formatted', fn (Subscribe $model) => 'R$ ' . number_format($model->plan_price, 2, ',', '.'))
             ->add('start_date_formatted', fn (Subscribe $model) => Carbon::parse($model->start_date)->format('d/m/Y'))
@@ -59,7 +60,8 @@ class ShowTable extends PowerGridComponent
     {
         return [
             Column::make('ID', 'id')->sortable(),
-            Column::make('Usuario', 'user_name')->searchable()->sortable(),
+            Column::make('Usuário', 'user_name')->searchable()->sortable(),
+            Column::make('CPF', 'user_cpf')->searchable(),
             Column::make('Plano', 'plan_name')->searchable()->sortable(),
             Column::make('Valor', 'plan_price_formatted', 'plans.price')->sortable(),
             Column::make('Inicio', 'start_date_formatted', 'start_date')->sortable(),

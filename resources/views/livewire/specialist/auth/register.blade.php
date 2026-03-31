@@ -35,6 +35,12 @@
                 <x-form-group>
                     <x-label required>Senha</x-label>
                     <x-input wire:model="password" type="password" placeholder="Digite sua senha" />
+                    <small class="text-base-content/60 mt-1">A senha deve ter no mínimo 8 caracteres.</small>
+                </x-form-group>
+
+                <x-form-group>
+                    <x-label required>Confirmar Senha</x-label>
+                    <x-input wire:model="password_confirmation" type="password" placeholder="Repita sua senha" />
                 </x-form-group>
 
                 <x-button class="btn-block" type="submit">Criar minha conta</x-button>

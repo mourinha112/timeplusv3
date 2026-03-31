@@ -4,12 +4,26 @@
         <x-subtitle>Bem-vinda de volta, {{ Auth::guard('specialist')->user()->name }}!</x-subtitle>
     </x-heading>
 
+    {{-- Lembrete de dados de pagamento --}}
+    @if (!Auth::guard('specialist')->user()->hasPaymentProfile())
+        <div role="alert" class="alert alert-warning shadow-lg">
+            <x-carbon-warning class="w-6 h-6" />
+            <div>
+                <h3 class="font-bold">Dados de pagamento pendentes</h3>
+                <p class="text-sm">Cadastre seus dados de pagamento para receber os repasses das suas sessões.</p>
+            </div>
+            <a href="{{ route('specialist.finance.payment-data') }}" wire:navigate class="btn btn-warning btn-sm">
+                Cadastrar agora
+            </a>
+        </div>
+    @endif
+
     {{-- Estatísticas rápidas --}}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <x-card>
             <x-card-body class="text-center">
                 <div class="text-3xl font-bold text-info">{{ $this->stats['today_total'] }}</div>
-                <x-text>Sessões hoje</x-text>
+                <x-text>Próximas sessões</x-text>
             </x-card-body>
         </x-card>
         <x-card>
@@ -84,7 +98,7 @@
     {{-- Sessões de hoje --}}
     <x-card>
         <x-card-body>
-            <x-card-title>Sessões de hoje</x-card-title>
+            <x-card-title>Próximas sessões</x-card-title>
             <x-text>{{ \Carbon\Carbon::now()->translatedFormat('l, d \\d\\e F') }}</x-text>
 
             @if ($this->todayAppointments->isNotEmpty())

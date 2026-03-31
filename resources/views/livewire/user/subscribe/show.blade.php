@@ -85,13 +85,12 @@
                                 </div>
                             </div>
                             <div class="mt-3">
-                                <x-text>Desconto oferecido</x-text>
+                                <x-text>Cobertura da empresa</x-text>
                                 <p class="font-bold text-success text-xl">
                                     {{ number_format($companyPlan->companyPlan->discount_percentage, 1) }}%</p>
                                 <p class="text-xs text-base-content/60">A empresa cobre
                                     {{ number_format($companyPlan->companyPlan->discount_percentage, 1) }}% do valor
-                                    dos
-                                    seus serviços</p>
+                                    das suas sessões</p>
                             </div>
                         </x-card-body>
                     </x-card>
@@ -100,9 +99,8 @@
                         <x-carbon-information class="w-5 h-5" />
                         <div>
                             <h4 class="font-semibold">Benefícios do plano empresarial</h4>
-                            <p class="text-sm">Enquanto estiver vinculado à empresa, você terá desconto automático nas
-                                suas
-                                consultas e não poderá contratar planos individuais.</p>
+                            <p class="text-sm">Enquanto estiver vinculado à empresa, você terá cobertura automática nas
+                                suas consultas.</p>
                         </div>
                     </div>
                 </x-card-body>
@@ -132,10 +130,10 @@
                                 </div>
                             </div>
                             <div class="mt-3">
-                                <x-text>Desconto (suspenso)</x-text>
+                                <x-text>Cobertura (suspensa)</x-text>
                                 <p class="font-bold text-base-content/50 text-xl line-through">
                                     {{ number_format($companyPlan->companyPlan->discount_percentage, 1) }}%</p>
-                                <p class="text-xs text-warning">⚠️ Desconto suspenso até que o plano seja reativado pela
+                                <p class="text-xs text-warning">Cobertura suspensa até que o plano seja reativado pela
                                     empresa</p>
                             </div>
                         </x-card-body>
@@ -145,7 +143,7 @@
                         <x-carbon-warning class="w-5 h-5" />
                         <div>
                             <h4 class="font-semibold">Plano temporariamente inativo</h4>
-                            <p class="text-sm">O desconto empresarial não está sendo aplicado no momento. Entre em
+                            <p class="text-sm">A cobertura empresarial não está sendo aplicada no momento. Entre em
                                 contato com sua empresa para reativação do plano.</p>
                         </div>
                     </div>
@@ -156,7 +154,7 @@
         <x-card class="mt-4">
             <x-card-body>
                 <div class="flex justify-between">
-                    <span class="badge badge-xs badge-info">Plano finaliza em
+                    <span class="badge badge-xs badge-info">Plano válido até
                         {{ \Carbon\Carbon::parse($subscribe->end_date)->format('d/m/Y') }}</span>
                     @php
                         // Mostrar o valor que foi efetivamente pago (sem desconto)
@@ -179,20 +177,34 @@
                     @endif
                 </div>
 
-                <ul class="mt-6 flex flex-col gap-6 text-xs">
-                    <li class="flex gap-2">
-                        <x-carbon-checkmark class="w-4 h-4 text-info" />
-                        Acesso completo à biblioteca de conteúdos Timeplus
-                    </li>
-                    <li class="flex gap-2">
-                        <x-carbon-checkmark class="w-4 h-4 text-info" />
-                        Fácil acesso a toda comunidade de psicólogos, psicanalistas, terapeutas e coaches
-                    </li>
-                    <li class="flex gap-2">
-                        <x-carbon-checkmark class="w-4 h-4 text-info" />
-                        Atendimento prioritário pela nossa equipe de suporte
-                    </li>
-                </ul>
+                @if ($subscribe->plan->description)
+                    <div class="mt-6 text-sm text-base-content/80">
+                        {!! nl2br(e($subscribe->plan->description)) !!}
+                    </div>
+                @else
+                    <ul class="mt-6 flex flex-col gap-6 text-xs">
+                        <li class="flex gap-2">
+                            <x-carbon-checkmark class="w-4 h-4 text-info" />
+                            Acesso completo à biblioteca de conteúdos Timeplus
+                        </li>
+                        <li class="flex gap-2">
+                            <x-carbon-checkmark class="w-4 h-4 text-info" />
+                            Fácil acesso a toda comunidade de psicólogos, psicanalistas, terapeutas e coaches
+                        </li>
+                        <li class="flex gap-2">
+                            <x-carbon-checkmark class="w-4 h-4 text-info" />
+                            Atendimento prioritário pela nossa equipe de suporte
+                        </li>
+                    </ul>
+                @endif
+
+                @if ($subscribe->plan->max_sessions)
+                    <div class="mt-4 p-3 bg-info/10 rounded-lg">
+                        <span class="text-sm font-semibold text-info">
+                            {{ $subscribe->plan->max_sessions }} {{ $subscribe->plan->max_sessions === 1 ? 'sessão incluída' : 'sessões incluídas' }}
+                        </span>
+                    </div>
+                @endif
 
             </x-card-body>
         </x-card>

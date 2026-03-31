@@ -62,13 +62,13 @@ class ShowTable extends PowerGridComponent
     {
         return [
             Column::make('ID', 'id')->sortable(),
-            Column::make('Codigo', 'code')->searchable()->sortable(),
-            Column::make('Cliente', 'user_name')->searchable()->sortable(),
-            Column::make('Especialista', 'specialist_name')->searchable()->sortable(),
+            Column::make('Código', 'code')->searchable()->sortable(),
+            Column::make('Cliente', 'user_name')->sortable(),
+            Column::make('Especialista', 'specialist_name')->sortable(),
             Column::make('Status', 'status_badge')->bodyAttribute('class', 'text-center'),
             Column::make('Criada em', 'created_at_formatted', 'rooms.created_at')->sortable(),
             Column::make('Fechada em', 'closed_at_formatted', 'rooms.closed_at')->sortable(),
-            Column::action('Acoes'),
+            Column::action('Ações'),
         ];
     }
 

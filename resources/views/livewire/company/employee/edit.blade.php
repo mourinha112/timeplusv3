@@ -49,7 +49,7 @@
                             <option value="">Selecione um plano</option>
                             @foreach ($companyPlans as $plan)
                                 <option value="{{ $plan->id }}" @if (!$plan->is_active) disabled @endif>
-                                    {{ $plan->name }} ({{ number_format($plan->discount_percentage, 0) }}% desconto)
+                                    {{ $plan->name }} ({{ number_format($plan->discount_percentage, 0) }}% de cobertura)
                                     @if (!$plan->is_active)
                                         - INATIVO
                                     @endif
@@ -57,7 +57,7 @@
                             @endforeach
                         </x-select>
                         <small class="text-base-content/60 mt-1">
-                            ⚠️ Apenas planos ativos podem ser selecionados. Planos inativos não concedem descontos.
+                            Apenas planos ativos podem ser selecionados.
                         </small>
                     </x-form-group>
                 </div>

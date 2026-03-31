@@ -34,15 +34,27 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        @php
+                            $totalEmployees = $company->employees->count();
+                            $activeEmployees = $company->employees->filter(fn($e) => $e->pivot->is_active)->count();
+                            $inactiveEmployees = $totalEmployees - $activeEmployees;
+                        @endphp
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                            <div>
+                                <x-text class="font-bold text-success">{{ $activeEmployees }}</x-text>
+                                <div class="mt-0.5 text-xs text-base-content/60">Usuários Ativos</div>
+                            </div>
+                            <div>
+                                <x-text class="font-bold text-error">{{ $inactiveEmployees }}</x-text>
+                                <div class="mt-0.5 text-xs text-base-content/60">Usuários Inativos</div>
+                            </div>
                             <div>
                                 <x-text>{{ $company->payments->count() }}</x-text>
                                 <div class="mt-0.5 text-xs text-base-content/60">Pagamentos</div>
                             </div>
                             <div>
-                                <x-text
-                                    class="font-bold">{{ $company->companyPlans->count() > 0 ? 'Tem Planos' : 'Sem Planos' }}</x-text>
-                                <div class="mt-0.5 text-xs text-base-content/60">Planos da Empresa</div>
+                                <x-text class="font-bold">{{ $company->companyPlans->count() }}</x-text>
+                                <div class="mt-0.5 text-xs text-base-content/60">Planos Configurados</div>
                             </div>
                             <div>
                                 <div class="text-base font-medium text-base-content">
@@ -116,16 +128,29 @@
                                 <div class="mt-6 p-4 bg-base-200/20 rounded-lg border border-base-300">
                                     <h4 class="font-semibold text-base-content flex items-center gap-2 mb-3">
                                         <x-carbon-plan class="w-4 h-4 text-success" />
-                                        Informações do Plano
+                                        Planos Contratados
                                     </h4>
-                                    <div class="text-sm">
-                                        <div>
-                                            <span class="font-medium text-base-content/70">Status:</span>
-                                            <span class="ml-2 text-success">Empresa possui planos configurados</span>
-                                        </div>
-                                        <div class="mt-2 text-base-content/60">
-                                            A empresa gerencia seus próprios planos e preços.
-                                        </div>
+                                    <div class="space-y-3">
+                                        @foreach ($company->companyPlans as $plan)
+                                            <div class="flex items-center justify-between p-3 rounded-lg border {{ $plan->is_active ? 'border-success/30 bg-success/5' : 'border-error/30 bg-error/5' }}">
+                                                <div>
+                                                    <span class="font-semibold">{{ $plan->name }}</span>
+                                                    <span class="text-sm text-base-content/60 ml-2">
+                                                        {{ number_format($plan->discount_percentage, 0) }}% de cobertura
+                                                    </span>
+                                                </div>
+                                                <span class="badge {{ $plan->is_active ? 'badge-success' : 'badge-error' }} badge-sm">
+                                                    {{ $plan->is_active ? 'Ativo' : 'Inativo' }}
+                                                </span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @else
+                                <div class="mt-6 p-4 bg-warning/10 rounded-lg border border-warning/30">
+                                    <div class="flex items-center gap-2 text-warning">
+                                        <x-carbon-warning class="w-4 h-4" />
+                                        <span class="font-semibold text-sm">Nenhum plano configurado</span>
                                     </div>
                                 </div>
                             @endif
@@ -133,6 +158,11 @@
                     </div>
 
                     <div class="flex flex-col gap-3 w-full md:w-56">
+                        <a wire:navigate href="{{ route('master.company.edit', ['company' => $company->id]) }}"
+                            class="btn btn-soft btn-sm btn-warning">
+                            <x-carbon-edit class="w-5 h-5" />
+                            Editar Empresa
+                        </a>
                         <a wire:navigate href="{{ route('master.company.index') }}"
                             class="btn btn-soft btn-sm btn-info">
                             <x-carbon-arrow-left class="w-5 h-5" />

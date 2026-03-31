@@ -121,7 +121,7 @@
                     <div class="p-4 bg-base-200/30 rounded-lg space-y-3">
                         <div>
                             <div class="text-xs uppercase text-base-content/50">Sessão</div>
-                            <div class="text-lg font-semibold text-base-content">50 minutos</div>
+                            <div class="text-lg font-semibold text-base-content">60 minutos</div>
                         </div>
                         <div>
                             <div class="text-xs uppercase text-base-content/50">Valor</div>

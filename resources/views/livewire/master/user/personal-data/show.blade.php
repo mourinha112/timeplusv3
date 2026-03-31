@@ -104,6 +104,20 @@
                                         <p class="text-base-content ml-8">{{ $user->birth_date }}</p>
                                     </div>
                                 @endif
+
+                                <div class="p-4 bg-base-200/30 rounded-lg">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <x-carbon-enterprise class="w-5 h-5 text-info shrink-0" />
+                                        <span class="font-semibold text-base-content">Empresa</span>
+                                    </div>
+                                    <p class="text-base-content ml-8">
+                                        @if ($user->companies->isNotEmpty())
+                                            {{ $user->companies->first()->name }}
+                                        @else
+                                            <span class="text-base-content/50">Nenhuma empresa vinculada</span>
+                                        @endif
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
@@ -129,6 +143,10 @@
                 </div>
 
                 <div class="flex flex-col gap-3 w-full md:w-56">
+                    <a href="{{ route('master.user.edit', ['user' => $user->id]) }}" class="btn btn-soft btn-sm btn-warning">
+                        <x-carbon-edit class="w-5 h-5" />
+                        Editar Usuário
+                    </a>
                     <a href="{{ route('master.user.index') }}" class="btn btn-soft btn-sm btn-info">
                         <x-carbon-arrow-left class="w-5 h-5" />
                         Voltar para a Lista
