@@ -17,9 +17,6 @@ class PersonalDetail extends Component
     #[Rule(['required', 'exists:specialties,id'])]
     public ?int $specialty_id = null;
 
-    #[Rule(['required', 'min:8', 'max:8', 'unique:specialists,crp'])]
-    public ?string $crp = null;
-
     #[Rule(['required', 'date_format:Y', 'before_or_equal:now', 'after_or_equal:1900'])]
     public ?int $year_started_acting = null;
 
@@ -45,7 +42,6 @@ class PersonalDetail extends Component
             $specialist->update([
                 'gender_id'           => $this->gender_id,
                 'specialty_id'        => $this->specialty_id,
-                'crp'                 => $this->crp,
                 'year_started_acting' => $this->year_started_acting,
                 'onboarding_step'     => 'professional-details',
             ]);

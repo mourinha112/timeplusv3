@@ -22,6 +22,12 @@ return [
         'webhook_token'  => env('ASAAS_WEBHOOK_TOKEN'),
     ],
 
+    'consultar' => [
+        'token'    => env('CONSULTAR_IO_TOKEN'),
+        'base_url' => env('CONSULTAR_IO_URL', 'https://consultar.io/api/v1'),
+        'timeout'  => env('CONSULTAR_IO_TIMEOUT', 15),
+    ],
+
     'sendgrid' => [
         'key' => env('SENDGRID_API_KEY'),
     ],

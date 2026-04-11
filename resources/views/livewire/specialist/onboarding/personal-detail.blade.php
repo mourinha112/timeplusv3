@@ -28,11 +28,6 @@
                 </x-form-group>
 
                 <x-form-group>
-                    <x-label required>CRP</x-label>
-                    <x-input wire:model="crp" x-mask="99/99999" placeholder="Digite o seu CRP" />
-                </x-form-group>
-
-                <x-form-group>
                     <x-label required>Início de atuação</x-label>
                     <x-input wire:model="year_started_acting" placeholder="Digite o ano de início de atuação"
                         x-mask="9999" />

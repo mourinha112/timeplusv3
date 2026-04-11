@@ -33,6 +33,21 @@
                 </x-form-group>
 
                 <x-form-group>
+                    <x-label required>UF do Conselho</x-label>
+                    <x-select wire:model="state_id">
+                        <option hidden>Selecione a UF do seu CRP</option>
+                        @foreach ($this->states as $state)
+                            <option value="{{ $state->id }}">{{ $state->abbreviation }} - {{ $state->name }}</option>
+                        @endforeach
+                    </x-select>
+                </x-form-group>
+
+                <x-form-group>
+                    <x-label required>CRP</x-label>
+                    <x-input wire:model="crp" x-mask="99/99999" placeholder="Digite o seu CRP" />
+                </x-form-group>
+
+                <x-form-group>
                     <x-label required>Senha</x-label>
                     <x-input wire:model="password" type="password" placeholder="Digite sua senha" />
                     <small class="text-base-content/60 mt-1">A senha deve ter no mínimo 8 caracteres.</small>
