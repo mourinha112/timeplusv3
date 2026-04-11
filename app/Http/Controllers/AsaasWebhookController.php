@@ -125,9 +125,55 @@ class AsaasWebhookController extends Controller
     protected function handlePaymentConfirmed(array $paymentData): void
     {
         $gatewayOrderId = $paymentData['id'];
+        $subscriptionId = $paymentData['subscription'] ?? null;
 
         // Buscar pagamento no banco
         $payment = Payment::where('gateway_order_id', $gatewayOrderId)->first();
+
+        // Cobrança recorrente vinda de uma assinatura: liga ao Subscribe pelo
+        // gateway_subscription_id, atualiza o pagamento existente da assinatura
+        // (criado no checkout) e estende o end_date pelo duration_days do plano.
+        if ($subscriptionId) {
+            $subscribe = Subscribe::where('gateway_subscription_id', $subscriptionId)->first();
+
+            if ($subscribe) {
+                $payment = $payment ?? $subscribe->payment()->first();
+
+                if ($payment) {
+                    $payment->update([
+                        'status'           => 'paid',
+                        'paid_at'          => now(),
+                        'gateway_order_id' => $gatewayOrderId,
+                    ]);
+                }
+
+                $newEnd = ($subscribe->end_date && $subscribe->end_date->isFuture())
+                    ? $subscribe->end_date->copy()->addDays($subscribe->plan->duration_days)
+                    : now()->addDays($subscribe->plan->duration_days);
+
+                $subscribe->update([
+                    'end_date'          => $newEnd,
+                    'next_billing_date' => $newEnd,
+                    'billing_status'    => Subscribe::STATUS_ACTIVE,
+                ]);
+
+                Log::info('Webhook Asaas: cobrança recorrente processada', [
+                    'subscribe_id'    => $subscribe->id,
+                    'subscription_id' => $subscriptionId,
+                    'new_end_date'    => $newEnd->toDateString(),
+                ]);
+
+                try {
+                    $subscribe->user->notify(new SubscriptionActiveNotification($subscribe, $payment));
+                } catch (\Exception $e) {
+                    Log::error('Webhook Asaas: erro ao notificar usuário sobre renovação', [
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+
+                return;
+            }
+        }
 
         if (!$payment) {
             Log::warning('Webhook Asaas: Pagamento não encontrado', [

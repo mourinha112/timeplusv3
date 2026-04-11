@@ -68,6 +68,16 @@ class User extends Authenticatable
         return $this->hasMany(Subscribe::class);
     }
 
+    public function credits()
+    {
+        return $this->hasMany(UserCredit::class);
+    }
+
+    public function availableCreditBalance(): float
+    {
+        return app(\App\Services\Credit\UserCreditService::class)->balance($this);
+    }
+
     public function appointments()
     {
         return $this->hasMany(Appointment::class);

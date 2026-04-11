@@ -18,4 +18,9 @@ class AsaasManagerService
     {
         return new PaymentService();
     }
+
+    public function subscription(): SubscriptionService
+    {
+        return new SubscriptionService();
+    }
 }

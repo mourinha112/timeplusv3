@@ -5,6 +5,7 @@ namespace App\Livewire\User\Checkout;
 use App\Exceptions\AsaasException;
 use App\Facades\Asaas;
 use App\Models\Room;
+use App\Services\Credit\UserCreditService;
 use App\Services\JitsiService;
 use Illuminate\Support\Facades\{Auth, DB, Log};
 use Livewire\Attributes\Rule;
@@ -151,6 +152,54 @@ class CreditCard extends Component
                 return;
             }
 
+            // Aplicar saldo de crédito do usuário (apenas para sessões)
+            $creditApplied = 0.0;
+
+            if ($this->payable instanceof \App\Models\Appointment) {
+                $creditService = app(UserCreditService::class);
+                $creditApplied = $creditService->consume($user, (float) $finalAmount, $this->payable);
+                $finalAmount   = round($finalAmount - $creditApplied, 2);
+
+                // Saldo cobriu integralmente — marca como pago sem cobrar Asaas
+                if ($finalAmount <= 0) {
+                    $payment = $this->payable->payment()->updateOrCreate(
+                        ['payable_id' => $this->payable->id, 'payable_type' => get_class($this->payable)],
+                        [
+                            'amount'              => $creditApplied,
+                            'payment_method'      => 'credit_balance',
+                            'status'              => 'paid',
+                            'paid_at'             => now(),
+                            'description'         => 'Pago integralmente com saldo de crédito',
+                            'metadata'            => [
+                                'credit_applied' => $creditApplied,
+                                'payable_type'   => get_class($this->payable),
+                                'payable_id'     => $this->payable->id,
+                            ],
+                            'company_id'          => $companyId,
+                            'discount_value'      => $discountValue,
+                            'discount_percentage' => $discountPercentage,
+                            'company_plan_name'   => $companyPlanName,
+                        ]
+                    );
+
+                    $roomCode = $this->createRoomForAppointment($this->payable);
+
+                    DB::commit();
+
+                    session()->flash('success', 'Sessão paga integralmente com seu saldo!');
+
+                    if ($roomCode) {
+                        session()->flash('room_code', $roomCode);
+                        session()->flash('appointment_date', $this->payable->appointment_date);
+                        session()->flash('appointment_time', $this->payable->appointment_time);
+                    }
+
+                    $this->redirect(route('user.appointment.index'), navigate: true);
+
+                    return;
+                }
+            }
+
             // Limpar e formatar os dados do cartão
             $cleanCardNumber = preg_replace('/[^0-9]/', '', $this->card_number);
             $cleanHolderName = strtoupper(trim($this->card_holder_name));
@@ -168,6 +217,71 @@ class CreditCard extends Component
             $description = $this->payable instanceof \App\Models\Appointment
                 ? 'Pagamento da sessão #' . $this->payable->id
                 : 'Assinatura do plano ' . $this->payable->plan->name;
+
+            // Plano recorrente → cria assinatura no Asaas (cobrança automática)
+            if ($this->payable instanceof \App\Models\Subscribe && $this->payable->plan->isRecurring()) {
+                $expiryYearFull = strlen((string) $this->card_expiry_year) === 2
+                    ? '20' . $this->card_expiry_year
+                    : (string) $this->card_expiry_year;
+
+                $subscription = Asaas::subscription()->create([
+                    'customer_id'        => $user->gateway_customer_id,
+                    'amount'             => $finalAmount,
+                    'cycle'              => $this->payable->plan->billing_cycle ?? 'monthly',
+                    'billing_type'       => 'CREDIT_CARD',
+                    'description'        => $description,
+                    'next_due_date'      => now()->format('Y-m-d'),
+                    'external_reference' => 'subscribe_' . $this->payable->id,
+                    'credit_card'        => [
+                        'holderName'  => $cleanHolderName,
+                        'number'      => $cleanCardNumber,
+                        'expiryMonth' => str_pad((string) $this->card_expiry_month, 2, '0', STR_PAD_LEFT),
+                        'expiryYear'  => $expiryYearFull,
+                        'ccv'         => (string) $this->card_cvv,
+                    ],
+                    'credit_card_holder_info' => [
+                        'name'          => $cleanHolderName,
+                        'email'         => $user->email,
+                        'cpfCnpj'       => preg_replace('/[^0-9]/', '', $user->cpf),
+                        'postalCode'    => '01310100',
+                        'addressNumber' => '1000',
+                        'phone'         => preg_replace('/[^0-9]/', '', $user->phone_number),
+                    ],
+                ]);
+
+                $this->payable->update([
+                    'gateway_subscription_id' => $subscription['id'],
+                    'next_billing_date'       => $subscription['next_due_date'] ?? now()->addDays($this->payable->plan->duration_days)->toDateString(),
+                    'billing_status'          => \App\Models\Subscribe::STATUS_ACTIVE,
+                ]);
+
+                $this->payable->payment()->updateOrCreate(
+                    ['payable_id' => $this->payable->id, 'payable_type' => get_class($this->payable)],
+                    [
+                        'gateway_order_id' => $subscription['id'],
+                        'amount'           => $finalAmount,
+                        'payment_method'   => 'credit_card',
+                        'status'           => 'pending_payment',
+                        'description'      => $description,
+                        'metadata'         => [
+                            'subscription_id'  => $subscription['id'],
+                            'card_last_digits' => substr($cleanCardNumber, -4),
+                            'card_holder_name' => $cleanHolderName,
+                            'user_id'          => $user->id,
+                            'payable_type'     => get_class($this->payable),
+                            'payable_id'       => $this->payable->id,
+                            'is_recurring'     => true,
+                        ],
+                    ]
+                );
+
+                DB::commit();
+
+                session()->flash('success', 'Assinatura criada! A primeira cobrança será processada em instantes.');
+                $this->redirect(route('user.subscribe.show'), navigate: true);
+
+                return;
+            }
 
             // Criação do pagamento no gateway
             $paymentGateway = Asaas::payment()->createWithCreditCard([
@@ -203,6 +317,7 @@ class CreditCard extends Component
                 'payable_type'     => get_class($this->payable),
                 'payable_id'       => $this->payable->id,
                 'has_discount'     => $discountValue > 0,
+                'credit_applied'   => $creditApplied ?? 0,
                 'payment_date'     => now()->toISOString(),
             ];
 

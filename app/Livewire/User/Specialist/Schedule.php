@@ -5,6 +5,7 @@ namespace App\Livewire\User\Specialist;
 use App\Models\{Appointment, Availability, Payment};
 use App\Notifications\Specialist\AppointmentScheduledNotification as SpecialistAppointmentScheduledNotification;
 use App\Notifications\User\AppointmentScheduledNotification;
+use App\Services\Payment\PayoutCalculator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\{Auth, DB, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -76,6 +77,12 @@ class Schedule extends Component
     #[Computed]
     public function availabilities()
     {
+        $user             = Auth::user();
+        $hasCompanyPlan   = $user?->hasActiveCompanyPlan() ?? false;
+        $eligibleModes    = $hasCompanyPlan
+            ? [Availability::MODE_BOTH, Availability::MODE_TIMEPLUS]
+            : [Availability::MODE_BOTH, Availability::MODE_PARTICULAR];
+
         $scheduledTimes = Appointment::where('specialist_id', $this->specialist->id)
             ->where('appointment_date', '>=', now()->toDateString())
             // ->where('status', '!=', 'cancelled')
@@ -88,6 +95,7 @@ class Schedule extends Component
 
         $availabilities = Availability::where('specialist_id', $this->specialist->id)
             ->where('available_date', '>=', now()->toDateString())
+            ->whereIn('service_mode', $eligibleModes)
             ->orderBy('available_date')
             ->orderBy('available_time')
             ->get()
@@ -193,6 +201,26 @@ class Schedule extends Component
         $this->selectedTime = null;
     }
 
+    /**
+     * Decide o modo (timeplus ou particular) do agendamento a partir do
+     * service_mode da disponibilidade e da elegibilidade do usuário.
+     */
+    private function resolveServiceMode(Availability $availability, bool $hasCompanyPlan): ?string
+    {
+        $slotMode = $availability->service_mode ?? Availability::MODE_BOTH;
+
+        if ($slotMode === Availability::MODE_TIMEPLUS) {
+            return $hasCompanyPlan ? Appointment::MODE_TIMEPLUS : null;
+        }
+
+        if ($slotMode === Availability::MODE_PARTICULAR) {
+            return $hasCompanyPlan ? null : Appointment::MODE_PARTICULAR;
+        }
+
+        // both — usuário com plano da empresa entra como timeplus, sem plano como particular
+        return $hasCompanyPlan ? Appointment::MODE_TIMEPLUS : Appointment::MODE_PARTICULAR;
+    }
+
     public function schedule()
     {
         $this->validate();
@@ -247,13 +275,52 @@ class Schedule extends Component
                 return;
             }
 
+            $availability = Availability::where('specialist_id', $this->specialist->id)
+                ->where('available_date', $this->selectedDate)
+                ->where('available_time', $this->selectedTime)
+                ->first();
+
+            if (!$availability) {
+                LivewireAlert::title('Horário Indisponível')
+                    ->text('Esse horário não está mais disponível na agenda do especialista.')
+                    ->error()
+                    ->show();
+
+                $this->clearSelection();
+
+                return;
+            }
+
+            $user           = Auth::user();
+            $hasCompanyPlan = $user->hasActiveCompanyPlan();
+
+            $serviceMode = $this->resolveServiceMode($availability, $hasCompanyPlan);
+
+            if ($serviceMode === null) {
+                LivewireAlert::title('Modalidade indisponível')
+                    ->text('Esse horário não atende sua modalidade de plano. Escolha outro horário.')
+                    ->error()
+                    ->show();
+
+                $this->clearSelection();
+
+                return;
+            }
+
+            $totalValue = $this->specialist->valueForMode($serviceMode);
+            $payout     = (new PayoutCalculator())->calculate($serviceMode, $totalValue);
+
             $appointment = Appointment::create([
-                'user_id'          => Auth::user()->id,
-                'specialist_id'    => $this->specialist->id,
-                'total_value'      => $this->specialist->appointment_value,
-                'appointment_date' => $this->selectedDate,
-                'appointment_time' => $this->selectedTime,
-                'status'           => 'scheduled',
+                'user_id'           => $user->id,
+                'specialist_id'     => $this->specialist->id,
+                'total_value'       => $totalValue,
+                'service_mode'      => $serviceMode,
+                'specialist_amount' => $payout['specialist_amount'],
+                'platform_amount'   => $payout['platform_amount'],
+                'duration_minutes'  => $this->specialist->getSessionDuration(),
+                'appointment_date'  => $this->selectedDate,
+                'appointment_time'  => $this->selectedTime,
+                'status'            => 'scheduled',
             ]);
 
             // Enviar notificações de agendamento

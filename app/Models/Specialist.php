@@ -13,10 +13,18 @@ class Specialist extends Authenticatable
     use Notifiable;
 
     /**
-     * Valor padrão da sessão (em reais)
-     * Usado quando o especialista não tem valor definido ou para padronização
+     * Valor fixo recebido pelo especialista por sessão TimePlus (em reais).
+     */
+    public const TIMEPLUS_SESSION_VALUE = 30.00;
+
+    /**
+     * Valor padrão da sessão particular quando o especialista não definiu o seu.
      */
     public const DEFAULT_APPOINTMENT_VALUE = 30.00;
+
+    public const MIN_SESSION_DURATION = 15;
+    public const MAX_SESSION_DURATION = 50;
+    public const DEFAULT_SESSION_DURATION = 30;
 
     protected $fillable = [
         'gender_id',
@@ -31,6 +39,10 @@ class Specialist extends Authenticatable
         'birth_date',
         'state_id',
         'appointment_value',
+        'particular_session_value',
+        'session_duration_minutes',
+        'accepts_timeplus',
+        'accepts_particular',
         'lgbtqia',
         'summary',
         'description',
@@ -53,8 +65,12 @@ class Specialist extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
+            'email_verified_at'         => 'datetime',
+            'password'                  => 'hashed',
+            'accepts_timeplus'          => 'boolean',
+            'accepts_particular'        => 'boolean',
+            'session_duration_minutes'  => 'integer',
+            'particular_session_value'  => 'decimal:2',
         ];
     }
 
@@ -78,17 +94,36 @@ class Specialist extends Authenticatable
     }
 
     /**
-     * Retorna o valor da sessão padronizado
-     * Se o especialista tiver valor definido, usa o dele.
-     * Caso contrário, usa o valor padrão da plataforma (R$ 30,00)
+     * Valor da sessão particular do especialista. Cai pro default só se nada
+     * estiver definido. O valor da sessão TimePlus é fixo em TIMEPLUS_SESSION_VALUE.
      */
     public function getAppointmentValueAttribute($value)
     {
-        // Força o valor padrão para todos (padronização solicitada)
-        return self::DEFAULT_APPOINTMENT_VALUE;
+        $particular = $this->attributes['particular_session_value'] ?? null;
 
-        // Se quiser usar o valor individual do especialista quando definido, descomente:
-        // return $value ?? self::DEFAULT_APPOINTMENT_VALUE;
+        return $particular !== null
+            ? (float) $particular
+            : ((float) ($value ?? self::DEFAULT_APPOINTMENT_VALUE));
+    }
+
+    /**
+     * Retorna o valor a cobrar do paciente conforme o modo de atendimento.
+     */
+    public function valueForMode(string $mode): float
+    {
+        return $mode === 'timeplus'
+            ? self::TIMEPLUS_SESSION_VALUE
+            : (float) $this->appointment_value;
+    }
+
+    /**
+     * Duração da sessão em minutos, dentro dos limites permitidos.
+     */
+    public function getSessionDuration(): int
+    {
+        $duration = (int) ($this->attributes['session_duration_minutes'] ?? self::DEFAULT_SESSION_DURATION);
+
+        return max(self::MIN_SESSION_DURATION, min(self::MAX_SESSION_DURATION, $duration));
     }
 
     /**

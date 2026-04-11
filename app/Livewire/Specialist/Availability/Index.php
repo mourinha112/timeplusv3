@@ -18,11 +18,20 @@ class Index extends Component
 
     public $weekDays = [];
 
+    public string $selectedMode = Availability::MODE_BOTH;
+
     public function mount()
     {
         $this->currentWeekStart = Carbon::now()->startOfWeek();
         $this->loadWeekData();
         $this->loadAvailabilities();
+    }
+
+    public function setMode(string $mode): void
+    {
+        if (in_array($mode, [Availability::MODE_BOTH, Availability::MODE_TIMEPLUS, Availability::MODE_PARTICULAR], true)) {
+            $this->selectedMode = $mode;
+        }
     }
 
     public function getFirstDayOfWeek()
@@ -81,12 +90,23 @@ class Index extends Component
 
     public function toggleTimeAvailability($date, $time)
     {
+        $specialist = Auth::guard('specialist')->user();
+
+        if ($date < now()->toDateString()) {
+            LivewireAlert::title('Data inválida')
+                ->text('Não é possível criar disponibilidade em datas passadas.')
+                ->warning()
+                ->show();
+
+            return;
+        }
+
         $availability = $this->availabilities[$date][$time . ':00'] ?? null;
 
         if ($availability) {
             $appointment = Appointment::where('appointment_date', $date)
                 ->where('appointment_time', $time . ':00')
-                ->where('specialist_id', Auth::guard('specialist')->id())
+                ->where('specialist_id', $specialist->id)
                 ->first();
 
             if ($appointment) {
@@ -100,11 +120,31 @@ class Index extends Component
 
             $availability->delete();
         } else {
+            $mode = $this->selectedMode;
+
+            if ($mode === Availability::MODE_TIMEPLUS && !$specialist->accepts_timeplus) {
+                LivewireAlert::title('Modalidade desativada')
+                    ->text('Você não está aceitando atendimentos TimePlus. Ative em Perfil > Dados profissionais.')
+                    ->warning()
+                    ->show();
+
+                return;
+            }
+
+            if ($mode === Availability::MODE_PARTICULAR && !$specialist->accepts_particular) {
+                LivewireAlert::title('Modalidade desativada')
+                    ->text('Você não está aceitando atendimentos particulares. Ative em Perfil > Dados profissionais.')
+                    ->warning()
+                    ->show();
+
+                return;
+            }
 
             Availability::create([
                 'available_date' => $date,
                 'available_time' => $time . ':00',
-                'specialist_id'  => Auth::guard('specialist')->id(),
+                'specialist_id'  => $specialist->id,
+                'service_mode'   => $mode,
             ]);
         }
 
@@ -113,10 +153,16 @@ class Index extends Component
 
     public function getTimeSlots()
     {
-        $slots = [];
+        $specialist = Auth::guard('specialist')->user();
+        $duration   = $specialist?->getSessionDuration() ?? \App\Models\Specialist::DEFAULT_SESSION_DURATION;
 
-        for ($hour = 0; $hour < 24; $hour++) {
-            $slots[] = sprintf('%02d:00', $hour);
+        $slots   = [];
+        $current = Carbon::createFromTime(0, 0, 0);
+        $end     = Carbon::createFromTime(0, 0, 0)->addDay();
+
+        while ($current->lt($end)) {
+            $slots[] = $current->format('H:i');
+            $current->addMinutes($duration);
         }
 
         return $slots;

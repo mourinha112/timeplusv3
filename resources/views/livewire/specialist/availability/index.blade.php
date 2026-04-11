@@ -14,6 +14,24 @@
         </button>
     </div>
 
+    <div class="mb-3 p-3 bg-base-200 rounded-lg">
+        <p class="text-xs font-semibold mb-2">Modalidade dos próximos slots que você criar:</p>
+        <div class="flex flex-wrap gap-2">
+            <button type="button" wire:click="setMode('both')"
+                class="btn btn-xs sm:btn-sm {{ $selectedMode === 'both' ? 'btn-primary' : 'btn-outline' }}">
+                Ambas
+            </button>
+            <button type="button" wire:click="setMode('timeplus')"
+                class="btn btn-xs sm:btn-sm {{ $selectedMode === 'timeplus' ? 'btn-info' : 'btn-outline' }}">
+                Somente TimePlus
+            </button>
+            <button type="button" wire:click="setMode('particular')"
+                class="btn btn-xs sm:btn-sm {{ $selectedMode === 'particular' ? 'btn-success' : 'btn-outline' }}">
+                Somente Particular
+            </button>
+        </div>
+    </div>
+
     <div class="card card-xl bg-base-100 shadow-lg border border-gray-200 rounded-xl p-4">
         <!-- Day Headers (fixos) -->
         <div class="grid grid-cols-[auto_repeat(7,1fr)] gap-1 lg:gap-2 mb-1">
@@ -46,18 +64,36 @@
                         @endphp
 
                         @if ($hasAvailability)
+                            @php
+                                $mode = $availability->service_mode ?? 'both';
+                                $modeColor = match ($mode) {
+                                    'timeplus' => 'bg-blue-50 border-blue-300 text-blue-700',
+                                    'particular' => 'bg-green-50 border-green-300 text-green-700',
+                                    default => 'bg-purple-50 border-purple-300 text-purple-700',
+                                };
+                                $modeLabel = match ($mode) {
+                                    'timeplus' => 'TimePlus',
+                                    'particular' => 'Particular',
+                                    default => 'Ambas',
+                                };
+                                $modeAbbr = match ($mode) {
+                                    'timeplus' => 'TP',
+                                    'particular' => 'PA',
+                                    default => 'AM',
+                                };
+                            @endphp
                             {{-- Slot ocupado --}}
                             <button
                                 wire:click="toggleTimeAvailability('{{ $dayInfo['full_date'] }}', '{{ $time }}')"
-                                class="btn btn-sm lg:btn-md rounded border text-xs font-medium flex items-center justify-center relative cursor-pointer group bg-blue-50 border-blue-200 hover:bg-red-50 hover:border-red-300 text-blue-600"
-                                title="OK">
+                                class="btn btn-sm lg:btn-md rounded border text-xs font-medium flex items-center justify-center relative cursor-pointer group hover:bg-red-50 hover:border-red-300 {{ $modeColor }}"
+                                title="{{ $modeLabel }}">
                                 <span class="flex items-center gap-1 group-hover:hidden">
-                                    <x-carbon-checkmark-outline class="w-4 h-4" />
-                                    <span class="hidden lg:inline">Disponível</span>
+                                    <span class="font-bold">{{ $modeAbbr }}</span>
+                                    <span class="hidden lg:inline">{{ $modeLabel }}</span>
                                 </span>
                                 <span class="hidden group-hover:flex items-center gap-1 text-red-500">
                                     <span class="font-bold text-sm">×</span>
-                                    <span class="hidden lg:inline">Cancelar</span>
+                                    <span class="hidden lg:inline">Remover</span>
                                 </span>
                             </button>
                         @else
@@ -75,10 +111,18 @@
         </div>
 
         <!-- Legenda -->
-        <div class="flex gap-6 mt-3 text-xs text-gray-600">
+        <div class="flex flex-wrap gap-4 mt-3 text-xs text-gray-600">
             <div class="flex items-center gap-2">
-                <div class="w-3 h-3 bg-blue-100 border border-blue-200 rounded"></div>
-                <span>Disponível</span>
+                <div class="w-3 h-3 bg-purple-100 border border-purple-300 rounded"></div>
+                <span>Ambas (TimePlus + Particular)</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-3 h-3 bg-blue-100 border border-blue-300 rounded"></div>
+                <span>Somente TimePlus</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-3 h-3 bg-green-100 border border-green-300 rounded"></div>
+                <span>Somente Particular</span>
             </div>
             <div class="flex items-center gap-2">
                 <div class="w-3 h-3 bg-gray-100 border border-gray-200 rounded"></div>

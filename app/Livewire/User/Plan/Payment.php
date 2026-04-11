@@ -54,11 +54,13 @@ class Payment extends Component
                 $endDate   = now()->addDays($this->plan->duration_days);
 
                 $subscribe = Subscribe::create([
-                    'user_id'        => Auth::id(),
-                    'plan_id'        => $this->plan->id,
-                    'start_date'     => $startDate,
-                    'end_date'       => $endDate,
-                    'cancelled_date' => null,
+                    'user_id'           => Auth::id(),
+                    'plan_id'           => $this->plan->id,
+                    'start_date'        => $startDate,
+                    'end_date'          => $endDate,
+                    'next_billing_date' => $this->plan->isRecurring() ? $endDate : null,
+                    'billing_status'    => Subscribe::STATUS_ACTIVE,
+                    'cancelled_date'    => null,
                 ]);
 
                 DB::commit();

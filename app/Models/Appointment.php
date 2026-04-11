@@ -7,10 +7,17 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasOne, MorphOne};
 
 class Appointment extends Model
 {
+    public const MODE_TIMEPLUS = 'timeplus';
+    public const MODE_PARTICULAR = 'particular';
+
     protected $fillable = [
         'user_id',
         'specialist_id',
         'total_value',
+        'service_mode',
+        'specialist_amount',
+        'platform_amount',
+        'duration_minutes',
         'appointment_date',
         'appointment_time',
         'status',
@@ -18,9 +25,12 @@ class Appointment extends Model
     ];
 
     protected $casts = [
-        'status'      => 'string',
-        'total_value' => 'decimal:2',
-        'notes'       => 'string',
+        'status'            => 'string',
+        'total_value'       => 'decimal:2',
+        'specialist_amount' => 'decimal:2',
+        'platform_amount'   => 'decimal:2',
+        'duration_minutes'  => 'integer',
+        'notes'             => 'string',
     ];
 
     public function user(): BelongsTo

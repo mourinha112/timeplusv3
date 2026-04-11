@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Plan extends Model
 {
+    public const CYCLE_MONTHLY = 'monthly';
+    public const CYCLE_QUARTERLY = 'quarterly';
+    public const CYCLE_YEARLY = 'yearly';
+    public const CYCLE_ONE_TIME = 'one_time';
+
     protected $fillable = [
         'name',
         'description',
@@ -13,12 +18,19 @@ class Plan extends Model
         'duration_days',
         'discount_percentage',
         'max_sessions',
+        'billing_cycle',
+        'gateway_plan_id',
     ];
 
     protected $casts = [
         'price'               => 'decimal:2',
         'discount_percentage' => 'decimal:2',
     ];
+
+    public function isRecurring(): bool
+    {
+        return ($this->billing_cycle ?? self::CYCLE_MONTHLY) !== self::CYCLE_ONE_TIME;
+    }
 
     public function hasDiscount(): bool
     {

@@ -4,6 +4,7 @@ namespace App\Livewire\User\Checkout;
 
 use App\Exceptions\AsaasException;
 use App\Facades\Asaas;
+use App\Services\Credit\UserCreditService;
 use Illuminate\Support\Facades\{Auth, DB, Log};
 use Livewire\Component;
 
@@ -141,6 +142,46 @@ class Pix extends Component
                 return;
             }
 
+            // Aplicar saldo de crédito do usuário (apenas para sessões)
+            $creditApplied = 0.0;
+
+            if ($this->payable instanceof \App\Models\Appointment) {
+                $creditService = app(UserCreditService::class);
+                $creditApplied = $creditService->consume($user, (float) $finalAmount, $this->payable);
+                $finalAmount   = round($finalAmount - $creditApplied, 2);
+
+                if ($finalAmount <= 0) {
+                    $this->payable->payment()->updateOrCreate(
+                        ['payable_id' => $this->payable->id, 'payable_type' => get_class($this->payable)],
+                        [
+                            'amount'              => $creditApplied,
+                            'payment_method'      => 'credit_balance',
+                            'status'              => 'paid',
+                            'paid_at'             => now(),
+                            'description'         => 'Pago integralmente com saldo de crédito',
+                            'metadata'            => [
+                                'credit_applied' => $creditApplied,
+                                'payable_type'   => get_class($this->payable),
+                                'payable_id'     => $this->payable->id,
+                            ],
+                            'company_id'          => $companyId,
+                            'discount_value'      => $discountValue,
+                            'discount_percentage' => $discountPercentage,
+                            'company_plan_name'   => $companyPlanName,
+                        ]
+                    );
+
+                    DB::commit();
+
+                    $this->shouldRedirect = true;
+                    $this->isLoading      = false;
+
+                    session()->flash('success', 'Sessão paga integralmente com seu saldo!');
+
+                    return;
+                }
+            }
+
             // Determinar descrição baseado no tipo
             $description = $this->payable instanceof \App\Models\Appointment
                 ? 'Pagamento da sessão #' . $this->payable->id
@@ -156,12 +197,13 @@ class Pix extends Component
 
             // Preparar metadata
             $metadata = [
-                'user_id'      => $user->id,
-                'user_name'    => $user->name,
-                'payable_type' => get_class($this->payable),
-                'payable_id'   => $this->payable->id,
-                'has_discount' => $discountValue > 0,
-                'payment_date' => now()->toISOString(),
+                'user_id'        => $user->id,
+                'user_name'      => $user->name,
+                'payable_type'   => get_class($this->payable),
+                'payable_id'     => $this->payable->id,
+                'has_discount'   => $discountValue > 0,
+                'credit_applied' => $creditApplied,
+                'payment_date'   => now()->toISOString(),
             ];
 
             // Criar/atualizar o pagamento no banco de dados

@@ -2,10 +2,12 @@
 
 namespace App\Livewire\User\Appointment;
 
+use App\Models\UserCredit;
 use App\Notifications\Specialist\AppointmentCancelledNotification as SpecialistAppointmentCancelledNotification;
 use App\Notifications\User\AppointmentCancelledNotification;
+use App\Services\Credit\UserCreditService;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\{Auth, Log};
+use Illuminate\Support\Facades\{Auth, DB, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Computed, Layout};
 use Livewire\Component;
@@ -161,13 +163,34 @@ class Index extends Component
         }
 
         try {
-            $appointment->update(['status' => 'cancelled']);
+            $creditGranted = null;
+
+            DB::transaction(function () use ($appointment, &$creditGranted) {
+                $appointment->update(['status' => 'cancelled']);
+
+                $payment = $appointment->payment()->first();
+
+                if ($payment && $payment->status === 'paid') {
+                    $creditGranted = app(UserCreditService::class)->grant(
+                        Auth::user(),
+                        (float) $payment->amount,
+                        UserCredit::SOURCE_CANCELLATION,
+                        $appointment,
+                        null,
+                        "Crédito por cancelamento da sessão #{$appointment->id}"
+                    );
+                }
+            });
 
             Auth::user()->notify(new AppointmentCancelledNotification($appointment));
             $appointment->specialist->notify(new SpecialistAppointmentCancelledNotification($appointment));
 
+            $message = $creditGranted
+                ? 'Sua sessão foi cancelada e R$ ' . number_format((float) $creditGranted->amount, 2, ',', '.') . ' foram adicionados ao seu saldo.'
+                : 'Sua sessão foi cancelada com sucesso.';
+
             LivewireAlert::title('Sessão cancelada')
-                ->text('Sua sessão foi cancelada com sucesso.')
+                ->text($message)
                 ->success()
                 ->show();
         } catch (\Exception $e) {
