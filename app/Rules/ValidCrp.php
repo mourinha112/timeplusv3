@@ -45,13 +45,13 @@ class ValidCrp implements ValidationRule, DataAwareRule
         }
 
         if (!$result['found']) {
-            $fail('CRP não encontrado no Conselho Regional de Psicologia.');
+            $fail('CRP não encontrado no Conselho Regional de Psicologia. Consulte o CRP para regularizar.');
 
             return;
         }
 
         if (!$result['active']) {
-            $fail('Este CRP consta como inativo no Conselho Regional de Psicologia.');
+            $fail('Este CRP consta como inativo no Conselho Regional de Psicologia. Consulte o CRP para regularizar.');
         }
     }
 }
