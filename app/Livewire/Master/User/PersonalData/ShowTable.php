@@ -2,12 +2,12 @@
 
 namespace App\Livewire\Master\User\PersonalData;
 
-use App\Models\User;
+use App\Models\{Company, User};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
 use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\Facades\{Filter, PowerGrid};
 
 #[Layout('components.layouts.app', ['title' => 'Usuários', 'guard' => 'master'])]
 class ShowTable extends PowerGridComponent
@@ -29,7 +29,9 @@ class ShowTable extends PowerGridComponent
 
     public function relationSearch(): array
     {
-        return [];
+        return [
+            'companies' => ['name'],
+        ];
     }
 
     public function fields(): PowerGridFields
@@ -59,10 +61,37 @@ class ShowTable extends PowerGridComponent
             Column::make('Nome', 'name')->searchable()->sortable(),
             Column::make('E-mail', 'email')->searchable(),
             Column::make('CPF', 'cpf')->searchable(),
-            Column::make('Empresa', 'company_name'),
+            Column::make('Empresa', 'company_name')->searchable(),
             Column::make('Situação', 'status_indicator', 'is_active'),
             Column::make('Cadastrado em', 'created_at_formatted', 'created_at')->sortable(),
             Column::action('Ações'),
+        ];
+    }
+
+    public function filters(): array
+    {
+        $companies = Company::query()
+            ->orderBy('name')
+            ->get()
+            ->map(fn (Company $c) => ['id' => $c->id, 'name' => $c->name])
+            ->toArray();
+
+        return [
+            Filter::select('company_name')
+                ->dataSource($companies)
+                ->optionLabel('name')
+                ->optionValue('id')
+                ->builder(function (Builder $builder, mixed $value) {
+                    if ($value === null || $value === '') {
+                        return $builder;
+                    }
+
+                    return $builder->whereHas('companies', fn (Builder $q) => $q->where('companies.id', $value));
+                }),
+            Filter::select('status_indicator', 'is_active')->dataSource([
+                ['id' => 1, 'name' => 'Ativo'],
+                ['id' => 0, 'name' => 'Inativo'],
+            ])->optionLabel('name')->optionValue('id'),
         ];
     }
 

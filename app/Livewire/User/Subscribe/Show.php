@@ -2,8 +2,10 @@
 
 namespace App\Livewire\User\Subscribe;
 
+use App\Exceptions\AsaasException;
+use App\Facades\Asaas;
 use App\Models\{CompanyUser, User};
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{Auth, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Computed, Layout};
 use Livewire\Component;
@@ -74,17 +76,41 @@ class Show extends Component
 
     public function cancel()
     {
-        if ($this->subscribe->cancelled_date) {
-            LivewireAlert::title('Assinatura já está cancelada.')
-                ->text('Você não pode cancelar uma assinatura que já foi cancelada.')
-                ->warning()
-                ->show();
+        if (!$this->subscribe) {
+            return;
         }
 
-        $this->subscribe->update(['cancelled_date' => now()]);
+        if ($this->subscribe->cancelled_date) {
+            LivewireAlert::title('Assinatura já está cancelada.')
+                ->text('Você já havia cancelado essa assinatura. O acesso permanece ativo até o fim do período pago.')
+                ->warning()
+                ->show();
 
-        LivewireAlert::title('Sucesso!')
-            ->text('Assinatura cancelada com sucesso!')
+            return;
+        }
+
+        if ($this->subscribe->gateway_subscription_id) {
+            try {
+                Asaas::subscription()->cancel($this->subscribe->gateway_subscription_id);
+            } catch (AsaasException $e) {
+                Log::warning('Falha ao cancelar assinatura recorrente no Asaas', [
+                    'subscribe_id'            => $this->subscribe->id,
+                    'gateway_subscription_id' => $this->subscribe->gateway_subscription_id,
+                    'error'                   => $e->getMessage(),
+                ]);
+            }
+        }
+
+        $this->subscribe->update([
+            'cancelled_date' => now(),
+        ]);
+
+        $endDate = $this->subscribe->end_date?->format('d/m/Y');
+
+        LivewireAlert::title('Assinatura cancelada')
+            ->text($endDate
+                ? "Você mantém o acesso ao plano até {$endDate}. Não haverá novas cobranças."
+                : 'Sua assinatura foi cancelada e não haverá novas cobranças.')
             ->success()
             ->show();
     }

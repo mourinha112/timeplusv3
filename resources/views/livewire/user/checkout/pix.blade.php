@@ -1,5 +1,7 @@
-<div class="space-y-8" x-data="{ shouldRedirect: @entangle('shouldRedirect') }"
-    x-effect="if (shouldRedirect) { window.location.href = '{{ route('user.appointment.index') }}' }">
+<div class="space-y-8"
+    wire:poll.5s="checkPaymentStatus"
+    x-data="{ shouldRedirect: @entangle('shouldRedirect') }"
+    x-effect="if (shouldRedirect) { window.location.href = '{{ $payable instanceof \App\Models\Subscribe ? route('user.subscribe.show') : route('user.appointment.index') }}' }">
     @error('payment')
         <x-alert class="alert-error">{{ $message }}</x-alert>
     @enderror

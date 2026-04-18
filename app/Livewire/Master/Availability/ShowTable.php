@@ -58,8 +58,8 @@ class ShowTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('ID', 'id')->sortable(),
-            Column::make('Especialista', 'specialist_name')->searchable()->sortable(),
+            Column::make('ID', 'id', 'availabilities.id')->sortable(),
+            Column::make('Especialista', 'specialist_name', 'specialists.name')->searchable()->sortable(),
             Column::make('Data', 'available_date_formatted', 'availabilities.available_date')->sortable(),
             Column::make('Dia', 'day_of_week'),
             Column::make('Horário', 'available_time_formatted', 'availabilities.available_time')->sortable(),
@@ -71,6 +71,9 @@ class ShowTable extends PowerGridComponent
     {
         return [
             Filter::datepicker('available_date_formatted', 'availabilities.available_date'),
+            Filter::inputText('available_time_formatted', 'availabilities.available_time')
+                ->placeholder('Horário (HH:MM)')
+                ->operators(['contains']),
             Filter::inputText('specialist_name', 'specialists.name')
                 ->placeholder('Nome do especialista'),
         ];

@@ -1,6 +1,9 @@
 <div>
-    <x-heading>
-        <x-title>Disponibilidades</x-title>
+    <x-heading class="bg-success/15 border-l-4 border-success p-3 rounded-r-lg">
+        <x-title class="text-success">
+            <x-carbon-time class="w-6 h-6 inline-block mr-1" />
+            Disponibilidades
+        </x-title>
         <x-subtitle>Visualize e gerencie suas disponibilidades.</x-subtitle>
     </x-heading>
 
@@ -11,6 +14,16 @@
         <x-text class="sm:text-lg">{{ $firstDayOfWeek }} até {{ $lastDayOfWeek }}</x-text>
         <button wire:click="nextWeek" class="btn btn-info btn-outline sm:btn-sm btn-xs">
             <x-carbon-chevron-right class="w-5" /> Próxima
+        </button>
+    </div>
+
+    <div class="flex justify-end mb-3">
+        <button type="button"
+            wire:click="replicatePreviousWeek"
+            wire:confirm="Replicar os horários da semana anterior para esta semana? Slots já existentes serão preservados."
+            class="btn btn-success btn-outline btn-xs sm:btn-sm">
+            <x-carbon-copy class="w-4" />
+            Replicar semana anterior
         </button>
     </div>
 

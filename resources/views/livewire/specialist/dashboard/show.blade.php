@@ -22,7 +22,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <x-card>
             <x-card-body class="text-center">
-                <div class="text-3xl font-bold text-info">{{ $this->stats['today_total'] }}</div>
+                <div class="text-3xl font-bold text-info">{{ $this->stats['upcoming_total'] }}</div>
                 <x-text>Próximas sessões</x-text>
             </x-card-body>
         </x-card>
@@ -95,20 +95,20 @@
         </x-card>
     @endif
 
-    {{-- Sessões de hoje --}}
+    {{-- Próximas sessões --}}
     <x-card>
         <x-card-body>
             <x-card-title>Próximas sessões</x-card-title>
-            <x-text>{{ \Carbon\Carbon::now()->translatedFormat('l, d \\d\\e F') }}</x-text>
 
-            @if ($this->todayAppointments->isNotEmpty())
+            @if ($this->upcomingAppointments->isNotEmpty())
                 <div class="mt-3 space-y-2">
-                    @foreach ($this->todayAppointments as $appointment)
+                    @foreach ($this->upcomingAppointments as $appointment)
                         <div class="flex items-center justify-between p-3 rounded-lg border
                             {{ $appointment->status === 'completed' ? 'bg-success/5 border-success/20' : ($this->isPaid($appointment) ? 'bg-info/5 border-info/20' : 'bg-warning/5 border-warning/20') }}">
                             <div class="flex items-center gap-3">
-                                <div class="text-lg font-semibold w-14 text-center">
-                                    {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') }}
+                                <div class="text-sm font-semibold text-center leading-tight">
+                                    <div>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d/m') }}</div>
+                                    <div class="text-base-content/70">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') }}</div>
                                 </div>
                                 <div>
                                     <div class="font-medium">{{ $appointment->user->name }}</div>
@@ -158,7 +158,7 @@
             @else
                 <div class="mt-3 text-center py-6 text-base-content/50">
                     <x-carbon-calendar class="w-8 h-8 mx-auto mb-2 opacity-50" />
-                    <p>Nenhuma sessão agendada para hoje.</p>
+                    <p>Nenhuma próxima sessão agendada.</p>
                 </div>
             @endif
         </x-card-body>

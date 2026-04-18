@@ -151,6 +151,73 @@ class Index extends Component
         $this->loadAvailabilities();
     }
 
+    public function replicatePreviousWeek(): void
+    {
+        $specialist   = Auth::guard('specialist')->user();
+        $previousStart = $this->currentWeekStart->copy()->subWeek();
+        $previousEnd   = $previousStart->copy()->addDays(6);
+
+        $previousAvailabilities = Availability::where('specialist_id', $specialist->id)
+            ->whereBetween('available_date', [$previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d')])
+            ->get();
+
+        if ($previousAvailabilities->isEmpty()) {
+            LivewireAlert::title('Semana anterior vazia')
+                ->text('Não há disponibilidades cadastradas na semana anterior para replicar.')
+                ->warning()
+                ->show();
+
+            return;
+        }
+
+        $created = 0;
+        $skipped = 0;
+        $today   = now()->toDateString();
+
+        foreach ($previousAvailabilities as $previous) {
+            $newDate = Carbon::parse($previous->available_date)->addWeek()->format('Y-m-d');
+
+            if ($newDate < $today) {
+                $skipped++;
+
+                continue;
+            }
+
+            $exists = Availability::where('specialist_id', $specialist->id)
+                ->where('available_date', $newDate)
+                ->where('available_time', $previous->available_time)
+                ->exists();
+
+            if ($exists) {
+                $skipped++;
+
+                continue;
+            }
+
+            Availability::create([
+                'specialist_id'  => $specialist->id,
+                'available_date' => $newDate,
+                'available_time' => $previous->available_time,
+                'service_mode'   => $previous->service_mode,
+            ]);
+
+            $created++;
+        }
+
+        $this->loadAvailabilities();
+
+        $message = "{$created} horário(s) replicado(s).";
+
+        if ($skipped > 0) {
+            $message .= " {$skipped} pulado(s) (já existiam ou já passaram).";
+        }
+
+        LivewireAlert::title('Semana replicada')
+            ->text($message)
+            ->success()
+            ->show();
+    }
+
     public function getTimeSlots()
     {
         $specialist = Auth::guard('specialist')->user();

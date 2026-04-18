@@ -419,7 +419,6 @@ class CreditCard extends Component
         $activeSubscribe = $user->subscribes()
             ->whereDate('start_date', '<=', now())
             ->whereDate('end_date', '>=', now())
-            ->whereNull('cancelled_date')
             ->whereHas('payments', function ($query) {
                 $query->where('status', 'paid');
             })

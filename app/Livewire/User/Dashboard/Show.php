@@ -28,6 +28,26 @@ class Show extends Component
             ->first();
     }
 
+    #[Computed]
+    public function hasActivePlan(): bool
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return false;
+        }
+
+        if (method_exists($user, 'hasActiveCompanyPlan') && $user->hasActiveCompanyPlan()) {
+            return true;
+        }
+
+        return $user->subscribes()
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->whereHas('payments', fn ($q) => $q->where('status', 'paid'))
+            ->exists();
+    }
+
     public function isPaid($appointment)
     {
         return $appointment->payment && $appointment->payment->status === 'paid';

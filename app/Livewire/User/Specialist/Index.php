@@ -22,7 +22,7 @@ class Index extends Component
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%');
             })
-            ->orderBy('name')
+            ->inRandomOrder()
             ->get();
     }
 

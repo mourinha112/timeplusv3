@@ -30,13 +30,21 @@ class Show extends Component
     }
 
     #[Computed]
-    public function todayAppointments()
+    public function upcomingAppointments()
     {
         return Appointment::where('specialist_id', Auth::guard('specialist')->id())
             ->with(['user', 'payment', 'room'])
-            ->where('appointment_date', now()->toDateString())
-            ->whereIn('status', ['scheduled', 'completed'])
+            ->where(function ($query) {
+                $query->where('appointment_date', '>', now()->toDateString())
+                    ->orWhere(function ($q) {
+                        $q->where('appointment_date', now()->toDateString())
+                            ->where('appointment_time', '>=', now()->format('H:i:s'));
+                    });
+            })
+            ->where('status', 'scheduled')
+            ->orderBy('appointment_date', 'asc')
             ->orderBy('appointment_time', 'asc')
+            ->limit(10)
             ->get();
     }
 
@@ -77,7 +85,7 @@ class Show extends Component
                 ->whereYear('appointment_date', $currentYear)
                 ->where('status', 'completed')
                 ->count(),
-            'today_total' => $this->todayAppointments->count(),
+            'upcoming_total' => $this->upcomingAppointments->count(),
         ];
     }
 

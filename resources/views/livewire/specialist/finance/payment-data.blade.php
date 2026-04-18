@@ -195,8 +195,10 @@
                             <ul class="text-sm text-base-content/70 space-y-1">
                                 <li>O valor da sessão é recebido pela plataforma quando o paciente efetua o
                                     pagamento.</li>
-                                <li>Após a confirmação do pagamento, o repasse é processado.</li>
-                                <li>Você receberá o valor líquido diretamente na conta/PIX cadastrado.</li>
+                                <li>Particular: você recebe 80% do valor (plataforma retém 20%).
+                                    TimePlus: você recebe R$ 30,00 integrais por sessão realizada.</li>
+                                <li>Após a confirmação do pagamento, o repasse é processado automaticamente.</li>
+                                <li>Você receberá o valor diretamente na conta/PIX cadastrado.</li>
                             </ul>
                         </div>
                     </div>

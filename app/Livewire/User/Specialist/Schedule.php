@@ -85,7 +85,7 @@ class Schedule extends Component
 
         $scheduledTimes = Appointment::where('specialist_id', $this->specialist->id)
             ->where('appointment_date', '>=', now()->toDateString())
-            // ->where('status', '!=', 'cancelled')
+            ->where('status', '!=', 'cancelled')
             ->get()
             ->groupBy('appointment_date')
             ->map(function ($appointments) {
@@ -261,7 +261,7 @@ class Schedule extends Component
             $appointment = Appointment::where('specialist_id', $this->specialist->id)
                 ->where('appointment_date', $this->selectedDate)
                 ->where('appointment_time', $this->selectedTime)
-                // ->where('status', '!=', 'cancelled')
+                ->where('status', '!=', 'cancelled')
                 ->first();
 
             if ($appointment) {

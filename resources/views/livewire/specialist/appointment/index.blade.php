@@ -1,6 +1,9 @@
 <div>
-    <x-heading>
-        <x-title>Agendamentos</x-title>
+    <x-heading class="bg-info/15 border-l-4 border-info p-3 rounded-r-lg">
+        <x-title class="text-info">
+            <x-carbon-calendar-heat-map class="w-6 h-6 inline-block mr-1" />
+            Agendamentos
+        </x-title>
         <x-subtitle>Visualize e gerencie seus agendamentos.</x-subtitle>
     </x-heading>
 

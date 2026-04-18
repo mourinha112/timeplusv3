@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
 use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\Facades\{Filter, PowerGrid};
 
 #[Layout('components.layouts.app', ['title' => 'Pagamentos', 'guard' => 'master'])]
 class ShowTable extends PowerGridComponent
@@ -29,7 +29,9 @@ class ShowTable extends PowerGridComponent
 
     public function relationSearch(): array
     {
-        return [];
+        return [
+            'company' => ['name', 'cnpj'],
+        ];
     }
 
     public function fields(): PowerGridFields
@@ -42,6 +44,12 @@ class ShowTable extends PowerGridComponent
                 }
                 if ($model->payable_type === Subscribe::class && $model->payable) {
                     return $model->payable->user?->name ?? '—';
+                }
+                return '—';
+            })
+            ->add('user_cpf', function (Payment $model) {
+                if (in_array($model->payable_type, [Appointment::class, Subscribe::class], true) && $model->payable) {
+                    return $model->payable->user?->cpf ?? '—';
                 }
                 return '—';
             })
@@ -81,13 +89,35 @@ class ShowTable extends PowerGridComponent
         return [
             Column::make('ID', 'id')->sortable(),
             Column::make('Usuário', 'user_name'),
-            Column::make('Empresa', 'company_name'),
-            Column::make('Tipo', 'tipo_formatted')->sortable(),
+            Column::make('CPF', 'user_cpf'),
+            Column::make('Empresa', 'company_name')->searchable(),
+            Column::make('Tipo', 'tipo_formatted', 'payable_type')->sortable(),
             Column::make('Método', 'payment_method_formatted', 'payment_method')->sortable(),
             Column::make('Status', 'status_formatted', 'status')->sortable(),
             Column::make('Valor', 'amount_formatted', 'amount')->sortable(),
             Column::make('Pago em', 'paid_at_formatted', 'paid_at')->sortable(),
             Column::action('Ações'),
+        ];
+    }
+
+    public function filters(): array
+    {
+        return [
+            Filter::select('tipo_formatted', 'payable_type')->dataSource([
+                ['id' => Appointment::class, 'name' => 'Sessão'],
+                ['id' => Subscribe::class,   'name' => 'Assinatura'],
+                ['id' => Plan::class,        'name' => 'Plano'],
+            ])->optionLabel('name')->optionValue('id'),
+            Filter::select('status_formatted', 'status')->dataSource([
+                ['id' => 'paid',            'name' => 'Pago'],
+                ['id' => 'pending_payment', 'name' => 'Pendente'],
+                ['id' => 'failed',          'name' => 'Falhou'],
+            ])->optionLabel('name')->optionValue('id'),
+            Filter::select('payment_method_formatted', 'payment_method')->dataSource([
+                ['id' => 'credit_card', 'name' => 'Cartão de Crédito'],
+                ['id' => 'pix',         'name' => 'Pix'],
+            ])->optionLabel('name')->optionValue('id'),
+            Filter::datepicker('paid_at_formatted', 'paid_at'),
         ];
     }
 

@@ -29,7 +29,10 @@ class ShowTable extends PowerGridComponent
 
     public function relationSearch(): array
     {
-        return [];
+        return [
+            'user'       => ['name', 'cpf'],
+            'specialist' => ['name', 'crp'],
+        ];
     }
 
     public function fields(): PowerGridFields

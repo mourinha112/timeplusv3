@@ -74,21 +74,23 @@
         </x-card-body>
     </x-card>
 
-    <x-card>
-        <x-card-body class="flex justify-between sm:items-center sm:flex-row">
+    @unless ($this->hasActivePlan)
+        <x-card>
+            <x-card-body class="flex justify-between sm:items-center sm:flex-row">
 
-            <div class="space-y-3">
-                <x-card-title>Eleve sua experiência</x-card-title>
-                <x-text>Descubra o melhor plano para aprimorar sua experiência.</x-text>
-            </div>
+                <div class="space-y-3">
+                    <x-card-title>Eleve sua experiência</x-card-title>
+                    <x-text>Descubra o melhor plano para aprimorar sua experiência.</x-text>
+                </div>
 
-            <x-btn-link href="{{ route('user.plan.index') }}" wire:navigate class="mt-2 sm:btn sm:mt-0">
-                <x-carbon-pricing-consumption class="w-4 h-4" />
-                Conhecer os planos
-            </x-btn-link>
+                <x-btn-link href="{{ route('user.plan.index') }}" wire:navigate class="mt-2 sm:btn sm:mt-0">
+                    <x-carbon-pricing-consumption class="w-4 h-4" />
+                    Conhecer os planos
+                </x-btn-link>
 
-        </x-card-body>
-    </x-card>
+            </x-card-body>
+        </x-card>
+    @endunless
 </div>
 
 <script>

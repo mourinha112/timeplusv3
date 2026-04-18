@@ -2,11 +2,12 @@
 
 namespace App\Livewire\Specialist\Appointment;
 
-use App\Models\Appointment;
+use App\Models\{Appointment, UserCredit};
 use App\Notifications\Specialist\AppointmentCancelledNotification as SpecialistAppointmentCancelledNotification;
 use App\Notifications\User\AppointmentCancelledNotification;
+use App\Services\Credit\UserCreditService;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{Auth, DB, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -87,25 +88,62 @@ class Index extends Component
     {
         $appointment = $this->appointments[$date][$time . ':00'] ?? null;
 
-        if ($appointment) {
-            // Se existe agendamento, remover
-            $appointment->update(['status' => 'cancelled']);
+        if (!$appointment) {
+            LivewireAlert::title('Agendamento não encontrado')
+                ->error()
+                ->show();
 
-            // Enviar notificações de cancelamento
+            return;
+        }
+
+        try {
+            $creditGranted = null;
+
+            DB::transaction(function () use ($appointment, &$creditGranted) {
+                $appointment->update(['status' => 'cancelled']);
+
+                $payment = $appointment->payment()->first();
+
+                if ($payment && $payment->status === 'paid') {
+                    $creditGranted = app(UserCreditService::class)->grant(
+                        $appointment->user,
+                        (float) $payment->amount,
+                        UserCredit::SOURCE_CANCELLATION,
+                        $appointment,
+                        null,
+                        "Crédito por cancelamento da sessão #{$appointment->id} pelo especialista"
+                    );
+                }
+            });
+
             try {
                 $appointment->user->notify(new AppointmentCancelledNotification($appointment));
                 Auth::guard('specialist')->user()->notify(new SpecialistAppointmentCancelledNotification($appointment));
             } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error('Erro ao enviar notificações de cancelamento', [
+                Log::error('Erro ao enviar notificações de cancelamento', [
                     'error' => $e->getMessage(),
                 ]);
             }
-        }
 
-        LivewireAlert::title('Agendamento cancelado!')
-            ->text('O agendamento foi cancelado com sucesso.')
-            ->success()
-            ->show();
+            $message = $creditGranted
+                ? 'O agendamento foi cancelado e R$ ' . number_format((float) $creditGranted->amount, 2, ',', '.') . ' foram devolvidos como crédito ao paciente.'
+                : 'O agendamento foi cancelado com sucesso.';
+
+            LivewireAlert::title('Agendamento cancelado!')
+                ->text($message)
+                ->success()
+                ->show();
+        } catch (\Exception $e) {
+            Log::error('Erro ao cancelar agendamento pelo especialista', [
+                'appointment_id' => $appointment->id,
+                'error'          => $e->getMessage(),
+            ]);
+
+            LivewireAlert::title('Erro!')
+                ->text('Ocorreu um erro ao cancelar o agendamento.')
+                ->error()
+                ->show();
+        }
 
         $this->loadAppointments();
     }

@@ -7,19 +7,18 @@
             class="input input-bordered input-sm w-full sm:w-64" />
     </div>
 
-    @foreach($this->specialists as $specialist)
-
     @if ($errors->any())
-    <ul>
-        @foreach ($errors->all() as $error)
-        <li class="text-danger">{{ $error }}</li>
-        @endforeach
-    </ul>
+        <ul class="mb-3">
+            @foreach ($errors->all() as $error)
+                <li class="text-danger">{{ $error }}</li>
+            @endforeach
+        </ul>
     @endif
 
-     <div class="grid md:grid-cols-2 grid-cols-1 gap-4 mb-3">
-        <livewire:user.specialist.card :specialist="$specialist" />
-        <livewire:user.specialist.schedule :specialist="$specialist" />
-    </div>
+    @foreach ($this->specialists as $specialist)
+        <div wire:key="specialist-row-{{ $specialist->id }}" class="grid md:grid-cols-2 grid-cols-1 gap-4 mb-3">
+            <livewire:user.specialist.card :specialist="$specialist" :key="'specialist-card-' . $specialist->id" />
+            <livewire:user.specialist.schedule :specialist="$specialist" :key="'specialist-schedule-' . $specialist->id" />
+        </div>
     @endforeach
 </section>

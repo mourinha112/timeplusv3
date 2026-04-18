@@ -2,12 +2,12 @@
 
 namespace App\Livewire\Master\Subscribe;
 
-use App\Models\Subscribe;
+use App\Models\{Company, Subscribe};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
 use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\Facades\{Filter, PowerGrid};
 
 #[Layout('components.layouts.app', ['title' => 'Assinaturas', 'guard' => 'master'])]
 class ShowTable extends PowerGridComponent
@@ -59,15 +59,50 @@ class ShowTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('ID', 'id')->sortable(),
-            Column::make('Usuário', 'user_name')->searchable()->sortable(),
-            Column::make('CPF', 'user_cpf')->searchable(),
-            Column::make('Plano', 'plan_name')->searchable()->sortable(),
+            Column::make('ID', 'id', 'subscribes.id')->sortable(),
+            Column::make('Usuário', 'user_name', 'users.name')->searchable()->sortable(),
+            Column::make('CPF', 'user_cpf', 'users.cpf')->searchable(),
+            Column::make('Plano', 'plan_name', 'plans.name')->searchable()->sortable(),
             Column::make('Valor', 'plan_price_formatted', 'plans.price')->sortable(),
-            Column::make('Inicio', 'start_date_formatted', 'start_date')->sortable(),
-            Column::make('Fim', 'end_date_formatted', 'end_date')->sortable(),
+            Column::make('Inicio', 'start_date_formatted', 'subscribes.start_date')->sortable(),
+            Column::make('Fim', 'end_date_formatted', 'subscribes.end_date')->sortable(),
             Column::make('Status', 'status_badge')->bodyAttribute('class', 'text-center'),
             Column::action('Acoes'),
+        ];
+    }
+
+    public function filters(): array
+    {
+        $companies = Company::query()
+            ->orderBy('name')
+            ->get()
+            ->map(fn (Company $c) => ['id' => $c->id, 'name' => $c->name])
+            ->toArray();
+
+        return [
+            Filter::select('plan_name', 'plans.id')
+                ->dataSource(
+                    \App\Models\Plan::query()->orderBy('name')->get()
+                        ->map(fn ($p) => ['id' => $p->id, 'name' => $p->name])
+                        ->toArray()
+                )
+                ->optionLabel('name')
+                ->optionValue('id'),
+            Filter::select('empresa_filter')
+                ->dataSource($companies)
+                ->optionLabel('name')
+                ->optionValue('id')
+                ->builder(function (Builder $builder, mixed $value) {
+                    if ($value === null || $value === '') {
+                        return $builder;
+                    }
+
+                    return $builder->whereIn('subscribes.user_id', function ($q) use ($value) {
+                        $q->select('user_id')->from('company_user')->where('company_id', $value);
+                    });
+                }),
+            Filter::datepicker('start_date_formatted', 'subscribes.start_date'),
+            Filter::datepicker('end_date_formatted', 'subscribes.end_date'),
         ];
     }
 
