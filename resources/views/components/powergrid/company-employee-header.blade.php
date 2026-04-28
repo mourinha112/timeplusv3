@@ -40,3 +40,18 @@
         <span class="font-medium">{{ session('error') }}</span>
     </div>
 @endif
+
+<div class="flex items-center gap-2 mb-3">
+    <span class="text-sm text-base-content/70">Ações em massa:</span>
+    <button type="button" wire:click="bulkActivate" class="btn btn-success btn-xs">
+        <x-carbon-checkmark class="w-3 h-3" />
+        Ativar selecionados
+    </button>
+    <button type="button" wire:click="bulkDeactivate" class="btn btn-warning btn-xs">
+        <x-carbon-close class="w-3 h-3" />
+        Desativar selecionados
+    </button>
+    <span class="text-xs text-base-content/50">
+        Marque as caixas de seleção na tabela e clique em uma das ações.
+    </span>
+</div>

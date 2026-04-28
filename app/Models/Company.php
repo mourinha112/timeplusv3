@@ -16,6 +16,9 @@ class Company extends Authenticatable
         'name',
         'cnpj',
         'email',
+        'contact_name',
+        'contact_role',
+        'contact_phone',
         'password',
         'phone',
         'address',
@@ -23,16 +26,20 @@ class Company extends Authenticatable
         'state',
         'zip_code',
         'is_active',
+        'recovery_password_token',
+        'recovery_password_token_expires_at',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'recovery_password_token',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
-        'password'  => 'hashed',
+        'is_active'                          => 'boolean',
+        'password'                           => 'hashed',
+        'recovery_password_token_expires_at' => 'datetime',
     ];
 
     public function companyPlans(): HasMany

@@ -42,6 +42,8 @@
         <x-footer />
 
     </div>
+
+    <x-support-button />
 </body>
 
 </html>

@@ -72,6 +72,17 @@
                     </div>
                 </div>
 
+                {{-- Modelo --}}
+                <div class="mb-4">
+                    <button type="button" wire:click="downloadTemplate" class="btn btn-soft btn-info btn-sm">
+                        <x-carbon-download class="w-4 h-4" />
+                        Baixar modelo CSV
+                    </button>
+                    <small class="block text-base-content/60 mt-1">
+                        Use o modelo para garantir o formato correto. CPF e telefone podem vir com ou sem pontuação.
+                    </small>
+                </div>
+
                 {{-- Upload --}}
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-base-content mb-2">

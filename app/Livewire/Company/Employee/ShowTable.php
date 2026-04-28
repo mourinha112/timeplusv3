@@ -14,14 +14,24 @@ class ShowTable extends PowerGridComponent
 {
     public string $tableName = 'company.employee.table';
 
+    public string $primaryKey = 'users.id';
+
+    public string $sortField = 'users.id';
+
     public function setUp(): array
     {
         return [
             PowerGrid::header()
               ->showSearchInput()
+              ->showToggleColumns()
               ->includeViewOnTop('components.powergrid.company-employee-header'),
             PowerGrid::footer()->showPerPage()->showRecordCount(),
         ];
+    }
+
+    public function checkBox(): array
+    {
+        return ['attribute' => 'users.id'];
     }
 
     public function datasource(): Builder
@@ -107,6 +117,38 @@ class ShowTable extends PowerGridComponent
 
         $status = $companyUser->is_active ? 'ativado' : 'desativado';
         session()->flash('message', "Funcionário {$status} com sucesso!");
+    }
+
+    public function bulkActivate(): void
+    {
+        $this->bulkUpdateActive(true);
+    }
+
+    public function bulkDeactivate(): void
+    {
+        $this->bulkUpdateActive(false);
+    }
+
+    private function bulkUpdateActive(bool $active): void
+    {
+        $ids = $this->checkboxValues ?? [];
+
+        if (empty($ids)) {
+            session()->flash('error', 'Selecione ao menos um funcionário.');
+
+            return;
+        }
+
+        $company = Auth::guard('company')->user();
+
+        $count = CompanyUser::where('company_id', $company->id)
+            ->whereIn('user_id', $ids)
+            ->update(['is_active' => $active]);
+
+        $this->checkboxValues = [];
+
+        $verb = $active ? 'ativados' : 'desativados';
+        session()->flash('message', "{$count} funcionário(s) {$verb} com sucesso.");
     }
 
     #[\Livewire\Attributes\On('company::employee-remove')]

@@ -24,6 +24,10 @@
                 <x-button class="btn-block" type="submit">Entrar</x-button>
             </x-form>
 
+            <div class="mt-4 text-center">
+                <x-link href="{{ route('company.auth.password-recovery') }}" wire:navigate>Esqueci minha senha</x-link>
+            </div>
+
             <div class="text-center mt-6 pt-6 border-t border-base-300">
                 <x-text>
                     Problemas de acesso? Entre em contato com o suporte.

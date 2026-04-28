@@ -75,5 +75,7 @@
             </small>
         </div>
     </div>
+
+    <x-support-button />
 </body>
 </html>

@@ -243,6 +243,12 @@ Route::group(['middleware' => ['auth:master']], function () {
 Route::group(['middleware' => 'guest:company'], function () {
     /* Login */
     Route::get('empresa/entrar', App\Livewire\Company\Auth\Login::class)->name('company.auth.login');
+
+    /* Password Recovery */
+    Route::get('empresa/recuperar-senha', App\Livewire\Company\Auth\PasswordRecovery::class)->name('company.auth.password-recovery');
+
+    /* Password Reset */
+    Route::get('empresa/redefinir-senha/{token}', App\Livewire\Company\Auth\PasswordReset::class)->name('company.auth.password.reset');
 });
 
 /**

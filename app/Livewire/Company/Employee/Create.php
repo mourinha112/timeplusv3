@@ -33,19 +33,22 @@ class Create extends Component
     #[Rule('required|email|max:255|unique:users,email')]
     public string $email = '';
 
-    public bool $showCredentialsModal = false;
-
-    public string $userEmail = '';
-
-    public string $userPassword = '';
-
-    public string $userName = '';
-
-    public bool $userExists = false;
+    #[Rule('nullable|exists:company_plans,id')]
+    public $company_plan_id = null;
 
     public function mount(): void
     {
         $this->companyId = Auth::guard('company')->id();
+
+        $defaultPlan = Company::find($this->companyId)
+            ?->companyPlans()
+            ->where('is_active', true)
+            ->orderBy('id')
+            ->first();
+
+        if ($defaultPlan) {
+            $this->company_plan_id = $defaultPlan->id;
+        }
     }
 
     public function save(): void
@@ -57,10 +60,8 @@ class Create extends Component
 
             $company = Company::findOrFail($this->companyId);
 
-            // Gerar senha temporária
             $password = Str::random(12);
 
-            // Criar novo usuário com email informado
             $user = User::create([
                 'name'         => $this->name,
                 'cpf'          => $this->cpf,
@@ -71,56 +72,48 @@ class Create extends Component
                 'is_active'    => true,
             ]);
 
-            // Criar customer no gateway Asaas
-            $gateway = Asaas::customer()->create([
-                'code'         => $user->id,
-                'name'         => $user->name,
-                'email'        => $user->email,
-                'document'     => $user->cpf,
-                'mobile_phone' => $user->phone_number,
-            ]);
+            try {
+                $gateway = Asaas::customer()->create([
+                    'code'         => $user->id,
+                    'name'         => $user->name,
+                    'email'        => $user->email,
+                    'document'     => $user->cpf,
+                    'mobile_phone' => $user->phone_number,
+                ]);
 
-            $user->update(['gateway_customer_id' => $gateway['id']]);
+                $user->update(['gateway_customer_id' => $gateway['id']]);
+            } catch (\Exception $asaasError) {
+                Log::warning('Erro ao criar customer Asaas no cadastro de funcionário', [
+                    'user_id' => $user->id,
+                    'error'   => $asaasError->getMessage(),
+                ]);
+            }
 
-            // Verificar se já não está vinculado à empresa
             if (!$company->employees()->where('user_id', $user->id)->exists()) {
-                // Vincular usuário à empresa
                 $company->employees()->attach($user->id, [
-                    'is_active' => true,
+                    'is_active'       => true,
+                    'company_plan_id' => $this->company_plan_id,
                 ]);
             }
 
             DB::commit();
 
-            // Guardar dados para o modal (apenas strings simples)
-            $this->userExists   = false;
-            $this->userEmail    = $user->email;
-            $this->userPassword = $password;
-            $this->userName     = $user->name;
-
-            // Enviar email com credenciais para o funcionário
             try {
                 $user->notify(new EmployeeCredentialsNotification(
                     companyName: $company->name,
                     email: $user->email,
                     password: $password
                 ));
-                Log::info('Email de credenciais enviado com sucesso', [
-                    'user_id'    => $user->id,
-                    'user_email' => $user->email,
-                    'company'    => $company->name,
-                ]);
             } catch (\Exception $emailError) {
                 Log::error('Erro ao enviar email de credenciais', [
-                    'user_id'    => $user->id,
-                    'user_email' => $user->email,
-                    'error'      => $emailError->getMessage(),
+                    'user_id' => $user->id,
+                    'error'   => $emailError->getMessage(),
                 ]);
             }
 
-            // Mostrar modal com informações
-            $this->showCredentialsModal = true;
+            session()->flash('message', 'Funcionário cadastrado! Um e-mail com as credenciais foi enviado para ' . $user->email);
 
+            $this->redirect(route('company.employee.index'), navigate: true);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Erro interno::' . get_class($this), [
@@ -138,15 +131,15 @@ class Create extends Component
         }
     }
 
-    public function closeModal()
-    {
-        $this->showCredentialsModal = false;
-
-        return $this->redirect(route('company.employee.index'));
-    }
-
     public function render()
     {
-        return view('livewire.company.employee.create');
+        $companyPlans = Company::findOrFail($this->companyId)
+            ->companyPlans()
+            ->where('is_active', true)
+            ->get();
+
+        return view('livewire.company.employee.create', [
+            'companyPlans' => $companyPlans,
+        ]);
     }
 }
