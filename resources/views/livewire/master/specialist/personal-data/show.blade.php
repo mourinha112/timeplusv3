@@ -112,6 +112,16 @@
                     </div>
 
                     <div class="flex flex-col gap-3 w-full md:w-56">
+                        <a wire:navigate href="{{ route('master.specialist.edit', ['specialist' => $specialist->id]) }}"
+                            class="btn btn-info btn-sm">
+                            <x-carbon-edit class="w-5 h-5" />
+                            Editar Especialista
+                        </a>
+                        <a wire:navigate href="{{ route('master.specialist.payment-data', ['specialist' => $specialist->id]) }}"
+                            class="btn btn-soft btn-sm btn-success">
+                            <x-carbon-finance class="w-5 h-5" />
+                            Dados de Pagamento
+                        </a>
                         <a wire:navigate href="{{ route('master.specialist.index') }}"
                             class="btn btn-soft btn-sm btn-info">
                             <x-carbon-arrow-left class="w-5 h-5" />

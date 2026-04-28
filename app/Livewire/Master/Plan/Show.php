@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Master\Plan;
 
-use App\Models\Plan;
-use Livewire\Attributes\Layout;
+use App\Models\{Plan, Subscribe};
+use Livewire\Attributes\{Computed, Layout};
 use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Detalhes do Plano', 'guard' => 'master'])]
@@ -16,8 +16,32 @@ class Show extends Component
         $this->plan = $plan;
     }
 
+    #[Computed()]
+    public function subscriberStats(): array
+    {
+        $base = Subscribe::where('plan_id', $this->plan->id);
+
+        return [
+            'total'     => (clone $base)->count(),
+            'active'    => (clone $base)->where('billing_status', Subscribe::STATUS_ACTIVE)
+                ->where(function ($q) {
+                    $q->whereNull('end_date')->orWhere('end_date', '>=', now());
+                })->count(),
+            'cancelled' => (clone $base)->where('billing_status', Subscribe::STATUS_CANCELLED)->count(),
+            'expired'   => (clone $base)->where('billing_status', Subscribe::STATUS_EXPIRED)->count(),
+        ];
+    }
+
     public function render()
     {
-        return view('livewire.master.plan.show');
+        $latestSubscribers = Subscribe::with('user')
+            ->where('plan_id', $this->plan->id)
+            ->orderByDesc('created_at')
+            ->limit(20)
+            ->get();
+
+        return view('livewire.master.plan.show', [
+            'latestSubscribers' => $latestSubscribers,
+        ]);
     }
 }

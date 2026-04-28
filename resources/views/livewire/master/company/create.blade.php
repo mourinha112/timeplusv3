@@ -93,6 +93,28 @@
                     </div>
                 </div>
 
+                <!-- Responsável / Contato -->
+                <div>
+                    <h3 class="text-lg font-semibold text-base-content mb-4">Responsável / Contato</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <x-form-group>
+                            <x-label>Nome do responsável</x-label>
+                            <x-input type="text" wire:model="contact_name" />
+                        </x-form-group>
+
+                        <x-form-group>
+                            <x-label>Cargo</x-label>
+                            <x-input type="text" wire:model="contact_role" placeholder="Ex.: RH, Diretor" />
+                        </x-form-group>
+
+                        <x-form-group>
+                            <x-label>Telefone do responsável</x-label>
+                            <x-input type="text" wire:model="contact_phone" x-mask="(99) 99999-9999"
+                                placeholder="(11) 99999-9999" />
+                        </x-form-group>
+                    </div>
+                </div>
+
                 <!-- Status -->
                 <x-form-group>
                     <x-checkbox class="checkbox-info" wire:model="is_active" checked>

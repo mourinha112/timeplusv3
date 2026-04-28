@@ -84,10 +84,16 @@ class ShowTable extends PowerGridComponent
     {
         return [
             Button::add('show')
-                ->slot('Visualizar')
+                ->slot('Ver')
                 ->id()
                 ->class('btn btn-info btn-sm')
                 ->dispatch('master::appointment-show', ['rowId' => $row->id]),
+
+            Button::add('edit')
+                ->slot('Editar')
+                ->id()
+                ->class('btn btn-warning btn-sm')
+                ->route('master.appointment.edit', ['appointment' => $row->id]),
         ];
     }
 }

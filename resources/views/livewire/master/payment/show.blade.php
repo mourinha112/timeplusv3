@@ -124,6 +124,21 @@
                     </div>
 
                     <div class="flex flex-col gap-3 w-full md:w-56">
+                        @if (!$payment->manual_paid_at && $payment->status !== 'paid')
+                            <button type="button" wire:click="openPayoffModal"
+                                class="btn btn-success btn-sm">
+                                <x-carbon-checkmark class="w-5 h-5" />
+                                Dar baixa manual
+                            </button>
+                        @elseif ($payment->manual_paid_at)
+                            <div class="alert alert-success p-3 text-sm">
+                                Baixa manual em {{ $payment->manual_paid_at->format('d/m/Y H:i') }}
+                                @if ($payment->manual_paid_note)
+                                    <br><span class="text-xs">{{ $payment->manual_paid_note }}</span>
+                                @endif
+                            </div>
+                        @endif
+
                         <a wire:navigate href="{{ route('master.payment.index') }}"
                             class="btn btn-soft btn-sm btn-info">
                             <x-carbon-arrow-left class="w-5 h-5" />
@@ -134,4 +149,30 @@
             </x-card-body>
         </div>
     </div>
+
+    @if ($showPayoffModal)
+        <div x-data="{ show: @entangle('showPayoffModal') }" x-show="show"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
+            @click.self="$wire.closePayoffModal()" @keydown.escape.window="$wire.closePayoffModal()" style="display: none;">
+            <div class="w-full max-w-md mx-4 bg-base-100 rounded-lg shadow-xl p-6" @click.stop>
+                <h3 class="text-xl font-bold mb-4">Dar baixa manual</h3>
+                <p class="text-sm text-base-content/70 mb-3">
+                    Esta ação marcará o pagamento como recebido e ficará registrado no relatório de baixas.
+                </p>
+
+                <x-form-group>
+                    <x-label>Observação (opcional)</x-label>
+                    <textarea wire:model="payoffNote" class="textarea textarea-bordered w-full" rows="3"
+                        placeholder="Ex.: Recebido via TED em 28/04 conforme comprovante"></textarea>
+                </x-form-group>
+
+                <div class="flex justify-end gap-3 mt-4">
+                    <button type="button" wire:click="closePayoffModal" class="btn btn-ghost">Cancelar</button>
+                    <button type="button" wire:click="payoff" class="btn btn-success">
+                        Confirmar baixa
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>

@@ -174,7 +174,10 @@ Route::group(['middleware' => ['auth:master']], function () {
     Route::get('master/especialistas', Master\Specialist\Index::class)->name('master.specialist.index');
     Route::get('master/empresas', Master\Company\Index::class)->name('master.company.index');
     Route::get('master/agendamentos', Master\Appointment\Index::class)->name('master.appointment.index');
+    Route::get('master/agendamentos/criar', Master\Appointment\Create::class)->name('master.appointment.create');
+    Route::get('master/agendamentos/{appointment}/editar', Master\Appointment\Edit::class)->name('master.appointment.edit');
     Route::get('master/pagamentos', Master\Payment\Index::class)->name('master.payment.index');
+    Route::get('master/pagamentos/baixas', Master\Payment\PayoffReport::class)->name('master.payment.payoff-report');
     Route::get('master/planos', Master\Plan\Index::class)->name('master.plan.index');
 
     /* CRUD Users */
@@ -182,6 +185,7 @@ Route::group(['middleware' => ['auth:master']], function () {
 
     /* CRUD Specialists */
     Route::get('master/especialistas/{specialist}/editar', Master\Specialist\Edit::class)->name('master.specialist.edit');
+    Route::get('master/especialistas/{specialist}/dados-pagamento', Master\Specialist\PaymentData::class)->name('master.specialist.payment-data');
 
     /* CRUD Companies */
     Route::get('master/empresas/criar', Master\Company\Create::class)->name('master.company.create');
@@ -219,9 +223,11 @@ Route::group(['middleware' => ['auth:master']], function () {
 
     /* Availabilities */
     Route::get('master/disponibilidades', Master\Availability\Index::class)->name('master.availability.index');
+    Route::get('master/disponibilidades/por-profissional', Master\Availability\BySpecialistView::class)->name('master.availability.by-specialist');
 
     /* Finance */
     Route::get('master/financeiro', Master\Finance\Index::class)->name('master.finance.index');
+    Route::get('master/financeiro/aprovacoes-bancarias', Master\Finance\BankApprovals::class)->name('master.finance.bank-approvals');
     Route::get('master/financeiro/{specialist}', Master\Finance\Show::class)->name('master.finance.show');
 
     /* Details */

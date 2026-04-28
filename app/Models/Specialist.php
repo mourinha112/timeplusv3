@@ -65,12 +65,14 @@ class Specialist extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at'         => 'datetime',
-            'password'                  => 'hashed',
-            'accepts_timeplus'          => 'boolean',
-            'accepts_particular'        => 'boolean',
-            'session_duration_minutes'  => 'integer',
-            'particular_session_value'  => 'decimal:2',
+            'email_verified_at'                  => 'datetime',
+            'password'                           => 'hashed',
+            'accepts_timeplus'                   => 'boolean',
+            'accepts_particular'                 => 'boolean',
+            'is_active'                          => 'boolean',
+            'session_duration_minutes'           => 'integer',
+            'particular_session_value'           => 'decimal:2',
+            'recovery_password_token_expires_at' => 'datetime',
         ];
     }
 

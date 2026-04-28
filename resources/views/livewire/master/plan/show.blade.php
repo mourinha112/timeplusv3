@@ -127,5 +127,78 @@
                 </div>
             </x-card-body>
         </div>
+
+        <x-card>
+            <x-card-body>
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <x-carbon-user-multiple class="w-5 h-5 text-info" />
+                    Inscritos neste plano
+                </h3>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="p-4 bg-base-200/40 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-info">{{ $this->subscriberStats['total'] }}</div>
+                        <div class="text-xs text-base-content/60">Total histórico</div>
+                    </div>
+                    <div class="p-4 bg-success/10 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-success">{{ $this->subscriberStats['active'] }}</div>
+                        <div class="text-xs text-base-content/60">Ativos agora</div>
+                    </div>
+                    <div class="p-4 bg-warning/10 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-warning">{{ $this->subscriberStats['cancelled'] }}</div>
+                        <div class="text-xs text-base-content/60">Cancelados</div>
+                    </div>
+                    <div class="p-4 bg-base-200/40 rounded-lg text-center">
+                        <div class="text-3xl font-bold">{{ $this->subscriberStats['expired'] }}</div>
+                        <div class="text-xs text-base-content/60">Expirados</div>
+                    </div>
+                </div>
+
+                @if ($latestSubscribers->isEmpty())
+                    <div class="text-center text-base-content/60 py-6">
+                        Nenhum usuário inscrito ainda.
+                    </div>
+                @else
+                    <div class="overflow-x-auto">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Usuário</th>
+                                    <th>Status</th>
+                                    <th>Início</th>
+                                    <th>Fim</th>
+                                    <th>Próx. cobrança</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($latestSubscribers as $sub)
+                                    <tr>
+                                        <td>
+                                            {{ $sub->user?->name ?? '—' }}
+                                            <div class="text-xs text-base-content/60">{{ $sub->user?->email }}</div>
+                                        </td>
+                                        <td>
+                                            @php
+                                                $badge = match ($sub->billing_status) {
+                                                    'active' => 'badge-success',
+                                                    'cancelled' => 'badge-warning',
+                                                    'expired' => 'badge-ghost',
+                                                    'paused' => 'badge-info',
+                                                    default => 'badge-ghost',
+                                                };
+                                            @endphp
+                                            <span class="badge {{ $badge }}">{{ $sub->billing_status }}</span>
+                                        </td>
+                                        <td>{{ $sub->start_date?->format('d/m/Y') ?? '—' }}</td>
+                                        <td>{{ $sub->end_date?->format('d/m/Y') ?? '—' }}</td>
+                                        <td>{{ $sub->next_billing_date?->format('d/m/Y') ?? '—' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+            </x-card-body>
+        </x-card>
     </div>
 </div>
