@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "TimePlus",
+    "slug": "timeplus",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.timeplus.app"
+    },
+    "android": {
+      "package": "com.timeplus.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#7464FF"
+      }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 24
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "apiBaseUrl": "https://your-timeplus-domain.com",
+      "jitsiServer": "https://meet.jit.si"
+    }
+  }
+}

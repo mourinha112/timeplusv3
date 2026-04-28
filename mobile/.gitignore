@@ -1,0 +1,16 @@
+node_modules/
+.expo/
+dist/
+web-build/
+.env
+.env.local
+
+# Native folders gerados pelo prebuild
+android/
+ios/
+
+# Build artifacts
+*.aab
+*.apk
+*.ipa
+*.log

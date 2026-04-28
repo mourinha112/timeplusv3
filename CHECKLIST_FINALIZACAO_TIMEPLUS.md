@@ -1,6 +1,6 @@
 # Checklist de Finalização TimePlus
 
-Status da revisão original do cliente vs. o que foi entregue. Última atualização: **2026-04-18** (Sprint 1 parcial mergeado).
+Status da revisão original do cliente vs. o que foi entregue. Última atualização: **2026-04-28** (Sprints 3, 4 e 5 entregues).
 
 Legenda: `[x]` feito · `[ ]` pendente · `[~]` parcial (schema pronto, UI/lógica falta)
 
@@ -22,8 +22,8 @@ Legenda: `[x]` feito · `[ ]` pendente · `[~]` parcial (schema pronto, UI/lógi
 
 ## App TimePlus
 
-- [ ] Decisão técnica feita: **React Native + Jitsi Meet SDK** (single app, sem precisar instalar Jitsi à parte)
-- [ ] Implementação não iniciada — Sprint 5
+- [x] Decisão técnica feita: **React Native + Jitsi Meet SDK** (single app, sem precisar instalar Jitsi à parte)
+- [~] Scaffold inicial criado em `/mobile` (Expo + React Navigation + axios + jitsi-meet-sdk). Falta: criar endpoints API no Laravel (Sanctum), telas de cadastro/recuperação, push, fluxo de pagamento, EAS Build
 
 ## Validação automática do CRP
 
@@ -41,30 +41,30 @@ Legenda: `[x]` feito · `[ ]` pendente · `[~]` parcial (schema pronto, UI/lógi
 - [x] Filtrar por empresa (adicionado filtro select + busca via company_name)
 
 ### Gestão de usuários > Empresas
-- [ ] Mais informações do responsável/contato (nome, cargo)
-- [ ] Trocar senha da empresa
+- [x] Mais informações do responsável/contato (nome, cargo, telefone) — campos `contact_name`, `contact_role`, `contact_phone` em `companies`, expostos em Master\Company\Edit e Create
+- [x] Trocar senha da empresa — campo "Nova senha" (opcional) em Master\Company\Edit
 
 ### Gestão de usuários > Especialistas
-- [ ] Aprovar dados de pagamento cadastrados
-- [ ] Em editar, "usuário ativo" não aparece marcado
-- [ ] Em "visualizar", botão para ir direto pro editar
-- [ ] Master poder cadastrar/editar dados de pagamento dos especialistas
+- [x] Aprovar dados de pagamento cadastrados — tela `master/financeiro/aprovacoes-bancarias` (Master\Finance\BankApprovals) lista pendentes/aprovados e permite aprovar/reverter
+- [x] Em editar, "usuário ativo" não aparece marcado — corrigido `<x-checkbox>` para honrar `wire:model` em SSR + cast `is_active => boolean` em Specialist
+- [x] Em "visualizar", botão para ir direto pro editar — adicionado em `master/specialist/personal-data/show`
+- [x] Master poder cadastrar/editar dados de pagamento dos especialistas — `master/especialistas/{id}/dados-pagamento` (Master\Specialist\PaymentData)
 
 ### Gerenciamento > Agendamentos
-- [ ] Criar agendamento (escolher profissional/dia/horário)
-- [ ] Editar agendamento existente
-- [ ] Cancelar agendamento (e gerar saldo/crédito automático para o usuário)
+- [x] Criar agendamento (escolher profissional/dia/horário/modalidade) — `master/agendamentos/criar` (Master\Appointment\Create) com PayoutCalculator
+- [x] Editar agendamento existente — `master/agendamentos/{id}/editar` (Master\Appointment\Edit)
+- [x] Cancelar agendamento e gerar crédito FIFO — Master\Appointment\Show usa `UserCreditService::grant`
 - [x] Filtro retornando 500 (corrigido via `relationSearch` user+specialist)
 
 ### Gerenciamento > Pagamentos
 - [x] Filtro funcional (tipo, status, método, data, busca por empresa)
 - [x] Separar pagamentos de mensalidade/sessão (filtro "Tipo": Sessão/Assinatura/Plano)
 - [x] Coluna CPF adicionada; empresa filtrável via relationSearch
-- [ ] Dar baixa em pagamento de agendamento
-- [ ] Relatório de baixas
+- [x] Dar baixa em pagamento de agendamento — botão em Master\Payment\Show com modal de observação, registra `manual_paid_at`, `manual_paid_by_master_id`, `manual_paid_note`
+- [x] Relatório de baixas — `master/pagamentos/baixas` (Master\Payment\PayoffReport) com filtro por período e total
 
 ### Gerenciamento > Planos
-- [ ] Relatório de quantidade de usuários/empresas inscritos por plano
+- [x] Relatório de quantidade de usuários inscritos por plano — Master\Plan\Show mostra cards com total/ativos/cancelados/expirados + lista dos 20 últimos inscritos
 
 ### Gerenciamento > Assinaturas
 - [x] Filtrar por empresa (filtro select via subquery company_user)
@@ -76,14 +76,16 @@ Legenda: `[x]` feito · `[ ]` pendente · `[~]` parcial (schema pronto, UI/lógi
 ### Gerenciamento > Disponibilidades dos Especialistas
 - [x] Filtro retornando 500 (coluna qualificada specialists.name)
 - [x] Filtrar por dia **E** horário (novo input text de horário)
-- [ ] Visualização alternativa: ver agenda **por profissional** (em vez da lista plana)
+- [x] Visualização alternativa: agenda agrupada por profissional — `master/disponibilidades/por-profissional` (Master\Availability\BySpecialistView) com filtros de período + accordion por especialista
 
 ### Financeiro - Especialistas
-- [ ] Definir/implementar fluxo de verificação dos dados bancários do especialista
+- [x] Fluxo de verificação implementado: especialista cadastra em `paymentProfile` → master aprova em `master/financeiro/aprovacoes-bancarias` → `is_verified=true` + `verified_at=now()`
 
 ### Configurações
-- [ ] Cadastrar Motivo da Consulta e Tipos de Formação para usuários
-- [ ] Relatório de alterações de agendamento e financeiro
+- [x] Cadastrar Motivo da Consulta — CRUD já existia em `master/motivos`
+- [x] Cadastrar Tipos de Formação — CRUD já existia em `master/tipos-formacao`
+- [ ] Associar Motivo/Formação ao perfil do usuário (não foi feito por falta de definição: pedir ao Anderson onde aparece — cadastro? perfil? matching?)
+- [ ] Relatório de alterações de agendamento e financeiro (audit log — não iniciado)
 
 ---
 
@@ -117,7 +119,7 @@ Legenda: `[x]` feito · `[ ]` pendente · `[~]` parcial (schema pronto, UI/lógi
 - [x] Cancelamento **pelo especialista** gera crédito para o usuário + aviso no modal
 
 ### Suporte
-- [ ] Disponibilizar suporte na tela (definir: e-mail / WhatsApp / ticket)
+- [x] Disponibilizar suporte na tela — botão flutuante `<x-support-button>` no layout app + guest, lê `SUPPORT_WHATSAPP` e `SUPPORT_EMAIL` do `.env`
 
 ---
 
@@ -143,34 +145,34 @@ Legenda: `[x]` feito · `[ ]` pendente · `[~]` parcial (schema pronto, UI/lógi
 - [ ] Amadurecer a aba (definir o que mostrar / filtros / ações)
 
 ### Financeiro do especialista
-- [ ] Verificação dos dados bancários (precisa do master, ver acima)
+- [x] Verificação dos dados bancários — agora aprovada pelo master em `master/financeiro/aprovacoes-bancarias`
 - [x] Texto do repasse atualizado (descreve 80% particular + R$30 TimePlus)
 
 ### Suporte
-- [ ] Disponibilizar suporte na tela
+- [x] Disponibilizar suporte na tela (mesmo componente flutuante)
 
 ---
 
 ## EMPRESA
 
 ### Login
-- [ ] Reaver senha (não tem opção)
+- [x] Reaver senha — `empresa/recuperar-senha` + `empresa/redefinir-senha/{token}` (Livewire PasswordRecovery/PasswordReset, notifications + emails dedicados)
 
 ### Planos
-- [ ] Atualmente a empresa cria o próprio plano em vez de **contratar** um plano TimePlus (e o master não vê isso). Trocar pelo fluxo de contratação dos modelos `per_employee` e `credit_pack`
+- [ ] Atualmente a empresa cria o próprio plano em vez de **contratar** um plano TimePlus (e o master não vê isso). Trocar pelo fluxo de contratação dos modelos `per_employee` e `credit_pack` — fora do escopo deste sprint, exige redesenho do fluxo
 
 ### Funcionários
-- [ ] Empresa não deve poder alterar a senha do funcionário
-- [ ] Ao criar funcionário: atribuir plano da empresa automaticamente
-- [ ] Ao criar funcionário: **não mostrar** login/senha na tela
-- [ ] Ao criar funcionário: enviar e-mail com o acesso
-- [ ] Importação em massa: arquivo CSV modelo para download
-- [ ] Importação em massa: tratar CPF com/sem pontuação
-- [ ] Importação em massa: corrigir erro "coluna NOME"
-- [ ] Ativação/desativação de funcionários **em massa** (checkbox por linha)
+- [x] Empresa não deve poder alterar a senha do funcionário — removido modal/lógica de `resetPassword` em Company\Employee\Edit
+- [x] Ao criar funcionário: atribuir plano da empresa automaticamente — `mount()` carrega primeiro plano ativo no `company_plan_id`, salvo no pivot `company_user`
+- [x] Ao criar funcionário: **não mostrar** login/senha na tela — modal de credenciais removido, mensagem flash + redirect direto
+- [x] Ao criar funcionário: enviar e-mail com o acesso — `EmployeeCredentialsNotification` enviado após save (já existia, agora é o único canal)
+- [x] Importação em massa: arquivo CSV modelo para download — `downloadTemplate()` com BOM UTF-8 e exemplos com/sem pontuação
+- [x] Importação em massa: tratar CPF com/sem pontuação — `formatCpf()` normaliza para `XXX.XXX.XXX-XX`; idem `formatPhone()`
+- [x] Importação em massa: erro "coluna NOME" corrigido — strip do BOM UTF-8 + lowercase nos headers
+- [x] Ativação/desativação em massa — checkboxes via `checkBox()` no PowerGrid + botões "Ativar/Desativar selecionados" no header
 
 ### Suporte
-- [ ] Disponibilizar suporte na tela
+- [x] Disponibilizar suporte na tela (componente flutuante)
 
 ---
 
@@ -186,8 +188,8 @@ Legenda: `[x]` feito · `[ ]` pendente · `[~]` parcial (schema pronto, UI/lógi
 
 | Sprint | Conteúdo | Status |
 |---|---|---|
-| Sprint 1 | Bugs críticos (filtros 500, e-mails, pós-pagamento, `<wire:id=...>`, CRP fail-closed, cancelamento pelo especialista) | **PRÓXIMO** |
+| Sprint 1 | Bugs críticos (filtros 500, e-mails, pós-pagamento, `<wire:id=...>`, CRP fail-closed, cancelamento pelo especialista) | **PARCIAL — falta fail-closed CRP, e-mails não chegando, bug Verônica, 60min hardcoded (todos bloqueados em confirmação do Anderson)** |
 | Sprint 2 | Modelo de negócio reformulado | **ENTREGUE 2026-04-11** |
-| Sprint 3 | UI da empresa: contratar plano recorrente, gerenciar créditos, importação massa, ativação massa, reaver senha | Schema pronto |
-| Sprint 4 | Painel master: aprovações, edições, relatórios, separar pagamentos, dar baixa, filtros | Não iniciado |
-| Sprint 5 | App mobile React Native + Jitsi SDK | Não iniciado |
+| Sprint 3 | UI da empresa: reaver senha, criar/editar funcionário, CSV, ativação massa, suporte | **ENTREGUE 2026-04-28** |
+| Sprint 4 | Painel master: campos responsável, trocar senha empresa, aprovação bancária, dados de pagamento, CRUD agendamento, dar baixa, relatórios, agenda por profissional | **ENTREGUE 2026-04-28** (exceto: contratar plano TimePlus pela empresa e relatório de alterações) |
+| Sprint 5 | App mobile React Native + Jitsi SDK | **SCAFFOLD ENTREGUE 2026-04-28** em `/mobile` — falta endpoints API + telas adicionais + EAS Build |
