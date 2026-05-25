@@ -23,9 +23,10 @@ return [
     ],
 
     'consultar' => [
-        'token'    => env('CONSULTAR_IO_TOKEN'),
-        'base_url' => env('CONSULTAR_IO_URL', 'https://consultar.io/api/v1'),
-        'timeout'  => env('CONSULTAR_IO_TIMEOUT', 15),
+        'token'        => env('CONSULTAR_IO_TOKEN'),
+        'base_url'     => env('CONSULTAR_IO_URL', 'https://consultar.io/api/v1'),
+        'timeout'      => env('CONSULTAR_IO_TIMEOUT', 15),
+        'validate_crp' => env('CONSULTAR_IO_VALIDATE_CRP', env('APP_ENV') === 'production'),
     ],
 
     'sendgrid' => [

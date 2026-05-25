@@ -74,7 +74,7 @@
         </x-card-body>
     </x-card>
 
-    @unless ($this->hasActivePlan)
+    @if (!$this->hasActivePlan && $this->canAccessPlans)
         <x-card>
             <x-card-body class="flex justify-between sm:items-center sm:flex-row">
 
@@ -90,7 +90,7 @@
 
             </x-card-body>
         </x-card>
-    @endunless
+    @endif
 </div>
 
 <script>

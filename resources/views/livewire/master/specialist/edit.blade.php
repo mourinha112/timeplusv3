@@ -103,6 +103,10 @@
                     </x-form-group>
 
                     <div class="flex justify-end gap-3">
+                        <a wire:navigate href="{{ route('master.specialist.payment-data', ['specialist' => $specialist->id]) }}" class="btn btn-soft btn-success">
+                            <x-carbon-finance class="w-4 h-4" />
+                            Dados Financeiros
+                        </a>
                         <a wire:navigate href="{{ route('master.specialist.personal-data.show', ['specialist' => $specialist->id]) }}" class="btn btn-soft btn-error">
                             <x-carbon-arrow-left class="w-4 h-4" />
                             Cancelar

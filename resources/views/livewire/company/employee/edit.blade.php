@@ -44,12 +44,17 @@
                     </x-form-group>
 
                     <x-form-group>
-                        <x-label required>Plano</x-label>
+                        <x-label>Área</x-label>
+                        <x-input type="text" wire:model="department" placeholder="Ex.: RH, Comercial, Operações" />
+                    </x-form-group>
+
+                    <x-form-group>
+                        <x-label>Plano</x-label>
                         <x-select wire:model="company_plan_id">
                             <option value="">Selecione um plano</option>
                             @foreach ($companyPlans as $plan)
                                 <option value="{{ $plan->id }}" @if (!$plan->is_active) disabled @endif>
-                                    {{ $plan->name }} ({{ number_format($plan->discount_percentage, 0) }}% de cobertura)
+                                    {{ $plan->name }} ({{ $plan->billing_model === 'credit_pack' ? 'pacote de créditos' : 'por funcionário' }})
                                     @if (!$plan->is_active)
                                         - INATIVO
                                     @endif

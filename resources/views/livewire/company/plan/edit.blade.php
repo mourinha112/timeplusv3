@@ -29,11 +29,25 @@
                     </x-form-group>
 
                     <x-form-group>
-                        <x-label required>Percentual de Desconto (%)</x-label>
-                        <x-input type="number" step="0.01" min="0.01" max="100"
-                            wire:model="discount_percentage" placeholder="Ex: 50.00" />
+                        <x-label required>Modelo de contratação</x-label>
+                        <x-select wire:model.live="billing_model">
+                            <option value="per_employee">Por funcionário ativo</option>
+                            <option value="credit_pack">Pacote de créditos</option>
+                        </x-select>
+                    </x-form-group>
+
+                    @if ($billing_model === 'credit_pack')
+                        <x-form-group>
+                            <x-label required>Créditos mensais</x-label>
+                            <x-input type="number" min="1" step="1" wire:model="monthly_credits" />
+                        </x-form-group>
+                    @endif
+
+                    <x-form-group>
+                        <x-label required>Valor base</x-label>
+                        <x-input type="number" step="0.01" min="30" wire:model="price_per_unit" readonly />
                         <x-text class="mt-1">
-                            Percentual que a empresa irá cobrir dos custos (mínimo 0,01% - máximo 100%)
+                            Use R$ 60,00 para plano por funcionário e R$ 30,00 por sessão/crédito.
                         </x-text>
                     </x-form-group>
 
@@ -44,7 +58,7 @@
                                 <div class="font-semibold text-base-content mb-2">Atenção ao editar:</div>
                                 <ul class="list-disc list-inside text-base-content/80 space-y-1">
                                     <li>As alterações afetarão todos os funcionários que possuem este plano</li>
-                                    <li>O novo percentual será aplicado imediatamente</li>
+                                    <li>O novo modelo/valor será aplicado imediatamente aos funcionários vinculados</li>
                                     <li>Recomendamos comunicar os funcionários sobre mudanças significativas</li>
                                 </ul>
                             </div>

@@ -92,6 +92,7 @@
                             </p>
                             <p class="text-sm text-info font-semibold">
                                 Por: R$ {{ number_format($pricing_info['final_amount'], 2, ',', '.') }}
+                                <span class="text-xs text-base-content/60">/ {{ $specialist->getSessionDuration() }} min</span>
                             </p>
                             <div class="flex items-center gap-2">
                                 <span class="badge badge-success badge-sm">{{ $pricing_info['discount_percentage'] }}%
@@ -108,6 +109,7 @@
                     @else
                         <p class="text-sm text-base-content font-semibold">
                             R$ {{ number_format($specialist->appointment_value, 2, ',', '.') }}
+                            <span class="text-xs text-base-content/60">/ {{ $specialist->getSessionDuration() }} min</span>
                         </p>
                     @endif
                     <p class="text-xs text-base-content/70">

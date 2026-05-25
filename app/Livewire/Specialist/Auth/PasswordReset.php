@@ -63,7 +63,7 @@ class PasswordReset extends Component
         } catch (\Exception $e) {
             Log::error('Erro interno::' . get_class($this), [
                 'message' => $e->getMessage(),
-                'email'   => $this->email,
+                'email'   => $this->specialist?->email,
                 'ip'      => request()->ip(),
             ]);
 

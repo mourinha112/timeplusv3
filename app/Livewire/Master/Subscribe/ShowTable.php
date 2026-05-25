@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Master\Subscribe;
 
-use App\Models\{Company, Subscribe};
+use App\Models\{Company, Plan, Subscribe};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
@@ -27,7 +27,17 @@ class ShowTable extends PowerGridComponent
         return Subscribe::query()
             ->join('users', 'subscribes.user_id', '=', 'users.id')
             ->join('plans', 'subscribes.plan_id', '=', 'plans.id')
-            ->select('subscribes.*', 'users.name as user_name', 'users.cpf as user_cpf', 'plans.name as plan_name', 'plans.price as plan_price');
+            ->select('subscribes.*', 'users.name as user_name', 'users.cpf as user_cpf', 'plans.name as plan_name', 'plans.price as plan_price')
+            ->selectSub(function ($query) {
+                $query->from('companies')
+                    ->join('company_user', 'companies.id', '=', 'company_user.company_id')
+                    ->whereColumn('company_user.user_id', 'subscribes.user_id')
+                    ->orderByDesc('company_user.is_active')
+                    ->orderBy('companies.name')
+                    ->limit(1)
+                    ->select('companies.name');
+            }, 'company_name')
+            ->with('payments');
     }
 
     public function relationSearch(): array
@@ -42,6 +52,7 @@ class ShowTable extends PowerGridComponent
             ->add('user_name')
             ->add('user_cpf')
             ->add('plan_name')
+            ->add('company_name', fn (Subscribe $model) => $model->company_name ?? '—')
             ->add('plan_price_formatted', fn (Subscribe $model) => 'R$ ' . number_format($model->plan_price, 2, ',', '.'))
             ->add('start_date_formatted', fn (Subscribe $model) => Carbon::parse($model->start_date)->format('d/m/Y'))
             ->add('end_date_formatted', fn (Subscribe $model) => Carbon::parse($model->end_date)->format('d/m/Y'))
@@ -51,6 +62,9 @@ class ShowTable extends PowerGridComponent
                 }
                 if (Carbon::parse($model->end_date)->isPast()) {
                     return '<span class="badge badge-warning">Expirada</span>';
+                }
+                if (!$model->hasConfirmedPayment()) {
+                    return '<span class="badge badge-warning">Aguardando pagamento</span>';
                 }
                 return '<span class="badge badge-success">Ativa</span>';
             });
@@ -62,6 +76,7 @@ class ShowTable extends PowerGridComponent
             Column::make('ID', 'id', 'subscribes.id')->sortable(),
             Column::make('Usuário', 'user_name', 'users.name')->searchable()->sortable(),
             Column::make('CPF', 'user_cpf', 'users.cpf')->searchable(),
+            Column::make('Empresa', 'company_name'),
             Column::make('Plano', 'plan_name', 'plans.name')->searchable()->sortable(),
             Column::make('Valor', 'plan_price_formatted', 'plans.price')->sortable(),
             Column::make('Inicio', 'start_date_formatted', 'subscribes.start_date')->sortable(),
@@ -82,7 +97,7 @@ class ShowTable extends PowerGridComponent
         return [
             Filter::select('plan_name', 'plans.id')
                 ->dataSource(
-                    \App\Models\Plan::query()->orderBy('name')->get()
+                    Plan::query()->orderBy('name')->get()
                         ->map(fn ($p) => ['id' => $p->id, 'name' => $p->name])
                         ->toArray()
                 )

@@ -75,7 +75,14 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($appointment->status === 'completed')
+                                    @if ($appointment->status === 'cancelled')
+                                        <div class="tooltip" data-tip="Seu agendamento foi cancelado. Se houver pagamento confirmado, o valor fica como crédito.">
+                                            <span class="badge badge-sm badge-error">
+                                                <x-carbon-close class="w-3 h-3 mr-1" />
+                                                Cancelado
+                                            </span>
+                                        </div>
+                                    @elseif($appointment->status === 'completed')
                                         <div class="tooltip" data-tip="Sessão concluída com sucesso.">
                                             <span class="badge badge-sm badge-success">
                                                 <x-carbon-checkmark-filled class="w-3 h-3 mr-1" />
@@ -87,14 +94,6 @@
                                             <span class="badge badge-sm badge-info">
                                                 <x-carbon-checkmark class="w-3 h-3 mr-1" />
                                                 Confirmado
-                                            </span>
-                                        </div>
-                                    @elseif($appointment->status === 'cancelled')
-                                        <div class="tooltip"
-                                            data-tip="Seu agendamento foi cancelado pelo especialista.">
-                                            <span class="badge badge-sm badge-error">
-                                                <x-carbon-close class="w-3 h-3 mr-1" />
-                                                Cancelado
                                             </span>
                                         </div>
                                     @else
@@ -145,7 +144,12 @@
                                 </td>
                                 <td>
                                     <div class="flex flex-wrap items-center gap-1">
-                                        @if ($this->needsPayment($appointment) && $appointment->status !== 'cancelled')
+                                        @if ($appointment->status === 'cancelled')
+                                            <span class="badge badge-error badge-sm">
+                                                <x-carbon-close class="w-3 h-3 mr-1" />
+                                                Cancelado
+                                            </span>
+                                        @elseif ($this->needsPayment($appointment))
                                             @if (\Carbon\Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time)->isPast())
                                                 <div class="tooltip" data-tip="Sessão expirada - não é possível pagar">
                                                     <span class="badge badge-error badge-sm">

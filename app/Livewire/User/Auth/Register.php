@@ -57,21 +57,35 @@ class Register extends Component
                 'password'     => $this->password,
             ]);
 
-            $gateway = Asaas::customer()->create([
-                'code'         => $user->id,
-                'name'         => $user->name,
-                'email'        => $user->email,
-                'document'     => $user->cpf,
-                'mobile_phone' => $user->phone_number,
-            ]);
+            try {
+                $gateway = Asaas::customer()->create([
+                    'code'         => $user->id,
+                    'name'         => $user->name,
+                    'email'        => $user->email,
+                    'document'     => $user->cpf,
+                    'mobile_phone' => $user->phone_number,
+                ]);
 
-            $user->update(['gateway_customer_id' => $gateway['id']]);
+                $user->update(['gateway_customer_id' => $gateway['id']]);
+            } catch (\Exception $asaasError) {
+                Log::warning('Erro ao criar customer Asaas no cadastro de usuário', [
+                    'user_id' => $user->id,
+                    'error'   => $asaasError->getMessage(),
+                ]);
+            }
 
             Auth::login($user, true);
 
-            $user->notify(new WelcomeNotification());
-
             DB::commit();
+
+            try {
+                $user->notify(new WelcomeNotification());
+            } catch (\Exception $emailError) {
+                Log::error('Erro ao enviar email de boas-vindas para usuário', [
+                    'user_id' => $user->id,
+                    'error'   => $emailError->getMessage(),
+                ]);
+            }
 
             $this->redirectRoute('user.dashboard.show');
         } catch (\Exception $e) {

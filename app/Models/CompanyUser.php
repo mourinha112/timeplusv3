@@ -13,6 +13,7 @@ class CompanyUser extends Model
         'company_id',
         'user_id',
         'company_plan_id',
+        'department',
         'is_active',
     ];
 

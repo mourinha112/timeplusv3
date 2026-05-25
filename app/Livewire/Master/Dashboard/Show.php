@@ -45,7 +45,10 @@ class Show extends Component
     #[Computed()]
     public function activeSubscriptions()
     {
-        return Subscribe::whereNull('cancelled_date')->whereDate('end_date', '>=', now())->count();
+        return Subscribe::whereNull('cancelled_date')
+            ->whereDate('end_date', '>=', now())
+            ->whereHas('payments', fn ($query) => $query->where('status', 'paid'))
+            ->count();
     }
 
     #[Computed()]

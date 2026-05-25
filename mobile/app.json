@@ -15,16 +15,6 @@
         "backgroundColor": "#7464FF"
       }
     },
-    "plugins": [
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "minSdkVersion": 24
-          }
-        }
-      ]
-    ],
     "extra": {
       "apiBaseUrl": "https://your-timeplus-domain.com",
       "jitsiServer": "https://meet.jit.si"

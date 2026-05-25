@@ -342,6 +342,13 @@ class CreditCard extends Component
                 ]
             );
 
+            if ($this->payable instanceof \App\Models\Subscribe) {
+                $this->payable->update([
+                    'billing_status' => \App\Models\Subscribe::STATUS_ACTIVE,
+                    'cancelled_date' => null,
+                ]);
+            }
+
             // Criar sala de videochamada automaticamente se for um appointment
             $roomCode = null;
 
@@ -361,7 +368,11 @@ class CreditCard extends Component
                 session()->flash('success', 'Pagamento realizado com sucesso!');
             }
 
-            $this->redirect(route('user.appointment.index'), navigate: true);
+            $redirectRoute = $this->payable instanceof \App\Models\Subscribe
+                ? route('user.subscribe.show')
+                : route('user.appointment.index');
+
+            $this->redirect($redirectRoute, navigate: true);
         } catch (AsaasException $e) {
             DB::rollBack();
             Log::error('Erro do Asaas no pagamento com cartão', [

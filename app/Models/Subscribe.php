@@ -33,7 +33,17 @@ class Subscribe extends Model
     {
         return $this->billing_status === self::STATUS_ACTIVE
             && $this->end_date
-            && $this->end_date->isFuture();
+            && $this->end_date->isFuture()
+            && $this->hasConfirmedPayment();
+    }
+
+    public function hasConfirmedPayment(): bool
+    {
+        if ($this->relationLoaded('payments')) {
+            return $this->payments->contains(fn (Payment $payment) => $payment->status === 'paid');
+        }
+
+        return $this->payments()->where('status', 'paid')->exists();
     }
 
     public function user()

@@ -6,6 +6,7 @@ use App\Facades\Asaas;
 use App\Models\Company;
 use App\Models\User;
 use App\Notifications\EmployeeCredentialsNotification;
+use App\Rules\{FormattedCpf, ValidatedCpf};
 use Illuminate\Support\Facades\{Auth, DB, Log};
 use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -21,7 +22,7 @@ class Create extends Component
     #[Rule('required|string|max:255')]
     public string $name = '';
 
-    #[Rule('required|string|size:14')]
+    #[Rule(['required', 'string', 'size:14', 'unique:users,cpf', new FormattedCpf(), new ValidatedCpf()])]
     public string $cpf = '';
 
     #[Rule('required|string|max:20')]
@@ -35,6 +36,9 @@ class Create extends Component
 
     #[Rule('nullable|exists:company_plans,id')]
     public $company_plan_id = null;
+
+    #[Rule('nullable|string|max:120')]
+    public ?string $department = null;
 
     public function mount(): void
     {
@@ -93,10 +97,13 @@ class Create extends Component
                 $company->employees()->attach($user->id, [
                     'is_active'       => true,
                     'company_plan_id' => $this->company_plan_id,
+                    'department'      => $this->department,
                 ]);
             }
 
             DB::commit();
+
+            $emailSent = true;
 
             try {
                 $user->notify(new EmployeeCredentialsNotification(
@@ -105,13 +112,19 @@ class Create extends Component
                     password: $password
                 ));
             } catch (\Exception $emailError) {
+                $emailSent = false;
                 Log::error('Erro ao enviar email de credenciais', [
                     'user_id' => $user->id,
                     'error'   => $emailError->getMessage(),
                 ]);
             }
 
-            session()->flash('message', 'Funcionário cadastrado! Um e-mail com as credenciais foi enviado para ' . $user->email);
+            session()->flash(
+                'message',
+                $emailSent
+                    ? 'Funcionário cadastrado! Um e-mail com as credenciais foi enviado para ' . $user->email
+                    : 'Funcionário cadastrado, mas não foi possível enviar o e-mail de credenciais. Verifique a configuração de e-mail.'
+            );
 
             $this->redirect(route('company.employee.index'), navigate: true);
         } catch (\Exception $e) {

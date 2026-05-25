@@ -49,6 +49,12 @@ class Index extends Component
         return SpecialistPaymentProfile::count();
     }
 
+    #[Computed()]
+    public function pendingProfilesCount()
+    {
+        return SpecialistPaymentProfile::where('is_verified', false)->count();
+    }
+
     public function render()
     {
         return view('livewire.master.finance.index');

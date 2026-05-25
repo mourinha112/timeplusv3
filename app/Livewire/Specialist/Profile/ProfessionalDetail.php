@@ -37,6 +37,18 @@ class ProfessionalDetail extends Component
         ];
     }
 
+    public function validationAttributes(): array
+    {
+        return [
+            'particular_session_value' => 'valor da sessão particular',
+            'session_duration_minutes' => 'duração da sessão',
+            'accepts_timeplus'         => 'atendimento TimePlus',
+            'accepts_particular'       => 'atendimento particular',
+            'summary'                  => 'resumo',
+            'description'              => 'descrição',
+        ];
+    }
+
     public function mount(): void
     {
         $this->specialist = Auth::guard('specialist')->user();

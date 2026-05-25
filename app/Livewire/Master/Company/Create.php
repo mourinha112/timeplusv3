@@ -3,6 +3,8 @@
 namespace App\Livewire\Master\Company;
 
 use App\Models\Company;
+use App\Notifications\Company\WelcomeNotification;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
@@ -37,7 +39,7 @@ class Create extends Component
     #[Rule('boolean')]
     public $is_active = true;
 
-    #[Rule('nullable|string|max:255')]
+    #[Rule('required|string|max:255')]
     public ?string $contact_name = null;
 
     #[Rule('nullable|string|max:120')]
@@ -75,6 +77,15 @@ class Create extends Component
             'contact_role'  => $this->contact_role,
             'contact_phone' => $this->contact_phone,
         ]);
+
+        try {
+            $company->notify(new WelcomeNotification($password));
+        } catch (\Exception $emailError) {
+            Log::error('Erro ao enviar boas-vindas da empresa', [
+                'company_id' => $company->id,
+                'error'      => $emailError->getMessage(),
+            ]);
+        }
 
         // Armazenar credenciais para exibir no modal
         $this->companyEmail    = $this->email;

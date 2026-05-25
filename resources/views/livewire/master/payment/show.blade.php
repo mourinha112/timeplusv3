@@ -40,6 +40,10 @@
                                             Pix
                                         @break
 
+                                        @case('credit_balance')
+                                            Saldo/Crédito
+                                        @break
+
                                         @default
                                             {{ $payment->payment_method ?? '—' }}
                                     @endswitch

@@ -15,6 +15,20 @@
             <x-stat title="Dados de Pgto Cadastrados" :value="$this->profilesCount" />
         </div>
 
+        <div class="flex flex-wrap gap-2">
+            <a wire:navigate href="{{ route('master.finance.index') }}"
+                class="btn btn-sm {{ Route::is('master.finance.index') ? 'btn-info' : 'btn-soft' }}">
+                Especialistas
+            </a>
+            <a wire:navigate href="{{ route('master.finance.bank-approvals') }}"
+                class="btn btn-sm {{ Route::is('master.finance.bank-approvals') ? 'btn-warning' : 'btn-soft' }}">
+                Aprovação de dados de pagamento
+                @if ($this->pendingProfilesCount > 0)
+                    <span class="badge badge-error badge-sm">{{ $this->pendingProfilesCount }}</span>
+                @endif
+            </a>
+        </div>
+
         <livewire:master.finance.show-table />
     </div>
 </div>

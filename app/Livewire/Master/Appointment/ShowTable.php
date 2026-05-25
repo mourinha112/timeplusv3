@@ -48,7 +48,7 @@ class ShowTable extends PowerGridComponent
             ->add('status_formatted', function (Appointment $model) {
                 return match ($model->status) {
                     'scheduled' => 'Agendado',
-                    'canceled'  => 'Cancelado',
+                    'cancelled' => 'Cancelado',
                     'completed' => 'Concluído',
                     default     => $model->status,
                 };

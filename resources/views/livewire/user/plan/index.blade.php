@@ -29,6 +29,11 @@
                 </div>
             </div>
             <div class="flex-none">
+                <button type="button" wire:click="cancelPendingSubscribe"
+                    wire:confirm="Cancelar esta assinatura pendente?"
+                    class="btn btn-ghost btn-sm">
+                    Cancelar pendência
+                </button>
                 <a href="{{ route('user.plan.payment', ['plan_id' => $this->pendingSubscribe->plan_id]) }}"
                     wire:navigate class="btn btn-warning btn-sm gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -88,10 +93,20 @@
                 </div>
             </div>
         @endif
+    @else
+        <div class="alert alert-warning mb-6">
+            <x-carbon-warning class="w-6 h-6" />
+            <div>
+                <h3 class="font-bold">Planos indisponíveis</h3>
+                <div class="text-sm mt-1">
+                    Os planos são liberados apenas para usuários vinculados a uma empresa ativa.
+                </div>
+            </div>
+        </div>
     @endif
 
     <div
-        class="grid grid-cols-1 md:grid-cols-3 gap-3 {{ $hasCompanyPlan && $companyPlan->companyPlan->is_active ? 'opacity-50 pointer-events-none' : '' }}">
+        class="grid grid-cols-1 md:grid-cols-3 gap-3 {{ (!$hasCompanyPlan || ($hasCompanyPlan && $companyPlan->companyPlan->is_active)) ? 'opacity-50 pointer-events-none' : '' }}">
         @foreach ($this->plans as $plan)
             <x-card class="h-fit {{ $loop->iteration === 2 ? 'border-4 border-info/40' : '' }}">
                 <x-card-body>
@@ -146,7 +161,12 @@
                     </ul>
 
                     <div class="mt-6">
-                        @if ($hasCompanyPlan)
+                        @if (!$hasCompanyPlan)
+                            <button class="btn btn-block btn-disabled" disabled>
+                                <x-carbon-locked class="w-4 h-4" />
+                                Requer empresa ativa
+                            </button>
+                        @elseif ($hasCompanyPlan)
                             @if ($companyPlan->companyPlan->is_active)
                                 <button class="btn btn-block btn-disabled" disabled>
                                     <x-carbon-locked class="w-4 h-4" />

@@ -48,6 +48,21 @@ class Show extends Component
             ->exists();
     }
 
+    #[Computed]
+    public function canAccessPlans(): bool
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return false;
+        }
+
+        return $user->companyUsers()
+            ->where('is_active', true)
+            ->whereNotNull('company_plan_id')
+            ->exists();
+    }
+
     public function isPaid($appointment)
     {
         return $appointment->payment && $appointment->payment->status === 'paid';

@@ -179,15 +179,34 @@
                                         </td>
                                         <td>
                                             @php
-                                                $badge = match ($sub->billing_status) {
+                                                $label = $sub->billing_status;
+
+                                                if ($sub->cancelled_date) {
+                                                    $label = 'cancelled';
+                                                } elseif ($sub->end_date && $sub->end_date->isPast()) {
+                                                    $label = 'expired';
+                                                } elseif (!$sub->hasConfirmedPayment()) {
+                                                    $label = 'pending_payment';
+                                                }
+
+                                                $badge = match ($label) {
                                                     'active' => 'badge-success',
                                                     'cancelled' => 'badge-warning',
                                                     'expired' => 'badge-ghost',
-                                                    'paused' => 'badge-info',
+                                                    'paused', 'pending_payment' => 'badge-info',
                                                     default => 'badge-ghost',
                                                 };
+
+                                                $statusText = match ($label) {
+                                                    'active' => 'Ativa',
+                                                    'cancelled' => 'Cancelada',
+                                                    'expired' => 'Expirada',
+                                                    'pending_payment' => 'Aguardando pagamento',
+                                                    'paused' => 'Pausada',
+                                                    default => $label,
+                                                };
                                             @endphp
-                                            <span class="badge {{ $badge }}">{{ $sub->billing_status }}</span>
+                                            <span class="badge {{ $badge }}">{{ $statusText }}</span>
                                         </td>
                                         <td>{{ $sub->start_date?->format('d/m/Y') ?? '—' }}</td>
                                         <td>{{ $sub->end_date?->format('d/m/Y') ?? '—' }}</td>

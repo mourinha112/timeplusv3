@@ -52,6 +52,7 @@ class ShowTable extends PowerGridComponent
             ->add('id')
             ->add('name')
             ->add('email')
+            ->add('cpf')
             ->add('payment_info', function (Specialist $model) {
                 if (!$model->payment_type) {
                     return '<span class="badge badge-warning">Nao cadastrado</span>';
@@ -107,6 +108,7 @@ class ShowTable extends PowerGridComponent
             Column::make('ID', 'id')->sortable(),
             Column::make('Especialista', 'name')->searchable()->sortable(),
             Column::make('E-mail', 'email')->searchable(),
+            Column::make('CPF', 'cpf')->searchable(),
             Column::make('Dados Pagamento', 'payment_info'),
             Column::make('Verificado', 'verified_badge')->bodyAttribute('class', 'text-center'),
             Column::make('Taxa', 'fee_formatted')->bodyAttribute('class', 'text-center'),

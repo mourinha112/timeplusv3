@@ -124,6 +124,39 @@
                                 </div>
                             </div>
 
+                            <div class="mt-6">
+                                <h3 class="text-lg font-semibold text-base-content flex items-center gap-2 mb-6">
+                                    <x-carbon-user class="w-5 h-5 text-info" />
+                                    Responsável / Contato
+                                </h3>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div class="p-4 bg-base-200/30 rounded-lg">
+                                        <div class="flex items-center gap-3 mb-2">
+                                            <x-carbon-user class="w-5 h-5 text-info shrink-0" />
+                                            <span class="font-semibold text-base-content">Nome</span>
+                                        </div>
+                                        <p class="text-base-content ml-8">{{ $company->contact_name ?? 'Não informado' }}</p>
+                                    </div>
+
+                                    <div class="p-4 bg-base-200/30 rounded-lg">
+                                        <div class="flex items-center gap-3 mb-2">
+                                            <x-carbon-identification class="w-5 h-5 text-info shrink-0" />
+                                            <span class="font-semibold text-base-content">Cargo</span>
+                                        </div>
+                                        <p class="text-base-content ml-8">{{ $company->contact_role ?? 'Não informado' }}</p>
+                                    </div>
+
+                                    <div class="p-4 bg-base-200/30 rounded-lg">
+                                        <div class="flex items-center gap-3 mb-2">
+                                            <x-carbon-phone class="w-5 h-5 text-info shrink-0" />
+                                            <span class="font-semibold text-base-content">Telefone</span>
+                                        </div>
+                                        <p class="text-base-content ml-8">{{ $company->contact_phone ?? 'Não informado' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             @if ($company->companyPlans->count() > 0)
                                 <div class="mt-6 p-4 bg-base-200/20 rounded-lg border border-base-300">
                                     <h4 class="font-semibold text-base-content flex items-center gap-2 mb-3">

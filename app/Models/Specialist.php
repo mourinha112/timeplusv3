@@ -156,6 +156,11 @@ class Specialist extends Authenticatable
         return $this->hasMany(Availability::class);
     }
 
+    public function favorites(): HasMany
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
     public function trainings(): HasMany
     {
         return $this->hasMany(Training::class);

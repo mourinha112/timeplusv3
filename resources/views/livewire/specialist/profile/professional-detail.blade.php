@@ -59,6 +59,8 @@
                 </x-form-group>
             </div>
 
+            <div class="divider mt-6">Resumo e descrição</div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:mt-2">
                 <x-form-group>
                     <x-label required>Resumo</x-label>

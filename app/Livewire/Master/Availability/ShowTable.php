@@ -14,6 +14,10 @@ class ShowTable extends PowerGridComponent
 {
     public string $tableName = 'master.availability.table';
 
+    public string $primaryKey = 'availabilities.id';
+
+    public string $sortField = 'availabilities.available_date';
+
     public function setUp(): array
     {
         return [
@@ -70,8 +74,8 @@ class ShowTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::datepicker('available_date_formatted', 'availabilities.available_date'),
-            Filter::inputText('available_time_formatted', 'availabilities.available_time')
+            Filter::datepicker('availabilities.available_date', 'availabilities.available_date'),
+            Filter::inputText('availabilities.available_time', 'availabilities.available_time')
                 ->placeholder('Horário (HH:MM)')
                 ->operators(['contains']),
             Filter::inputText('specialist_name', 'specialists.name')

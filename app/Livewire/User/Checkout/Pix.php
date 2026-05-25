@@ -4,7 +4,9 @@ namespace App\Livewire\User\Checkout;
 
 use App\Exceptions\AsaasException;
 use App\Facades\Asaas;
+use App\Models\Room;
 use App\Services\Credit\UserCreditService;
+use App\Services\JitsiService;
 use Illuminate\Support\Facades\{Auth, DB, Log};
 use Livewire\Component;
 
@@ -25,7 +27,10 @@ class Pix extends Component
         // Verificar se já existe pagamento
         $existingPayment = $this->payable->payment;
 
-        if ($existingPayment && $existingPayment->payment_method === 'pix') {
+        if ($existingPayment && in_array($existingPayment->status, ['paid', 'confirmed'], true)) {
+            $this->shouldRedirect = true;
+            $this->isLoading      = false;
+        } elseif ($existingPayment && $existingPayment->payment_method === 'pix') {
             // Se já existe pagamento PIX, carregar dados
             $this->loadPixQrCode();
         } else {
@@ -171,12 +176,20 @@ class Pix extends Component
                         ]
                     );
 
+                    $roomCode = $this->createRoomForAppointment($this->payable);
+
                     DB::commit();
 
                     $this->shouldRedirect = true;
                     $this->isLoading      = false;
 
                     session()->flash('success', 'Sessão paga integralmente com seu saldo!');
+
+                    if ($roomCode) {
+                        session()->flash('room_code', $roomCode);
+                        session()->flash('appointment_date', $this->payable->appointment_date);
+                        session()->flash('appointment_time', $this->payable->appointment_time);
+                    }
 
                     return;
                 }
@@ -329,6 +342,35 @@ class Pix extends Component
             'discount_percentage'  => 0,
             'has_company_discount' => false,
         ];
+    }
+
+    private function createRoomForAppointment($appointment): ?string
+    {
+        try {
+            $existingRoom = Room::where('appointment_id', $appointment->id)->first();
+
+            if ($existingRoom) {
+                return $existingRoom->code;
+            }
+
+            $roomCode = (new JitsiService())->createRoomCode();
+
+            Room::create([
+                'code'           => $roomCode,
+                'status'         => 'closed',
+                'created_by'     => $appointment->user_id,
+                'appointment_id' => $appointment->id,
+            ]);
+
+            return $roomCode;
+        } catch (\Exception $e) {
+            Log::error('Erro ao criar sala para pagamento com saldo', [
+                'appointment_id' => $appointment->id,
+                'error'          => $e->getMessage(),
+            ]);
+
+            return null;
+        }
     }
 
     public function render()

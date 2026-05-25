@@ -3,7 +3,8 @@
 namespace App\Livewire\User\Specialist;
 
 use App\Models\Specialist;
-use Livewire\Attributes\{Computed, Layout};
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\{Computed, Layout, On};
 use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Especialistas', 'guard' => 'user'])]
@@ -22,8 +23,18 @@ class Index extends Component
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%');
             })
-            ->inRandomOrder()
+            ->withExists([
+                'favorites as favorited_by_user' => fn ($query) => $query->where('user_id', Auth::id()),
+            ])
+            ->orderByDesc('favorited_by_user')
+            ->orderBy('name')
             ->get();
+    }
+
+    #[On('favorite-updated')]
+    public function refreshList(): void
+    {
+        unset($this->specialists);
     }
 
     public function render()

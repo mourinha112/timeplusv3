@@ -26,7 +26,9 @@ class Show extends Component
             'active'    => (clone $base)->where('billing_status', Subscribe::STATUS_ACTIVE)
                 ->where(function ($q) {
                     $q->whereNull('end_date')->orWhere('end_date', '>=', now());
-                })->count(),
+                })
+                ->whereHas('payments', fn ($query) => $query->where('status', 'paid'))
+                ->count(),
             'cancelled' => (clone $base)->where('billing_status', Subscribe::STATUS_CANCELLED)->count(),
             'expired'   => (clone $base)->where('billing_status', Subscribe::STATUS_EXPIRED)->count(),
         ];
@@ -34,7 +36,7 @@ class Show extends Component
 
     public function render()
     {
-        $latestSubscribers = Subscribe::with('user')
+        $latestSubscribers = Subscribe::with(['user', 'payments'])
             ->where('plan_id', $this->plan->id)
             ->orderByDesc('created_at')
             ->limit(20)

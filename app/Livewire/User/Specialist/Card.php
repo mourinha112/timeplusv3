@@ -44,6 +44,7 @@ class Card extends Component
                 ->delete();
 
             $this->favorited = false;
+            $this->dispatch('favorite-updated');
             LivewireAlert::title('Sucesso!')
                 ->text('Especialista removido dos favoritos com sucesso!')
                 ->success()
@@ -56,6 +57,7 @@ class Card extends Component
                 'specialist_id' => $this->specialist->id,
             ]);
             $this->favorited = true;
+            $this->dispatch('favorite-updated');
             LivewireAlert::title('Sucesso!')
                 ->text('Especialista adicionado aos favoritos com sucesso!')
                 ->success()

@@ -38,7 +38,7 @@ class Edit extends Component
     #[Rule('boolean')]
     public $is_active = true;
 
-    #[Rule('nullable|string|max:255')]
+    #[Rule('required|string|max:255')]
     public ?string $contact_name = null;
 
     #[Rule('nullable|string|max:120')]

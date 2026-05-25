@@ -59,7 +59,7 @@ class Payment extends Component
                     'start_date'        => $startDate,
                     'end_date'          => $endDate,
                     'next_billing_date' => $this->plan->isRecurring() ? $endDate : null,
-                    'billing_status'    => Subscribe::STATUS_ACTIVE,
+                    'billing_status'    => Subscribe::STATUS_PAUSED,
                     'cancelled_date'    => null,
                 ]);
 

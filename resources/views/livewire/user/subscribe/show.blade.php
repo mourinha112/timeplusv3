@@ -84,13 +84,25 @@
                                     <p class="font-semibold">{{ $companyPlan->companyPlan->name }}</p>
                                 </div>
                             </div>
-                            <div class="mt-3">
-                                <x-text>Cobertura da empresa</x-text>
-                                <p class="font-bold text-success text-xl">
-                                    {{ number_format($companyPlan->companyPlan->discount_percentage, 1) }}%</p>
-                                <p class="text-xs text-base-content/60">A empresa cobre
-                                    {{ number_format($companyPlan->companyPlan->discount_percentage, 1) }}% do valor
-                                    das suas sessões</p>
+                            <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <x-text>Modelo</x-text>
+                                    <p class="font-bold text-success">
+                                        {{ $companyPlan->companyPlan->billing_model === 'credit_pack' ? 'Pacote de créditos' : 'Por funcionário ativo' }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <x-text>Valor base</x-text>
+                                    <p class="font-bold text-success">
+                                        R$ {{ number_format((float) $companyPlan->companyPlan->price_per_unit, 2, ',', '.') }}
+                                    </p>
+                                </div>
+                                @if ($companyPlan->companyPlan->billing_model === 'credit_pack')
+                                    <div>
+                                        <x-text>Créditos mensais</x-text>
+                                        <p class="font-bold text-success">{{ $companyPlan->companyPlan->monthly_credits }}</p>
+                                    </div>
+                                @endif
                             </div>
                         </x-card-body>
                     </x-card>
@@ -99,8 +111,7 @@
                         <x-carbon-information class="w-5 h-5" />
                         <div>
                             <h4 class="font-semibold">Benefícios do plano empresarial</h4>
-                            <p class="text-sm">Enquanto estiver vinculado à empresa, você terá cobertura automática nas
-                                suas consultas.</p>
+                            <p class="text-sm">Enquanto estiver vinculado à empresa, você verá as regras do plano empresarial no agendamento.</p>
                         </div>
                     </div>
                 </x-card-body>
@@ -130,11 +141,11 @@
                                 </div>
                             </div>
                             <div class="mt-3">
-                                <x-text>Cobertura (suspensa)</x-text>
-                                <p class="font-bold text-base-content/50 text-xl line-through">
-                                    {{ number_format($companyPlan->companyPlan->discount_percentage, 1) }}%</p>
-                                <p class="text-xs text-warning">Cobertura suspensa até que o plano seja reativado pela
-                                    empresa</p>
+                                <x-text>Modelo</x-text>
+                                <p class="font-bold text-base-content/50">
+                                    {{ $companyPlan->companyPlan->billing_model === 'credit_pack' ? 'Pacote de créditos' : 'Por funcionário ativo' }}
+                                </p>
+                                <p class="text-xs text-warning">Benefícios suspensos até que o plano seja reativado pela empresa</p>
                             </div>
                         </x-card-body>
                     </x-card>

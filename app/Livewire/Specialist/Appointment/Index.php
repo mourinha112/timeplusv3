@@ -150,10 +150,16 @@ class Index extends Component
 
     public function getTimeSlots()
     {
-        $slots = [];
+        $specialist = Auth::guard('specialist')->user();
+        $duration   = $specialist?->getSessionDuration() ?? \App\Models\Specialist::DEFAULT_SESSION_DURATION;
 
-        for ($hour = 0; $hour < 24; $hour++) {
-            $slots[] = sprintf('%02d:00', $hour);
+        $slots   = [];
+        $current = Carbon::createFromTime(0, 0, 0);
+        $end     = Carbon::createFromTime(0, 0, 0)->addDay();
+
+        while ($current->lt($end)) {
+            $slots[] = $current->format('H:i');
+            $current->addMinutes($duration);
         }
 
         return $slots;

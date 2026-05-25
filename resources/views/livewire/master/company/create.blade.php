@@ -98,7 +98,7 @@
                     <h3 class="text-lg font-semibold text-base-content mb-4">Responsável / Contato</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <x-form-group>
-                            <x-label>Nome do responsável</x-label>
+                            <x-label required>Nome do responsável</x-label>
                             <x-input type="text" wire:model="contact_name" />
                         </x-form-group>
 

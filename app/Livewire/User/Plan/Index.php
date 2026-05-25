@@ -27,6 +27,7 @@ class Index extends Component
         $user = User::find(Auth::id());
 
         return $user->subscribes()
+            ->whereNull('cancelled_date')
             ->where(function ($query) {
                 // Assinaturas com pagamentos pendentes
                 $query->whereHas('payments', function ($q) {
@@ -82,6 +83,15 @@ class Index extends Component
 
     public function confirmSubscription($planId)
     {
+        if (!$this->hasCompanyPlan) {
+            LivewireAlert::title('Plano indisponível')
+                ->text('Planos só ficam disponíveis para usuários vinculados a uma empresa ativa.')
+                ->warning()
+                ->show();
+
+            return;
+        }
+
         // Limpar Subscribes pendentes antigos (mais de 30 minutos sem pagamento)
         Subscribe::where('user_id', Auth::id())
             ->whereDoesntHave('payments', function ($query) {
@@ -149,6 +159,31 @@ class Index extends Component
     public function proceedToPayment($data)
     {
         $this->redirect(route('user.plan.payment', ['plan_id' => $data['plan_id']]), navigate: true);
+    }
+
+    public function cancelPendingSubscribe(): void
+    {
+        $pending = $this->pendingSubscribe;
+
+        if (!$pending || $pending->hasConfirmedPayment()) {
+            return;
+        }
+
+        $pending->payments()
+            ->whereIn('status', ['pending', 'pending_payment'])
+            ->update(['status' => 'canceled']);
+
+        $pending->update([
+            'billing_status' => Subscribe::STATUS_CANCELLED,
+            'cancelled_date' => now(),
+        ]);
+
+        unset($this->pendingSubscribe);
+
+        LivewireAlert::title('Pendência cancelada')
+            ->text('Você pode escolher outro plano quando a contratação estiver disponível.')
+            ->success()
+            ->show();
     }
 
     public function render()

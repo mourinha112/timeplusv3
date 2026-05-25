@@ -11,11 +11,19 @@ class CompanyPlan extends Model
         'company_id',
         'name',
         'discount_percentage',
+        'billing_model',
+        'monthly_credits',
+        'price_per_unit',
+        'gateway_subscription_id',
+        'billing_status',
+        'next_billing_date',
         'is_active',
     ];
 
     protected $casts = [
         'discount_percentage' => 'decimal:2',
+        'price_per_unit'      => 'decimal:2',
+        'next_billing_date'   => 'date',
         'is_active'           => 'boolean',
     ];
 

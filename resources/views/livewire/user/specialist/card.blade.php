@@ -63,8 +63,11 @@
     <div class="divider"></div>
 
     <!-- Footer com Preço -->
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between gap-2">
         <div class="badge badge-info badge-soft font-bold">R$
             {{ number_format($specialist->appointment_value, 2, ',', '.') }}</div>
+        <div class="badge badge-ghost badge-sm">
+            {{ $specialist->getSessionDuration() }} min
+        </div>
     </div>
 </x-card>

@@ -9,7 +9,11 @@
         </x-subtitle>
     </x-heading>
 
-    <div class="flex gap-2 mb-4">
+    <div class="flex flex-wrap gap-2 mb-4">
+        <a wire:navigate href="{{ route('master.finance.index') }}" class="btn btn-sm btn-soft">
+            <x-carbon-arrow-left class="w-4 h-4" />
+            Financeiro
+        </a>
         <button type="button" wire:click="setFilter('pending')"
             class="btn btn-sm {{ $filter === 'pending' ? 'btn-warning' : 'btn-soft' }}">
             Pendentes

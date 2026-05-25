@@ -36,6 +36,10 @@ class ValidCrp implements ValidationRule, DataAwareRule
             return;
         }
 
+        if (!config('services.consultar.validate_crp')) {
+            return;
+        }
+
         try {
             $result = app(ConsultarService::class)->consultarCrp($state->abbreviation, (string) $value);
         } catch (ConsultarServiceException $e) {

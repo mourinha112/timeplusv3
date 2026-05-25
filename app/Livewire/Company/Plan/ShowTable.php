@@ -44,15 +44,25 @@ class ShowTable extends PowerGridComponent
         return PowerGrid::fields()
           ->add('id')
           ->add('name')
-          ->add('discount_percentage')
+          ->add('billing_model')
+          ->add('monthly_credits')
+          ->add('price_per_unit')
           ->add('is_active')
           ->add('status_indicator', function (CompanyPlan $model) {
               return $model->is_active
                 ? '<span class="badge badge-success">Ativo</span>'
                 : '<span class="badge badge-error">Inativo</span>';
           })
-          ->add('discount_badge', function (CompanyPlan $model) {
-              return '<span class="badge badge-success text-xs font-semibold">' . $model->discount_percentage . '%</span>';
+          ->add('billing_model_badge', function (CompanyPlan $model) {
+              return $model->billing_model === 'credit_pack'
+                ? '<span class="badge badge-info">Pacote de créditos</span>'
+                : '<span class="badge badge-success">Por funcionário</span>';
+          })
+          ->add('monthly_credits_formatted', function (CompanyPlan $model) {
+              return $model->billing_model === 'credit_pack' ? (string) $model->monthly_credits : '—';
+          })
+          ->add('price_per_unit_formatted', function (CompanyPlan $model) {
+              return 'R$ ' . number_format((float) ($model->price_per_unit ?: 0), 2, ',', '.');
           })
           ->add('employees_count', function (CompanyPlan $model) {
               return $model->getActiveUsersCount();
@@ -65,7 +75,11 @@ class ShowTable extends PowerGridComponent
         return [
             Column::make('ID', 'id')->sortable(),
             Column::make('Nome do Plano', 'name')->searchable()->sortable(),
-            Column::make('Desconto', 'discount_badge', 'discount_percentage')
+            Column::make('Modelo', 'billing_model_badge', 'billing_model')
+              ->bodyAttribute('class', 'text-center'),
+            Column::make('Créditos/mês', 'monthly_credits_formatted', 'monthly_credits')
+              ->bodyAttribute('class', 'text-center'),
+            Column::make('Valor base', 'price_per_unit_formatted', 'price_per_unit')
               ->bodyAttribute('class', 'text-center'),
             Column::make('Funcionários', 'employees_count')
               ->bodyAttribute('class', 'text-center'),

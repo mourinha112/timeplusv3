@@ -54,7 +54,7 @@ class ShowTable extends PowerGridComponent
                 return '—';
             })
             ->add('company_name', function (Payment $model) {
-                return $model->company?->name ?? '—';
+                return $this->resolveCompanyName($model);
             })
             ->add('tipo_formatted', function (Payment $model) {
                 return match ($model->payable_type) {
@@ -66,16 +66,23 @@ class ShowTable extends PowerGridComponent
             })
             ->add('payment_method_formatted', function (Payment $model) {
                 return match ($model->payment_method) {
-                    'credit_card' => 'Cartão de Crédito',
-                    'pix'         => 'Pix',
-                    default       => (string) $model->payment_method,
+                    'credit_card'    => 'Cartão de Crédito',
+                    'credit_balance' => 'Saldo/Crédito',
+                    'pix'            => 'Pix',
+                    default          => (string) $model->payment_method,
                 };
             })
             ->add('status_formatted', function (Payment $model) {
                 return match ($model->status) {
+                    'pending'         => '<span class="badge badge-ghost badge-sm">Criado</span>',
+                    'order_created'   => '<span class="badge badge-info badge-sm">Pedido criado</span>',
                     'paid'            => '<span class="badge badge-success badge-sm">Pago</span>',
                     'pending_payment' => '<span class="badge badge-warning badge-sm">Pendente</span>',
+                    'processing'      => '<span class="badge badge-info badge-sm">Processando</span>',
                     'failed'          => '<span class="badge badge-error badge-sm">Falhou</span>',
+                    'canceled'        => '<span class="badge badge-error badge-sm">Cancelado</span>',
+                    'refunded'        => '<span class="badge badge-neutral badge-sm">Estornado</span>',
+                    'partial_refunded' => '<span class="badge badge-neutral badge-sm">Estorno parcial</span>',
                     default           => (string) $model->status,
                 };
             })
@@ -90,7 +97,7 @@ class ShowTable extends PowerGridComponent
             Column::make('ID', 'id')->sortable(),
             Column::make('Usuário', 'user_name'),
             Column::make('CPF', 'user_cpf'),
-            Column::make('Empresa', 'company_name')->searchable(),
+            Column::make('Empresa', 'company_name'),
             Column::make('Tipo', 'tipo_formatted', 'payable_type')->sortable(),
             Column::make('Método', 'payment_method_formatted', 'payment_method')->sortable(),
             Column::make('Status', 'status_formatted', 'status')->sortable(),
@@ -103,21 +110,28 @@ class ShowTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::select('tipo_formatted', 'payable_type')->dataSource([
+            Filter::select('payable_type', 'payable_type')->dataSource([
                 ['id' => Appointment::class, 'name' => 'Sessão'],
                 ['id' => Subscribe::class,   'name' => 'Assinatura'],
                 ['id' => Plan::class,        'name' => 'Plano'],
             ])->optionLabel('name')->optionValue('id'),
-            Filter::select('status_formatted', 'status')->dataSource([
+            Filter::select('status', 'status')->dataSource([
+                ['id' => 'pending',          'name' => 'Criado'],
+                ['id' => 'order_created',    'name' => 'Pedido criado'],
                 ['id' => 'paid',            'name' => 'Pago'],
                 ['id' => 'pending_payment', 'name' => 'Pendente'],
+                ['id' => 'processing',       'name' => 'Processando'],
                 ['id' => 'failed',          'name' => 'Falhou'],
+                ['id' => 'canceled',         'name' => 'Cancelado'],
+                ['id' => 'refunded',         'name' => 'Estornado'],
+                ['id' => 'partial_refunded', 'name' => 'Estorno parcial'],
             ])->optionLabel('name')->optionValue('id'),
-            Filter::select('payment_method_formatted', 'payment_method')->dataSource([
-                ['id' => 'credit_card', 'name' => 'Cartão de Crédito'],
-                ['id' => 'pix',         'name' => 'Pix'],
+            Filter::select('payment_method', 'payment_method')->dataSource([
+                ['id' => 'credit_card',    'name' => 'Cartão de Crédito'],
+                ['id' => 'pix',            'name' => 'Pix'],
+                ['id' => 'credit_balance', 'name' => 'Saldo/Crédito'],
             ])->optionLabel('name')->optionValue('id'),
-            Filter::datepicker('paid_at_formatted', 'paid_at'),
+            Filter::datepicker('paid_at', 'paid_at'),
         ];
     }
 
@@ -136,5 +150,28 @@ class ShowTable extends PowerGridComponent
                 ->class('btn btn-info btn-sm')
                 ->dispatch('master::payment-show', ['rowId' => $row->id]),
         ];
+    }
+
+    private function resolveCompanyName(Payment $payment): string
+    {
+        if ($payment->company?->name) {
+            return $payment->company->name;
+        }
+
+        $payable = $payment->payable;
+        $user    = null;
+
+        if ($payable instanceof Appointment || $payable instanceof Subscribe) {
+            $user = $payable->user;
+        }
+
+        if (!$user) {
+            return '—';
+        }
+
+        $company = $user->activeCompanies()->orderBy('companies.name')->first()
+            ?? $user->companies()->orderBy('companies.name')->first();
+
+        return $company?->name ?? '—';
     }
 }

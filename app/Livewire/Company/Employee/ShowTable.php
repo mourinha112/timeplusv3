@@ -20,6 +20,8 @@ class ShowTable extends PowerGridComponent
 
     public function setUp(): array
     {
+        $this->showCheckBox();
+
         return [
             PowerGrid::header()
               ->showSearchInput()
@@ -46,6 +48,7 @@ class ShowTable extends PowerGridComponent
               'users.*',
               'company_user.is_active as employee_is_active',
               'company_user.id as company_user_id',
+              'company_user.department',
               'company_plans.name as plan_name',
               'company_plans.discount_percentage',
               'company_plans.is_active as plan_is_active',
@@ -65,6 +68,7 @@ class ShowTable extends PowerGridComponent
           ->add('email')
           ->add('cpf')
           ->add('phone_number')
+          ->add('department')
           ->add('employee_is_active')
           ->add('plan_name')
           ->add('discount_percentage')
@@ -89,6 +93,7 @@ class ShowTable extends PowerGridComponent
             Column::make('Nome', 'name')->searchable()->sortable(),
             Column::make('E-mail', 'email')->searchable(),
             Column::make('Telefone', 'phone_number')->searchable(),
+            Column::make('Área', 'department')->searchable(),
             Column::make('Plano', 'plan_badge', 'plan_name')
               ->bodyAttribute('class', 'text-center'),
             Column::make('Situação', 'status_indicator', 'employee_is_active')

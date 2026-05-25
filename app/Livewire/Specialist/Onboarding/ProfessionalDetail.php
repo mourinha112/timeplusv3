@@ -10,7 +10,7 @@ use Livewire\Component;
 #[Layout('components.layouts.guest', ['title' => 'Dados Profissionais', 'guard' => 'specialist'])]
 class ProfessionalDetail extends Component
 {
-    #[Rule(['required', 'integer', 'min:10', 'max:1000'])]
+    #[Rule(['required', 'integer', 'min:30', 'max:1000'])]
     public ?int $appointment_value = null;
 
     #[Rule(['required', 'min:50', 'max:255'])]

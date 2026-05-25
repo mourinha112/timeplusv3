@@ -55,7 +55,7 @@ class Company extends Authenticatable
     public function employees(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'company_user')
-            ->withPivot(['is_active'])
+            ->withPivot(['company_plan_id', 'department', 'is_active'])
             ->withTimestamps();
     }
 

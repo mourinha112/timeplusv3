@@ -5,7 +5,7 @@
             Criar Plano
         </x-title>
         <x-subtitle>
-            Crie um novo plano de desconto para seus funcionários
+            Configure uma contratação por funcionário ou por pacote de créditos
         </x-subtitle>
     </x-heading>
 
@@ -22,11 +22,25 @@
                     </x-form-group>
 
                     <x-form-group>
-                        <x-label required>Percentual de Desconto (%)</x-label>
-                        <x-input type="number" step="0.01" min="0.01" max="100"
-                            wire:model="discount_percentage" placeholder="Ex: 50" />
+                        <x-label required>Modelo de contratação</x-label>
+                        <x-select wire:model.live="billing_model">
+                            <option value="per_employee">Por funcionário ativo</option>
+                            <option value="credit_pack">Pacote de créditos</option>
+                        </x-select>
+                    </x-form-group>
+
+                    @if ($billing_model === 'credit_pack')
+                        <x-form-group>
+                            <x-label required>Créditos mensais</x-label>
+                            <x-input type="number" min="1" step="1" wire:model="monthly_credits" />
+                        </x-form-group>
+                    @endif
+
+                    <x-form-group>
+                        <x-label required>Valor base</x-label>
+                        <x-input type="number" step="0.01" min="30" wire:model="price_per_unit" readonly />
                         <x-text class="mt-1">
-                            Percentual que a empresa irá cobrir dos custos do funcionário (mínimo 0,01% - máximo 100%)
+                            Use R$ 60,00 para plano por funcionário e R$ 30,00 por sessão/crédito.
                         </x-text>
                     </x-form-group>
 
@@ -36,9 +50,8 @@
                             <div class="text-sm">
                                 <div class="font-semibold text-base-content mb-1">Como funciona:</div>
                                 <p class="text-base-content/80">
-                                    O plano define apenas o percentual de desconto. Quando um funcionário usar os
-                                    serviços,
-                                    a empresa pagará o percentual definido e o funcionário pagará o restante.
+                                    Planos por funcionário cobrem o uso dos funcionários ativos. Pacotes de créditos
+                                    consomem primeiro os créditos mensais e depois créditos extras adquiridos.
                                 </p>
                             </div>
                         </div>

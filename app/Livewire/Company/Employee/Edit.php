@@ -4,6 +4,7 @@ namespace App\Livewire\Company\Employee;
 
 use App\Facades\Asaas;
 use App\Models\{CompanyUser, User};
+use App\Rules\{FormattedCpf, ValidatedCpf};
 use Illuminate\Support\Facades\{Auth, DB, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\{Layout, Locked, Rule};
@@ -24,7 +25,6 @@ class Edit extends Component
     #[Rule('required|string|max:255')]
     public $name = '';
 
-    #[Rule('required|string|size:14')]
     public $cpf = '';
 
     #[Rule('required|string|max:20')]
@@ -33,8 +33,11 @@ class Edit extends Component
     #[Rule('required|date_format:d/m/Y')]
     public $birth_date = '';
 
-    #[Rule('required|exists:company_plans,id')]
+    #[Rule('nullable|exists:company_plans,id')]
     public $company_plan_id = null;
+
+    #[Rule('nullable|string|max:120')]
+    public ?string $department = null;
 
     public function mount($employee)
     {
@@ -52,11 +55,19 @@ class Edit extends Component
         $this->phone_number    = $this->employee->phone_number;
         $this->birth_date      = $this->employee->birth_date;
         $this->company_plan_id = $this->companyUser->company_plan_id;
+        $this->department      = $this->companyUser->department;
     }
 
     public function save()
     {
-        $this->validate();
+        $this->validate([
+            'name'            => ['required', 'string', 'max:255'],
+            'cpf'             => ['required', 'string', 'size:14', new FormattedCpf(), new ValidatedCpf(), \Illuminate\Validation\Rule::unique('users', 'cpf')->ignore($this->employeeId)],
+            'phone_number'    => ['required', 'string', 'max:20'],
+            'birth_date'      => ['required', 'date_format:d/m/Y'],
+            'company_plan_id' => ['nullable', 'exists:company_plans,id'],
+            'department'      => ['nullable', 'string', 'max:120'],
+        ]);
 
         try {
             DB::beginTransaction();
@@ -82,6 +93,7 @@ class Edit extends Component
 
             $this->companyUser->update([
                 'company_plan_id' => $this->company_plan_id,
+                'department'      => $this->department,
             ]);
 
             DB::commit();

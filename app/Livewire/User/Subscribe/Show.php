@@ -25,6 +25,7 @@ class Show extends Component
         $user = User::find(Auth::id());
 
         return $user->subscribes()
+            ->whereNull('cancelled_date')
             ->where(function ($query) {
                 // Assinaturas com pagamentos pendentes
                 $query->whereHas('payments', function ($q) {

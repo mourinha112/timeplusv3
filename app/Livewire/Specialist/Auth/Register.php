@@ -62,7 +62,14 @@ class Register extends Component
 
             Auth::guard('specialist')->login($specialist, true);
 
-            $specialist->notify(new WelcomeNotification());
+            try {
+                $specialist->notify(new WelcomeNotification());
+            } catch (\Exception $emailError) {
+                Log::error('Erro ao enviar email de boas-vindas para especialista', [
+                    'specialist_id' => $specialist->id,
+                    'error'         => $emailError->getMessage(),
+                ]);
+            }
 
             $this->redirectRoute('specialist.dashboard.show');
         } catch (\Exception $e) {

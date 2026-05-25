@@ -90,6 +90,14 @@
 
                                     <div class="p-4 bg-base-200/30 rounded-lg">
                                         <div class="flex items-center gap-3 mb-2">
+                                            <x-carbon-enterprise class="w-5 h-5 text-info shrink-0" />
+                                            <span class="font-semibold text-base-content">Área</span>
+                                        </div>
+                                        <p class="text-base-content ml-8">{{ $companyUser->department ?? 'Não informado' }}</p>
+                                    </div>
+
+                                    <div class="p-4 bg-base-200/30 rounded-lg">
+                                        <div class="flex items-center gap-3 mb-2">
                                             <x-carbon-user class="w-5 h-5 text-info shrink-0" />
                                             <span class="font-semibold text-base-content">Status na Empresa</span>
                                         </div>
