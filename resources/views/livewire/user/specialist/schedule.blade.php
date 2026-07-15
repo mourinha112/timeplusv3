@@ -7,6 +7,38 @@
         </ul>
     @endif
 
+    @if ($this->companyCreditInfo)
+        @php($creditInfo = $this->companyCreditInfo)
+        <div class="mb-4 p-4 rounded-lg {{ $creditInfo['can_schedule'] ? 'bg-info/10' : 'bg-warning/10' }}">
+            <div class="flex items-start gap-3">
+                <x-carbon-wallet class="w-5 h-5 flex-shrink-0 mt-0.5 {{ $creditInfo['can_schedule'] ? 'text-info' : 'text-warning' }}" />
+                <div class="text-sm">
+                    <div class="font-semibold text-base-content mb-1">
+                        Créditos da empresa ({{ $creditInfo['company_name'] }})
+                    </div>
+                    <p class="text-base-content/80">
+                        @if ($creditInfo['limit'] !== null)
+                            Você usou {{ $creditInfo['used'] }} de {{ $creditInfo['limit'] }} créditos neste mês
+                            — restam <strong>{{ $creditInfo['employee_remaining'] }}</strong>.
+                        @else
+                            Você usou {{ $creditInfo['used'] }} crédito(s) neste mês (sem limite individual).
+                        @endif
+                        Cada sessão consome 1 crédito (R$ {{ number_format($creditInfo['unit_price'], 2, ',', '.') }}, pago pela empresa).
+                    </p>
+                    @if (!$creditInfo['can_schedule'])
+                        <p class="text-warning font-medium mt-1">
+                            @if ($creditInfo['company_balance'] < 1)
+                                A empresa está sem créditos disponíveis no momento.
+                            @else
+                                Você atingiu seu limite mensal de créditos.
+                            @endif
+                        </p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="flex items-start gap-2 mb-4">
         <!-- Botão Anterior -->
         <button

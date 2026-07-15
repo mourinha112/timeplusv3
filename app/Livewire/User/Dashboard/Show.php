@@ -2,6 +2,8 @@
 
 namespace App\Livewire\User\Dashboard;
 
+use App\Models\CompanyPlan;
+use App\Services\Credit\{CompanyCreditService, UserCreditService};
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\{Computed, Layout};
 use Livewire\Component;
@@ -61,6 +63,40 @@ class Show extends Component
             ->where('is_active', true)
             ->whereNotNull('company_plan_id')
             ->exists();
+    }
+
+    /** Resumo de créditos do plano da empresa (pacote de créditos) para o card. */
+    #[Computed]
+    public function companyCreditInfo(): ?array
+    {
+        $user        = Auth::user();
+        $companyUser = $user?->getActiveCompanyPlan();
+
+        if (!$companyUser || !$companyUser->companyPlan?->isCreditPack()) {
+            return null;
+        }
+
+        $service = app(CompanyCreditService::class);
+        $company = $companyUser->company;
+        $plan    = $companyUser->companyPlan;
+
+        $used  = $service->usedByUserInMonth($company, $user);
+        $limit = $plan->credits_per_employee;
+
+        return [
+            'limit'              => $limit,
+            'used'               => $used,
+            'employee_remaining' => $limit !== null ? max(0, $limit - $used) : null,
+            'company_balance'    => $service->balance($company),
+            'unit_price'         => CompanyPlan::CREDIT_UNIT_PRICE,
+        ];
+    }
+
+    /** Saldo monetário pessoal (cancelamentos/estornos). */
+    #[Computed]
+    public function personalCreditBalance(): float
+    {
+        return app(UserCreditService::class)->balance(Auth::user());
     }
 
     public function isPaid($appointment)

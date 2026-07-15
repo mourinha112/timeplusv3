@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Appointment;
-use App\Models\Payment;
-use App\Models\Room;
-use App\Models\Subscribe;
-use App\Notifications\User\PaymentApprovedNotification;
-use App\Notifications\User\SubscriptionActiveNotification;
+use App\Models\{Appointment, Payment, Room, Subscribe};
+use App\Notifications\User\{PaymentApprovedNotification, SubscriptionActiveNotification};
 use App\Services\JitsiService;
 use Illuminate\Http\{JsonResponse, Request};
 use Illuminate\Support\Facades\Log;
@@ -183,6 +179,8 @@ class AsaasWebhookController extends Controller
             return;
         }
 
+        $wasAlreadyPaid = $payment->status === 'paid';
+
         // Atualizar status do pagamento
         $payment->update([
             'status'  => 'paid',
@@ -211,6 +209,11 @@ class AsaasWebhookController extends Controller
             }
         }
 
+        // Pagamentos da empresa (fatura mensal / compra de créditos extras)
+        if ($payment->payable_type === \App\Models\Company::class && !$wasAlreadyPaid) {
+            $this->handleCompanyPaymentConfirmed($payment);
+        }
+
         // Se for uma assinatura, enviar notificação
         if ($payment->payable_type === 'App\Models\Subscribe' && $payment->payable instanceof Subscribe) {
             try {
@@ -221,6 +224,58 @@ class AsaasWebhookController extends Controller
                     'error' => $e->getMessage(),
                 ]);
             }
+        }
+    }
+
+    /**
+     * Processa confirmação de pagamento de empresa: compra de créditos extras
+     * concede os créditos (validade de 6 meses); a fatura mensal já teve seus
+     * créditos concedidos na geração, então só é marcada como paga.
+     *
+     * @param Payment $payment
+     * @return void
+     */
+    protected function handleCompanyPaymentConfirmed(Payment $payment): void
+    {
+        $metadata = $payment->metadata ?? [];
+        $type     = $metadata['type'] ?? null;
+        $company  = $payment->payable;
+
+        if (!$company instanceof \App\Models\Company) {
+            return;
+        }
+
+        if ($type === 'company_credit_purchase') {
+            $credits = (int) ($metadata['credits'] ?? 0);
+
+            if ($credits <= 0) {
+                return;
+            }
+
+            $plan = isset($metadata['company_plan_id'])
+                ? \App\Models\CompanyPlan::find($metadata['company_plan_id'])
+                : null;
+
+            $balance = app(\App\Services\Credit\CompanyCreditService::class)
+                ->grantExtra($company, $credits, $plan);
+
+            Log::info('Webhook Asaas: créditos extras concedidos à empresa', [
+                'company_id'  => $company->id,
+                'payment_id'  => $payment->id,
+                'credits'     => $credits,
+                'balance_id'  => $balance->id,
+                'valid_until' => $balance->valid_until->toDateString(),
+            ]);
+
+            return;
+        }
+
+        if ($type === 'company_monthly_billing') {
+            Log::info('Webhook Asaas: fatura mensal da empresa paga', [
+                'company_id' => $company->id,
+                'payment_id' => $payment->id,
+                'period'     => $metadata['period'] ?? null,
+            ]);
         }
     }
 

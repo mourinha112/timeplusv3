@@ -35,6 +35,13 @@
                                     Sessões
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('user.credit.index') }}"
+                                    class="{{ !Route::is('user.credit.index') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-wallet class="w-4 h-4" />
+                                    Créditos
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -60,6 +67,13 @@
                                 class="{{ !Route::is('user.appointment.index') ?: 'border bg-base-200 font-semibold' }}">
                                 <x-carbon-home class="w-5 h-5" />
                                 Sessões
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('user.credit.index') }}"
+                                class="{{ !Route::is('user.credit.index') ?: 'border bg-base-200 font-semibold' }}">
+                                <x-carbon-wallet class="w-5 h-5" />
+                                Créditos
                             </a>
                         </li>
                     </ul>
@@ -279,6 +293,13 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('company.credit.index') }}"
+                                    class="{{ !Route::is('company.credit.*') ?: 'border bg-base-200 font-semibold' }}">
+                                    <x-carbon-wallet class="w-4 h-4" />
+                                    Créditos
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('company.payment.index') }}"
                                     class="{{ !Route::is('company.payment.*') ?: 'border bg-base-200 font-semibold' }}">
                                     <x-carbon-money class="w-4 h-4" />
@@ -310,6 +331,13 @@
                                 class="{{ !Route::is('company.employee.*') ?: 'border bg-base-200 font-semibold' }}">
                                 <x-carbon-user-multiple class="w-5 h-5" />
                                 Funcionários
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('company.credit.index') }}"
+                                class="{{ !Route::is('company.credit.*') ?: 'border bg-base-200 font-semibold' }}">
+                                <x-carbon-wallet class="w-5 h-5" />
+                                Créditos
                             </a>
                         </li>
                         <li>

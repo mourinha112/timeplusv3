@@ -13,3 +13,6 @@ Schedule::command('rooms:open-scheduled')->everyMinute();
 Schedule::command('rooms:close-expired')->everyMinute();
 Schedule::command('appointments:expire-unpaid')->everyFiveMinutes();
 Schedule::command('appointments:send-reminders')->everyFiveMinutes();
+
+/* Fatura mensal das empresas + renovação dos créditos mensais (dia 1º) */
+Schedule::command('company:monthly-billing')->monthlyOn(1, '06:00');

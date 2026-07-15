@@ -58,6 +58,43 @@
         </x-card>
     @endif
 
+    @if ($this->companyCreditInfo || $this->personalCreditBalance > 0)
+        <x-card class="border-info/30 bg-info/5">
+            <x-card-body class="flex justify-between sm:items-center sm:flex-row">
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2">
+                        <x-carbon-wallet class="w-6 h-6 text-info" />
+                        <x-card-title>Seus créditos</x-card-title>
+                    </div>
+                    @if ($this->companyCreditInfo)
+                        <x-text>
+                            @if ($this->companyCreditInfo['limit'] !== null)
+                                Você tem <strong>{{ $this->companyCreditInfo['employee_remaining'] }}</strong> de
+                                {{ $this->companyCreditInfo['limit'] }} créditos de sessão neste mês
+                            @else
+                                Você usou {{ $this->companyCreditInfo['used'] }} crédito(s) neste mês (sem limite individual)
+                            @endif
+                            — cada sessão custa R$
+                            {{ number_format($this->companyCreditInfo['unit_price'], 2, ',', '.') }}, paga pela sua
+                            empresa.
+                        </x-text>
+                    @endif
+                    @if ($this->personalCreditBalance > 0)
+                        <x-text>
+                            Saldo de R$ {{ number_format($this->personalCreditBalance, 2, ',', '.') }} disponível para
+                            suas próximas sessões.
+                        </x-text>
+                    @endif
+                </div>
+
+                <x-btn-link href="{{ route('user.credit.index') }}" wire:navigate class="mt-2 sm:btn sm:mt-0">
+                    <x-carbon-wallet class="w-4 h-4" />
+                    Ver créditos
+                </x-btn-link>
+            </x-card-body>
+        </x-card>
+    @endif
+
     <x-card>
         <x-card-body class="flex justify-between sm:items-center sm:flex-row">
 

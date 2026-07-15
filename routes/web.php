@@ -69,6 +69,9 @@ Route::group(['middleware' => 'auth:user'], function () {
     Route::get('assinaturas', User\Subscribe\Show::class)->name('user.subscribe.show');
     Route::get('assinaturas/historico', User\Subscribe\History::class)->name('user.subscribe.history');
 
+    /* Credits */
+    Route::get('creditos', User\Credit\Index::class)->name('user.credit.index');
+
     /* Profile */
     Route::get('perfil', User\Profile\Update::class)->name('user.profile.update');
 
@@ -277,6 +280,9 @@ Route::group(['middleware' => ['auth:company']], function () {
     Route::get('empresa/funcionarios/importar', App\Livewire\Company\Employee\Import::class)->name('company.employee.import');
     Route::get('empresa/funcionarios/{employee}/editar', App\Livewire\Company\Employee\Edit::class)->name('company.employee.edit');
     Route::get('empresa/funcionarios/{employee}', App\Livewire\Company\Employee\Show::class)->name('company.employee.show');
+
+    /* Credits */
+    Route::get('empresa/creditos', App\Livewire\Company\Credit\Index::class)->name('company.credit.index');
 
     /* Payments */
     Route::get('empresa/pagamentos', App\Livewire\Company\Payment\Index::class)->name('company.payment.index');

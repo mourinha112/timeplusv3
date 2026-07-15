@@ -2,9 +2,11 @@
 
 namespace App\Livewire\User\Specialist;
 
-use App\Models\{Appointment, Availability, Payment};
+use App\Models\{Appointment, Availability, CompanyPlan, Room};
 use App\Notifications\Specialist\AppointmentScheduledNotification as SpecialistAppointmentScheduledNotification;
 use App\Notifications\User\AppointmentScheduledNotification;
+use App\Services\Credit\CompanyCreditService;
+use App\Services\JitsiService;
 use App\Services\Payment\PayoutCalculator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\{Auth, DB, Log};
@@ -74,12 +76,46 @@ class Schedule extends Component
         }
     }
 
+    /**
+     * Informações de crédito da empresa (plano credit_pack) para exibir na
+     * agenda: limite mensal do funcionário, quanto já usou e saldo da empresa.
+     */
+    #[Computed]
+    public function companyCreditInfo(): ?array
+    {
+        $user        = Auth::user();
+        $companyUser = $user?->getActiveCompanyPlan();
+
+        if (!$companyUser || !$companyUser->companyPlan?->isCreditPack()) {
+            return null;
+        }
+
+        $creditService = app(CompanyCreditService::class);
+        $company       = $companyUser->company;
+        $plan          = $companyUser->companyPlan;
+
+        $used              = $creditService->usedByUserInMonth($company, $user);
+        $limit             = $plan->credits_per_employee;
+        $companyBalance    = $creditService->balance($company);
+        $employeeRemaining = $limit !== null ? max(0, $limit - $used) : null;
+
+        return [
+            'limit'              => $limit,
+            'used'               => $used,
+            'employee_remaining' => $employeeRemaining,
+            'company_balance'    => $companyBalance,
+            'can_schedule'       => $companyBalance > 0 && ($employeeRemaining === null || $employeeRemaining > 0),
+            'unit_price'         => CompanyPlan::CREDIT_UNIT_PRICE,
+            'company_name'       => $company->name,
+        ];
+    }
+
     #[Computed]
     public function availabilities()
     {
-        $user             = Auth::user();
-        $hasCompanyPlan   = $user?->hasActiveCompanyPlan() ?? false;
-        $eligibleModes    = $hasCompanyPlan
+        $user           = Auth::user();
+        $hasCompanyPlan = $user?->hasActiveCompanyPlan() ?? false;
+        $eligibleModes  = $hasCompanyPlan
             ? [Availability::MODE_BOTH, Availability::MODE_TIMEPLUS]
             : [Availability::MODE_BOTH, Availability::MODE_PARTICULAR];
 
@@ -292,7 +328,8 @@ class Schedule extends Component
             }
 
             $user           = Auth::user();
-            $hasCompanyPlan = $user->hasActiveCompanyPlan();
+            $companyUser    = $user->getActiveCompanyPlan();
+            $hasCompanyPlan = $companyUser !== null;
 
             $serviceMode = $this->resolveServiceMode($availability, $hasCompanyPlan);
 
@@ -305,6 +342,43 @@ class Schedule extends Component
                 $this->clearSelection();
 
                 return;
+            }
+
+            /* Plano por pacote de créditos: valida limite do funcionário e saldo da empresa */
+            $isCreditPack = $serviceMode === Appointment::MODE_TIMEPLUS
+                && $companyUser?->companyPlan?->isCreditPack();
+            $creditService = app(CompanyCreditService::class);
+
+            if ($isCreditPack) {
+                $company           = $companyUser->company;
+                $plan              = $companyUser->companyPlan;
+                $employeeRemaining = $creditService->employeeRemainingThisMonth($company, $plan, $user);
+
+                if ($employeeRemaining !== null && $employeeRemaining < 1) {
+                    DB::rollBack();
+
+                    LivewireAlert::title('Limite mensal atingido')
+                        ->text("Você já utilizou todos os seus {$plan->credits_per_employee} créditos deste mês. Os créditos renovam no próximo mês.")
+                        ->warning()
+                        ->show();
+
+                    $this->clearSelection();
+
+                    return;
+                }
+
+                if ($creditService->balance($company) < 1) {
+                    DB::rollBack();
+
+                    LivewireAlert::title('Empresa sem créditos')
+                        ->text('Sua empresa está sem créditos disponíveis no momento. Fale com o RH para adquirir mais créditos.')
+                        ->warning()
+                        ->show();
+
+                    $this->clearSelection();
+
+                    return;
+                }
             }
 
             $totalValue = $this->specialist->valueForMode($serviceMode);
@@ -323,12 +397,50 @@ class Schedule extends Component
                 'status'            => 'scheduled',
             ]);
 
+            /* Pacote de créditos: debita 1 crédito da empresa e confirma o pagamento */
+            if ($isCreditPack) {
+                $consumed = $creditService->consume($companyUser->company, 1, $user, $appointment);
+
+                if ($consumed < 1) {
+                    DB::rollBack();
+
+                    LivewireAlert::title('Empresa sem créditos')
+                        ->text('Sua empresa está sem créditos disponíveis no momento. Fale com o RH para adquirir mais créditos.')
+                        ->warning()
+                        ->show();
+
+                    $this->clearSelection();
+
+                    return;
+                }
+
+                $appointment->payment()->create([
+                    'amount'            => $totalValue,
+                    'payment_method'    => 'credit_balance',
+                    'status'            => 'paid',
+                    'paid_at'           => now(),
+                    'description'       => 'Sessão coberta pelo pacote de créditos da empresa',
+                    'company_id'        => $companyUser->company->id,
+                    'company_plan_name' => $companyUser->companyPlan->name,
+                    'metadata'          => [
+                        'company_credit' => true,
+                        'credits_used'   => 1,
+                        'company_id'     => $companyUser->company->id,
+                        'user_id'        => $user->id,
+                    ],
+                ]);
+
+                $this->createRoomForAppointment($appointment);
+            }
+
             // Enviar notificações de agendamento
             Auth::user()->notify(new AppointmentScheduledNotification($appointment));
             $this->specialist->notify(new SpecialistAppointmentScheduledNotification($appointment));
 
             LivewireAlert::title('Agendamento Confirmado')
-                ->text('Seu agendamento foi realizado com sucesso!')
+                ->text($isCreditPack
+                    ? 'Sessão agendada e paga com 1 crédito da sua empresa!'
+                    : 'Seu agendamento foi realizado com sucesso!')
                 ->success()
                 ->show();
 
@@ -336,7 +448,11 @@ class Schedule extends Component
 
             DB::commit();
 
-            $this->redirect(route('user.appointment.payment', ['appointment_id' => $appointment->id]), true);
+            if ($isCreditPack) {
+                $this->redirect(route('user.appointment.index'), true);
+            } else {
+                $this->redirect(route('user.appointment.payment', ['appointment_id' => $appointment->id]), true);
+            }
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -351,6 +467,33 @@ class Schedule extends Component
                 ->show();
 
             $this->clearSelection();
+        }
+    }
+
+    /**
+     * Cria a sala de videochamada quando a sessão já nasce paga (crédito da
+     * empresa) — mesmo comportamento do checkout pago.
+     */
+    private function createRoomForAppointment(Appointment $appointment): ?string
+    {
+        try {
+            $roomCode = (new JitsiService())->createRoomCode();
+
+            Room::create([
+                'code'           => $roomCode,
+                'status'         => 'closed',
+                'created_by'     => $appointment->user_id,
+                'appointment_id' => $appointment->id,
+            ]);
+
+            return $roomCode;
+        } catch (\Exception $e) {
+            Log::error('Erro ao criar sala para sessão paga com crédito da empresa', [
+                'appointment_id' => $appointment->id,
+                'error'          => $e->getMessage(),
+            ]);
+
+            return null;
         }
     }
 

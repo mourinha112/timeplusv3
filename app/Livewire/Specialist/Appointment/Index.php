@@ -5,7 +5,7 @@ namespace App\Livewire\Specialist\Appointment;
 use App\Models\{Appointment, UserCredit};
 use App\Notifications\Specialist\AppointmentCancelledNotification as SpecialistAppointmentCancelledNotification;
 use App\Notifications\User\AppointmentCancelledNotification;
-use App\Services\Credit\UserCreditService;
+use App\Services\Credit\{CompanyCreditService, UserCreditService};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\{Auth, DB, Log};
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -97,22 +97,28 @@ class Index extends Component
         }
 
         try {
-            $creditGranted = null;
+            $creditGranted          = null;
+            $companyCreditsRefunded = 0;
 
-            DB::transaction(function () use ($appointment, &$creditGranted) {
+            DB::transaction(function () use ($appointment, &$creditGranted, &$companyCreditsRefunded) {
                 $appointment->update(['status' => 'cancelled']);
 
                 $payment = $appointment->payment()->first();
 
                 if ($payment && $payment->status === 'paid') {
-                    $creditGranted = app(UserCreditService::class)->grant(
-                        $appointment->user,
-                        (float) $payment->amount,
-                        UserCredit::SOURCE_CANCELLATION,
-                        $appointment,
-                        null,
-                        "Crédito por cancelamento da sessão #{$appointment->id} pelo especialista"
-                    );
+                    // Sessão paga com crédito da empresa → devolve o crédito ao saldo da empresa
+                    if (($payment->metadata['company_credit'] ?? false) === true) {
+                        $companyCreditsRefunded = app(CompanyCreditService::class)->refundForAppointment($appointment);
+                    } else {
+                        $creditGranted = app(UserCreditService::class)->grant(
+                            $appointment->user,
+                            (float) $payment->amount,
+                            UserCredit::SOURCE_CANCELLATION,
+                            $appointment,
+                            null,
+                            "Crédito por cancelamento da sessão #{$appointment->id} pelo especialista"
+                        );
+                    }
                 }
             });
 
@@ -125,9 +131,11 @@ class Index extends Component
                 ]);
             }
 
-            $message = $creditGranted
-                ? 'O agendamento foi cancelado e R$ ' . number_format((float) $creditGranted->amount, 2, ',', '.') . ' foram devolvidos como crédito ao paciente.'
-                : 'O agendamento foi cancelado com sucesso.';
+            $message = match (true) {
+                $creditGranted !== null     => 'O agendamento foi cancelado e R$ ' . number_format((float) $creditGranted->amount, 2, ',', '.') . ' foram devolvidos como crédito ao paciente.',
+                $companyCreditsRefunded > 0 => 'O agendamento foi cancelado e o crédito devolvido ao saldo da empresa.',
+                default                     => 'O agendamento foi cancelado com sucesso.',
+            };
 
             LivewireAlert::title('Agendamento cancelado!')
                 ->text($message)

@@ -16,6 +16,7 @@ class Company extends Authenticatable
         'name',
         'cnpj',
         'email',
+        'gateway_customer_id',
         'contact_name',
         'contact_role',
         'contact_phone',
@@ -62,5 +63,10 @@ class Company extends Authenticatable
     public function activeEmployees(): BelongsToMany
     {
         return $this->employees()->wherePivot('is_active', true);
+    }
+
+    public function creditBalances(): HasMany
+    {
+        return $this->hasMany(CompanyCreditBalance::class);
     }
 }

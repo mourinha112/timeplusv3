@@ -40,6 +40,20 @@
                         <x-form-group>
                             <x-label required>Créditos mensais</x-label>
                             <x-input type="number" min="1" step="1" wire:model="monthly_credits" />
+                            <x-text class="mt-1">
+                                Quantidade de sessões cobertas por mês. Créditos mensais não usados expiram no fim do
+                                mês.
+                            </x-text>
+                        </x-form-group>
+
+                        <x-form-group>
+                            <x-label>Limite de créditos por funcionário/mês</x-label>
+                            <x-input type="number" min="1" step="1" wire:model="credits_per_employee"
+                                placeholder="Deixe vazio para não limitar" />
+                            <x-text class="mt-1">
+                                Limite universal: vale igualmente para todos os funcionários. Deixe vazio para permitir
+                                que usem enquanto houver saldo da empresa.
+                            </x-text>
                         </x-form-group>
                     @endif
 
@@ -47,7 +61,11 @@
                         <x-label required>Valor base</x-label>
                         <x-input type="number" step="0.01" min="30" wire:model="price_per_unit" readonly />
                         <x-text class="mt-1">
-                            Use R$ 60,00 para plano por funcionário e R$ 30,00 por sessão/crédito.
+                            @if ($billing_model === 'credit_pack')
+                                R$ 30,00 por sessão/crédito consumido pelos funcionários.
+                            @else
+                                R$ 30,00 por funcionário ativo no 1º mês; R$ 60,00 por funcionário nos meses seguintes.
+                            @endif
                         </x-text>
                     </x-form-group>
 

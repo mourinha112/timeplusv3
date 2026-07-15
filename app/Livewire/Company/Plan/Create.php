@@ -3,6 +3,7 @@
 namespace App\Livewire\Company\Plan;
 
 use App\Models\CompanyPlan;
+use App\Services\Credit\CompanyCreditService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
@@ -21,35 +22,51 @@ class Create extends Component
     #[Rule('required_if:billing_model,credit_pack|integer|min:1')]
     public $monthly_credits = 1;
 
+    /** Limite universal de créditos por funcionário/mês (vazio = sem limite). */
+    #[Rule('nullable|integer|min:1')]
+    public $credits_per_employee = null;
+
     #[Rule('required|numeric|min:30')]
-    public $price_per_unit = 60.00;
+    public $price_per_unit = 30.00;
 
     public function mount()
     {
         $this->company = Auth::guard('company')->user();
+        $this->updatedBillingModel($this->billing_model);
     }
 
     public function updatedBillingModel(string $value): void
     {
-        $this->price_per_unit = $value === 'credit_pack' ? 30.00 : 60.00;
+        $this->price_per_unit = $value === 'credit_pack'
+            ? CompanyPlan::CREDIT_UNIT_PRICE
+            : CompanyPlan::PER_EMPLOYEE_FIRST_MONTH_PRICE;
     }
 
     public function save()
     {
         $this->validate();
 
-        $pricePerUnit = $this->billing_model === 'credit_pack' ? 30.00 : 60.00;
+        $isCreditPack = $this->billing_model === 'credit_pack';
 
-        CompanyPlan::create([
-            'company_id'          => $this->company->id,
-            'name'                => $this->name,
-            'discount_percentage' => 0,
-            'billing_model'       => $this->billing_model,
-            'monthly_credits'     => $this->billing_model === 'credit_pack' ? $this->monthly_credits : 0,
-            'price_per_unit'      => $pricePerUnit,
-            'billing_status'      => 'active',
-            'is_active'           => true,
+        $plan = CompanyPlan::create([
+            'company_id'           => $this->company->id,
+            'name'                 => $this->name,
+            'discount_percentage'  => 0,
+            'billing_model'        => $this->billing_model,
+            'monthly_credits'      => $isCreditPack ? $this->monthly_credits : 0,
+            'credits_per_employee' => $isCreditPack ? ($this->credits_per_employee ?: null) : null,
+            'price_per_unit'       => $isCreditPack
+                ? CompanyPlan::CREDIT_UNIT_PRICE
+                : CompanyPlan::PER_EMPLOYEE_FIRST_MONTH_PRICE,
+            'billing_status' => 'active',
+            'contracted_at'  => now()->toDateString(),
+            'is_active'      => true,
         ]);
+
+        /* Libera os créditos do mês corrente imediatamente */
+        if ($isCreditPack) {
+            app(CompanyCreditService::class)->grantMonthly($plan);
+        }
 
         session()->flash('success', 'Plano criado com sucesso!');
 
