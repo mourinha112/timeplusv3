@@ -198,6 +198,10 @@ Route::group(['middleware' => ['auth:master']], function () {
     Route::get('master/planos/criar', Master\Plan\Create::class)->name('master.plan.create');
     Route::get('master/planos/{plan}/editar', Master\Plan\Edit::class)->name('master.plan.edit');
 
+    /* CRUD Company Plans */
+    Route::get('master/empresas/{company}/planos/criar', Master\CompanyPlan\Create::class)->name('master.company-plan.create');
+    Route::get('master/planos-empresa/{plan}/editar', Master\CompanyPlan\Edit::class)->name('master.company-plan.edit');
+
     /* CRUD Specialties */
     Route::get('master/especialidades', Master\Specialty\Index::class)->name('master.specialty.index');
     Route::get('master/especialidades/criar', Master\Specialty\Create::class)->name('master.specialty.create');
@@ -267,11 +271,8 @@ Route::group(['middleware' => ['auth:company']], function () {
     /* Dashboard */
     Route::get('empresa/painel', App\Livewire\Company\Dashboard\Show::class)->name('company.dashboard.show');
 
-    /* Plans */
+    /* Plans (somente visualização — criação/edição é feita pelo master) */
     Route::get('empresa/planos', App\Livewire\Company\Plan\Index::class)->name('company.plan.index');
-    // Route::get('empresa/planos/table', App\Livewire\Company\Plan\ShowTable::class)->name('company.plan.table');
-    Route::get('empresa/planos/criar', App\Livewire\Company\Plan\Create::class)->name('company.plan.create');
-    Route::get('empresa/planos/{plan}/editar', App\Livewire\Company\Plan\Edit::class)->name('company.plan.edit');
     Route::get('empresa/planos/{plan}', App\Livewire\Company\Plan\Show::class)->name('company.plan.show');
 
     /* Employees */

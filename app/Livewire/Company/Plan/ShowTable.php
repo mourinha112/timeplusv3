@@ -97,32 +97,6 @@ class ShowTable extends PowerGridComponent
         $this->redirect(route('company.plan.show', ['plan' => $plan->id]));
     }
 
-    #[\Livewire\Attributes\On('company::plan-toggle-status')]
-    public function toggleStatus($rowId): void
-    {
-        $plan = CompanyPlan::findOrFail($rowId);
-        $plan->update(['is_active' => !$plan->is_active]);
-
-        $status = $plan->is_active ? 'ativado' : 'desativado';
-        session()->flash('message', "Plano {$status} com sucesso!");
-    }
-
-    #[\Livewire\Attributes\On('company::plan-delete')]
-    public function delete($rowId): void
-    {
-        $plan = CompanyPlan::findOrFail($rowId);
-
-        // Verificar se há funcionários usando este plano
-        if ($plan->getActiveUsersCount() > 0) {
-            session()->flash('error', 'Não é possível excluir um plano que possui funcionários ativos!');
-
-            return;
-        }
-
-        $plan->delete();
-        session()->flash('message', 'Plano excluído com sucesso!');
-    }
-
     public function actions(CompanyPlan $row): array
     {
         return [
@@ -131,25 +105,6 @@ class ShowTable extends PowerGridComponent
               ->id()
               ->class('btn btn-info btn-sm')
               ->dispatch('company::plan-show', ['rowId' => $row->id]),
-
-            Button::add('edit')
-              ->slot('Editar')
-              ->id()
-              ->class('btn btn-info btn-sm')
-              ->route('company.plan.edit', ['plan' => $row->id]),
-
-            Button::add('toggle-status')
-              ->slot($row->is_active ? 'Desativar' : 'Ativar')
-              ->id()
-              ->class($row->is_active ? 'btn btn-warning btn-sm' : 'btn btn-success btn-sm')
-              ->dispatch('company::plan-toggle-status', ['rowId' => $row->id]),
-
-            Button::add('delete')
-              ->slot('Excluir')
-              ->id()
-              ->class('btn btn-error btn-sm')
-              ->dispatch('company::plan-delete', ['rowId' => $row->id])
-              ->confirm('Tem certeza que deseja excluir este plano? Esta ação não pode ser desfeita.'),
         ];
     }
 }

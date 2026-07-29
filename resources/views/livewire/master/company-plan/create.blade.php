@@ -2,19 +2,12 @@
     <x-heading>
         <x-title class="flex items-center gap-3">
             <x-carbon-layers class="w-8 text-info" />
-            Editar Plano
+            Criar Plano — {{ $company->name }}
         </x-title>
         <x-subtitle>
-            Atualize as informações do plano "{{ $plan->name }}"
+            Configure uma contratação por funcionário ou por pacote de créditos para esta empresa
         </x-subtitle>
     </x-heading>
-
-    <div class="flex justify-between items-center mb-6">
-        <a wire:navigate href="{{ route('company.plan.index') }}" class="btn btn-ghost">
-            <x-carbon-arrow-left class="w-4 h-4" />
-            Voltar para Planos
-        </a>
-    </div>
 
     <x-card class="w-full">
         <x-card-body>
@@ -22,9 +15,9 @@
                 <div class="space-y-6">
                     <x-form-group>
                         <x-label required>Nome do Plano</x-label>
-                        <x-input type="text" wire:model="name" placeholder="Ex: Plano Básico, Premium, VIP..." />
+                        <x-input type="text" wire:model="name" placeholder="Ex: Plano Básico, Premium, etc." />
                         <x-text class="mt-1">
-                            Escolha um nome descritivo e fácil de identificar
+                            Escolha um nome descritivo para identificar este plano
                         </x-text>
                     </x-form-group>
 
@@ -69,44 +62,44 @@
                         </x-text>
                     </x-form-group>
 
-                    <div class="bg-warning/10 p-4 rounded-lg">
+                    <div class="bg-info/10 p-4 rounded-lg">
                         <div class="flex items-start gap-3">
-                            <x-carbon-warning class="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
+                            <x-carbon-information class="w-5 h-5 text-info flex-shrink-0 mt-0.5" />
                             <div class="text-sm">
-                                <div class="font-semibold text-base-content mb-2">Atenção ao editar:</div>
-                                <ul class="list-disc list-inside text-base-content/80 space-y-1">
-                                    <li>As alterações afetarão todos os funcionários que possuem este plano</li>
-                                    <li>O novo modelo/valor será aplicado imediatamente aos funcionários vinculados</li>
-                                    <li>Recomendamos comunicar os funcionários sobre mudanças significativas</li>
-                                </ul>
+                                <div class="font-semibold text-base-content mb-1">Como funciona:</div>
+                                @if ($billing_model === 'credit_pack')
+                                    <p class="text-base-content/80">
+                                        A empresa paga R$ 30,00 por sessão. Os créditos mensais são liberados todo mês e
+                                        expiram no fim do mês. Créditos extras comprados valem 6 meses e são consumidos
+                                        somente quando os créditos mensais acabam.
+                                    </p>
+                                @else
+                                    <p class="text-base-content/80">
+                                        Cobrança mensal por funcionário ativo: R$ 30,00 no primeiro mês e R$ 60,00 nos
+                                        meses seguintes. Cada funcionário escolhe um dos planos de consultas (1, 2 ou 4
+                                        consultas por mês).
+                                    </p>
+                                @endif
                             </div>
                         </div>
                     </div>
-
-                    @if ($plan->getActiveUsersCount() > 0)
-                        <div class="bg-info/10 p-4 rounded-lg">
-                            <div class="flex items-start gap-3">
-                                <x-carbon-information class="w-5 h-5 text-info flex-shrink-0 mt-0.5" />
-                                <div class="text-sm">
-                                    <div class="font-semibold text-base-content mb-1">Funcionários ativos:</div>
-                                    <p class="text-base-content/80">
-                                        Este plano está sendo usado por <strong>{{ $plan->getActiveUsersCount() }}
-                                            funcionários</strong> atualmente.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
                 </div>
 
-                <div class="flex justify-end gap-3 mt-8">
-                    <a wire:navigate href="{{ route('company.plan.index') }}" class="btn btn-ghost">
-                        <x-carbon-close class="w-4 h-4" />
+                <div class="flex justify-end gap-3 mt-6">
+                    <a wire:navigate href="{{ route('master.company.show', ['company' => $company->id]) }}"
+                        class="btn btn-soft btn-error">
+                        <x-carbon-arrow-left class="w-4 h-4" />
                         Cancelar
                     </a>
-                    <x-button type="submit" color="info">
-                        <x-carbon-save class="w-4 h-4" />
-                        Atualizar Plano
+                    <x-button type="submit" class="btn-soft btn-info" wire:loading.attr="disabled">
+                        <span class="flex items-center gap-1" wire:loading.remove>
+                            <x-carbon-add class="w-4 h-4" />
+                            Criar Plano
+                        </span>
+                        <span wire:loading class="flex items-center gap-2">
+                            <span class="loading loading-spinner loading-xs"></span>
+                            Criando...
+                        </span>
                     </x-button>
                 </div>
             </x-form>

@@ -84,9 +84,8 @@
             <div class="flex items-start gap-3">
                 <x-carbon-warning class="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
                 <div class="text-sm text-base-content/80">
-                    Sua empresa ainda não possui um plano por pacote de créditos ativo.
-                    <a wire:navigate href="{{ route('company.plan.create') }}" class="link link-info">Criar plano</a>.
-                    Você ainda pode comprar créditos extras (validade de 6 meses).
+                    Sua empresa ainda não possui um plano por pacote de créditos ativo. Entre em contato com a equipe
+                    TimePlus para contratar um plano. Você ainda pode comprar créditos extras (validade de 6 meses).
                 </div>
             </div>
         </div>

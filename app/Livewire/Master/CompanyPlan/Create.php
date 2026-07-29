@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Livewire\Company\Plan;
+namespace App\Livewire\Master\CompanyPlan;
 
+use App\Models\Company;
 use App\Models\CompanyPlan;
 use App\Services\Credit\CompanyCreditService;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
-#[Layout('components.layouts.app', ['title' => 'Criar Plano', 'guard' => 'company'])]
+#[Layout('components.layouts.app', ['title' => 'Criar Plano da Empresa', 'guard' => 'master'])]
 class Create extends Component
 {
-    public $company = null;
+    public Company $company;
 
     #[Rule('required|string|max:255')]
     public $name = '';
@@ -29,9 +29,9 @@ class Create extends Component
     #[Rule('required|numeric|min:30')]
     public $price_per_unit = 30.00;
 
-    public function mount()
+    public function mount(Company $company)
     {
-        $this->company = Auth::guard('company')->user();
+        $this->company = $company;
         $this->updatedBillingModel($this->billing_model);
     }
 
@@ -68,13 +68,13 @@ class Create extends Component
             app(CompanyCreditService::class)->grantMonthly($plan);
         }
 
-        session()->flash('success', 'Plano criado com sucesso!');
+        session()->flash('message', 'Plano criado com sucesso!');
 
-        return $this->redirect(route('company.plan.index'));
+        return $this->redirect(route('master.company.show', ['company' => $this->company->id]));
     }
 
     public function render()
     {
-        return view('livewire.company.plan.create');
+        return view('livewire.master.company-plan.create');
     }
 }

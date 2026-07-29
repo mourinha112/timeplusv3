@@ -7,6 +7,13 @@
             </div>
         @endif
 
+        @if (session()->has('error'))
+            <div role="alert" class="alert alert-error shadow-lg">
+                <x-carbon-warning class="w-6 h-6" />
+                <span class="font-medium">{{ session('error') }}</span>
+            </div>
+        @endif
+
         <x-heading>
             <h1 class="text-3xl font-bold text-base-content flex items-center gap-3">
                 Detalhes da Empresa
@@ -157,36 +164,63 @@
                                 </div>
                             </div>
 
-                            @if ($company->companyPlans->count() > 0)
-                                <div class="mt-6 p-4 bg-base-200/20 rounded-lg border border-base-300">
-                                    <h4 class="font-semibold text-base-content flex items-center gap-2 mb-3">
+                            <div class="mt-6 p-4 bg-base-200/20 rounded-lg border border-base-300">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="font-semibold text-base-content flex items-center gap-2">
                                         <x-carbon-plan class="w-4 h-4 text-success" />
                                         Planos Contratados
                                     </h4>
+                                    <a wire:navigate
+                                        href="{{ route('master.company-plan.create', ['company' => $company->id]) }}"
+                                        class="btn btn-info btn-sm">
+                                        <x-carbon-add class="w-4 h-4" />
+                                        Novo Plano
+                                    </a>
+                                </div>
+
+                                @if ($company->companyPlans->count() > 0)
                                     <div class="space-y-3">
                                         @foreach ($company->companyPlans as $plan)
-                                            <div class="flex items-center justify-between p-3 rounded-lg border {{ $plan->is_active ? 'border-success/30 bg-success/5' : 'border-error/30 bg-error/5' }}">
+                                            <div class="flex items-center justify-between gap-3 p-3 rounded-lg border {{ $plan->is_active ? 'border-success/30 bg-success/5' : 'border-error/30 bg-error/5' }}">
                                                 <div>
                                                     <span class="font-semibold">{{ $plan->name }}</span>
                                                     <span class="text-sm text-base-content/60 ml-2">
-                                                        {{ number_format($plan->discount_percentage, 0) }}% de cobertura
+                                                        {{ $plan->billing_model === 'credit_pack' ? 'Pacote de créditos' : 'Por funcionário' }}
+                                                    </span>
+                                                    <span class="badge {{ $plan->is_active ? 'badge-success' : 'badge-error' }} badge-sm ml-2">
+                                                        {{ $plan->is_active ? 'Ativo' : 'Inativo' }}
                                                     </span>
                                                 </div>
-                                                <span class="badge {{ $plan->is_active ? 'badge-success' : 'badge-error' }} badge-sm">
-                                                    {{ $plan->is_active ? 'Ativo' : 'Inativo' }}
-                                                </span>
+                                                <div class="flex items-center gap-2">
+                                                    <a wire:navigate
+                                                        href="{{ route('master.company-plan.edit', ['plan' => $plan->id]) }}"
+                                                        class="btn btn-info btn-xs">
+                                                        Editar
+                                                    </a>
+                                                    <button type="button"
+                                                        wire:click="togglePlanStatus({{ $plan->id }})"
+                                                        class="btn btn-xs {{ $plan->is_active ? 'btn-warning' : 'btn-success' }}">
+                                                        {{ $plan->is_active ? 'Desativar' : 'Ativar' }}
+                                                    </button>
+                                                    <button type="button"
+                                                        wire:click="deletePlan({{ $plan->id }})"
+                                                        wire:confirm="Tem certeza que deseja excluir este plano? Esta ação não pode ser desfeita."
+                                                        class="btn btn-error btn-xs">
+                                                        Excluir
+                                                    </button>
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>
-                                </div>
-                            @else
-                                <div class="mt-6 p-4 bg-warning/10 rounded-lg border border-warning/30">
-                                    <div class="flex items-center gap-2 text-warning">
-                                        <x-carbon-warning class="w-4 h-4" />
-                                        <span class="font-semibold text-sm">Nenhum plano configurado</span>
+                                @else
+                                    <div class="p-4 bg-warning/10 rounded-lg border border-warning/30">
+                                        <div class="flex items-center gap-2 text-warning">
+                                            <x-carbon-warning class="w-4 h-4" />
+                                            <span class="font-semibold text-sm">Nenhum plano configurado</span>
+                                        </div>
                                     </div>
-                                </div>
-                            @endif
+                                @endif
+                            </div>
                         </div>
                     </div>
 

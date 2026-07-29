@@ -4,14 +4,10 @@
             <x-carbon-layers class="w-8 text-info" />
             Planos da Empresa
         </h2>
-        <x-text class="mt-1">Gerencie os planos oferecidos pela sua empresa</x-text>
-    </div>
-
-    <div class="flex gap-2">
-        <a href="{{ route('company.plan.create') }}" class="btn btn-info">
-            <x-carbon-add class="w-4 h-4" />
-            Novo Plano
-        </a>
+        <x-text class="mt-1">
+            Visualize os planos contratados pela sua empresa. Para criar ou alterar um plano, entre em contato com a
+            equipe TimePlus.
+        </x-text>
     </div>
 </div>
 

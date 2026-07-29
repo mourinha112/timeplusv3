@@ -1,18 +1,15 @@
 <?php
 
-namespace App\Livewire\Company\Plan;
+namespace App\Livewire\Master\CompanyPlan;
 
 use App\Models\CompanyPlan;
 use App\Services\Credit\CompanyCreditService;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
-#[Layout('components.layouts.app', ['title' => 'Editar Plano', 'guard' => 'company'])]
+#[Layout('components.layouts.app', ['title' => 'Editar Plano da Empresa', 'guard' => 'master'])]
 class Edit extends Component
 {
-    public $company = null;
-
     public $plan = null;
 
     #[Rule('required|string|max:255')]
@@ -33,14 +30,8 @@ class Edit extends Component
 
     public function mount($plan)
     {
-        $this->company = Auth::guard('company')->user();
+        $this->plan = CompanyPlan::with('company')->findOrFail($plan);
 
-        // Verificar se o plano pertence à empresa
-        $this->plan = CompanyPlan::where('id', $plan)
-          ->where('company_id', $this->company->id)
-          ->firstOrFail();
-
-        // Preencher os campos com os dados atuais
         $this->name                 = $this->plan->name;
         $this->billing_model        = $this->plan->billing_model ?? 'per_employee';
         $this->monthly_credits      = (int) ($this->plan->monthly_credits ?: 1);
@@ -78,13 +69,13 @@ class Edit extends Component
             app(CompanyCreditService::class)->grantMonthly($this->plan->fresh());
         }
 
-        session()->flash('success', 'Plano atualizado com sucesso!');
+        session()->flash('message', 'Plano atualizado com sucesso!');
 
-        return $this->redirect(route('company.plan.index'));
+        return $this->redirect(route('master.company.show', ['company' => $this->plan->company_id]));
     }
 
     public function render()
     {
-        return view('livewire.company.plan.edit');
+        return view('livewire.master.company-plan.edit');
     }
 }
