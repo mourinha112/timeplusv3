@@ -72,14 +72,14 @@ class Index extends Component
             ->get();
     }
 
-    /** Compras de créditos extras aguardando pagamento. */
+    /** Cobranças da empresa aguardando pagamento (créditos extras e faturas mensais do plano). */
     #[Computed]
     public function pendingPurchases()
     {
         return Payment::query()
             ->where('company_id', $this->company->id)
             ->where('status', 'pending_payment')
-            ->where('metadata->type', 'company_credit_purchase')
+            ->whereIn('metadata->type', ['company_credit_purchase', 'company_monthly_billing'])
             ->latest()
             ->get();
     }

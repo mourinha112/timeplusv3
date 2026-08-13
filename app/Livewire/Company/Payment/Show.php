@@ -21,7 +21,12 @@ class Show extends Component
             abort(403, 'Acesso negado a este pagamento.');
         }
 
-        $this->payment = $payment->load(['payable.user', 'payable.specialist', 'company']);
+        $this->payment = $payment->load('company');
+
+        /* Faturas da empresa têm a própria Company como payable (sem user/specialist) */
+        if (!($payment->payable instanceof \App\Models\Company)) {
+            $this->payment->load(['payable.user', 'payable.specialist']);
+        }
     }
 
     public function render()

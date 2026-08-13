@@ -132,12 +132,12 @@
 
                 @if ($this->pendingPurchases->isNotEmpty())
                     <div class="divider"></div>
-                    <h4 class="font-semibold text-sm mb-2">Compras aguardando pagamento</h4>
+                    <h4 class="font-semibold text-sm mb-2">Cobranças aguardando pagamento</h4>
                     <ul class="space-y-2">
                         @foreach ($this->pendingPurchases as $purchase)
-                            <li class="flex items-center justify-between text-sm">
+                            <li class="flex items-center justify-between gap-2 text-sm">
                                 <span>
-                                    {{ $purchase->metadata['credits'] ?? '-' }} crédito(s) —
+                                    {{ $purchase->description }} —
                                     R$ {{ number_format((float) $purchase->amount, 2, ',', '.') }}
                                     <span class="text-base-content/50">({{ $purchase->created_at->format('d/m/Y H:i') }})</span>
                                 </span>
@@ -165,7 +165,7 @@
                         <p class="text-sm text-base-content/70">{{ $this->pixPayment->description }}</p>
 
                         @if ($this->pixPayment->status === 'paid')
-                            <div class="badge badge-success">Pagamento confirmado — créditos liberados!</div>
+                            <div class="badge badge-success">Pagamento confirmado!</div>
                         @else
                             @if ($this->pixPayment->pix_qr_code)
                                 <img src="data:image/png;base64,{{ $this->pixPayment->pix_qr_code }}"

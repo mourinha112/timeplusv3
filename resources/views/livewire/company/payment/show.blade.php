@@ -11,17 +11,51 @@
             </div>
         </div>
         <div
-            class="badge badge-lg {{ $payment->status === 'paid' ? 'badge-success' : ($payment->status === 'pending' ? 'badge-warning' : 'badge-error') }}">
+            class="badge badge-lg {{ $payment->status === 'paid' ? 'badge-success' : (in_array($payment->status, ['pending', 'pending_payment']) ? 'badge-warning' : 'badge-error') }}">
 
-            @if (ucfirst($payment->status) === 'Paid')
+            @if ($payment->status === 'paid')
                 Pago
-            @elseif(ucfirst($payment->status) === 'Pending')
+            @elseif (in_array($payment->status, ['pending', 'pending_payment']))
                 Pendente
             @else
                 Cancelado
             @endif
         </div>
     </div>
+
+    @if ($payment->status === 'pending_payment' && ($payment->pix_qr_code || $payment->pix_key))
+        <!-- Pagamento PIX pendente -->
+        <x-card>
+            <div class="card-header border-b border-base-300 p-6">
+                <h2 class="text-xl font-semibold text-base-content flex items-center">
+                    <x-carbon-qr-code class="w-5.5 mr-2 text-info" />
+                    Pagar com PIX
+                </h2>
+            </div>
+            <x-card-body>
+                <div class="text-center space-y-4 max-w-md mx-auto">
+                    <p class="text-sm text-base-content/70">{{ $payment->description }}</p>
+
+                    @if ($payment->pix_qr_code)
+                        <img src="data:image/png;base64,{{ $payment->pix_qr_code }}" alt="QR Code PIX"
+                            class="mx-auto w-48 h-48 rounded-lg border border-base-300" />
+                    @endif
+
+                    @if ($payment->pix_key)
+                        <div>
+                            <p class="text-xs text-base-content/60 mb-1">PIX copia e cola:</p>
+                            <textarea readonly rows="3" onclick="this.select()"
+                                class="textarea textarea-bordered w-full text-xs">{{ $payment->pix_key }}</textarea>
+                        </div>
+                    @endif
+
+                    <p class="text-xs text-base-content/60">
+                        A baixa é automática assim que o pagamento for confirmado.
+                    </p>
+                </div>
+            </x-card-body>
+        </x-card>
+    @endif
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Informações do Funcionário -->

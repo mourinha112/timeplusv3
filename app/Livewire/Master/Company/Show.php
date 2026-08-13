@@ -20,6 +20,21 @@ class Show extends Component
     public function togglePlanStatus(int $planId): void
     {
         $plan = CompanyPlan::where('company_id', $this->company->id)->findOrFail($planId);
+
+        /* A empresa opta por UM modelo: bloqueia ativar um 2º plano simultâneo */
+        if (!$plan->is_active) {
+            $otherActive = CompanyPlan::where('company_id', $this->company->id)
+                ->where('id', '!=', $plan->id)
+                ->where('is_active', true)
+                ->first();
+
+            if ($otherActive) {
+                session()->flash('error', "A empresa já possui o plano ativo \"{$otherActive->name}\". Desative-o antes de ativar outro plano.");
+
+                return;
+            }
+        }
+
         $plan->update(['is_active' => !$plan->is_active]);
 
         $this->company->load('companyPlans');

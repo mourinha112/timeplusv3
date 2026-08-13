@@ -27,6 +27,9 @@
                             <option value="per_employee">Por funcionário ativo</option>
                             <option value="credit_pack">Pacote de créditos</option>
                         </x-select>
+                        @error('billing_model')
+                            <p class="text-sm text-error mt-1">{{ $message }}</p>
+                        @enderror
                     </x-form-group>
 
                     @if ($billing_model === 'credit_pack')

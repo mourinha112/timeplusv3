@@ -4,7 +4,9 @@ namespace App\Livewire\Master\CompanyPlan;
 
 use App\Models\Company;
 use App\Models\CompanyPlan;
+use App\Services\Billing\CompanyBillingService;
 use App\Services\Credit\CompanyCreditService;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\{Layout, Rule};
 use Livewire\Component;
 
@@ -46,6 +48,17 @@ class Create extends Component
     {
         $this->validate();
 
+        /* A empresa opta por UM modelo: não pode ter dois planos ativos ao mesmo tempo */
+        $activePlan = $this->company->companyPlans()->where('is_active', true)->first();
+
+        if ($activePlan) {
+            $this->addError('billing_model', "A empresa já possui o plano ativo \"{$activePlan->name}\" ("
+                . ($activePlan->isCreditPack() ? 'pacote de créditos' : 'por funcionário')
+                . '). Desative-o antes de criar um novo plano.');
+
+            return;
+        }
+
         $isCreditPack = $this->billing_model === 'credit_pack';
 
         $plan = CompanyPlan::create([
@@ -68,7 +81,20 @@ class Create extends Component
             app(CompanyCreditService::class)->grantMonthly($plan);
         }
 
-        session()->flash('message', 'Plano criado com sucesso!');
+        /* Gera a 1ª fatura PIX do plano (empresa paga em empresa/pagamentos ou empresa/creditos) */
+        try {
+            $invoice = app(CompanyBillingService::class)->generateMonthlyCharge($plan);
+
+            session()->flash('message', $invoice
+                ? 'Plano criado com sucesso! A fatura PIX do 1º mês foi gerada para a empresa.'
+                : 'Plano criado com sucesso! A fatura será gerada quando houver funcionários ativos no plano (cobrança automática do dia 1º).');
+        } catch (\Exception $e) {
+            Log::warning('Plano criado, mas falhou ao gerar a 1ª fatura PIX', [
+                'company_plan_id' => $plan->id,
+                'message'         => $e->getMessage(),
+            ]);
+            session()->flash('message', 'Plano criado, mas não foi possível gerar a fatura PIX do 1º mês (verifique CNPJ/e-mail da empresa e as chaves Asaas). Ela será gerada na cobrança automática do dia 1º.');
+        }
 
         return $this->redirect(route('master.company.show', ['company' => $this->company->id]));
     }
