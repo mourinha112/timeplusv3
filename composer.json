@@ -20,6 +20,7 @@
         "livewire/livewire": "^3.6",
         "power-components/livewire-powergrid": "^6.6",
         "predis/predis": "^3.0",
+        "resend/resend-php": "^1.17",
         "sendgrid/sendgrid": "^8.1"
     },
     "require-dev": {
@@ -86,6 +87,9 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "audit": {
+            "block-insecure": false
         }
     },
     "minimum-stability": "stable",

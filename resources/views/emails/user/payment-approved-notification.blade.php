@@ -7,7 +7,7 @@ Seu pagamento foi aprovado e sua sessão está confirmada!
 - **Especialista:** {{ $specialist->name }}
 - **Data:** {{ \Carbon\Carbon::parse($appointment->schedule_date)->format('d/m/Y') }}
 - **Horário:** {{ \Carbon\Carbon::parse($appointment->schedule_date)->format('H:i') }}
-- **Valor Pago:** R$ {{ number_format($payment->amount / 100, 2, ',', '.') }}
+- **Valor Pago:** R$ {{ number_format((float) $payment->amount, 2, ',', '.') }}
 
 @if($room)
 **Sua sala de vídeo está pronta!**

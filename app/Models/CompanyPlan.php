@@ -45,6 +45,7 @@ class CompanyPlan extends Model
         'is_active'            => 'boolean',
     ];
 
+    /** @return BelongsTo<Company, $this> */
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);

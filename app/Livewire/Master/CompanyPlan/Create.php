@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Master\CompanyPlan;
 
-use App\Models\Company;
-use App\Models\CompanyPlan;
+use App\Models\{Company, CompanyPlan};
+use App\Notifications\Company\PlanContractedNotification;
 use App\Services\Billing\CompanyBillingService;
 use App\Services\Credit\CompanyCreditService;
 use Illuminate\Support\Facades\Log;
@@ -82,6 +82,8 @@ class Create extends Component
         }
 
         /* Gera a 1ª fatura PIX do plano (empresa paga em empresa/pagamentos ou empresa/creditos) */
+        $invoice = null;
+
         try {
             $invoice = app(CompanyBillingService::class)->generateMonthlyCharge($plan);
 
@@ -94,6 +96,17 @@ class Create extends Component
                 'message'         => $e->getMessage(),
             ]);
             session()->flash('message', 'Plano criado, mas não foi possível gerar a fatura PIX do 1º mês (verifique CNPJ/e-mail da empresa e as chaves Asaas). Ela será gerada na cobrança automática do dia 1º.');
+        }
+
+        /* Avisa a empresa por e-mail que o plano está ativo (com o PIX, se houver) */
+        try {
+            $this->company->notify(new PlanContractedNotification($plan, $invoice));
+        } catch (\Exception $e) {
+            Log::error('Falha ao enviar e-mail de plano contratado', [
+                'company_plan_id' => $plan->id,
+                'company_id'      => $this->company->id,
+                'message'         => $e->getMessage(),
+            ]);
         }
 
         return $this->redirect(route('master.company.show', ['company' => $this->company->id]));

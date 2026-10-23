@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, MorphMany, MorphOne};
 
 class Subscribe extends Model
 {
-    public const STATUS_ACTIVE = 'active';
-    public const STATUS_PAUSED = 'paused';
+    public const STATUS_ACTIVE    = 'active';
+    public const STATUS_PAUSED    = 'paused';
     public const STATUS_CANCELLED = 'cancelled';
-    public const STATUS_EXPIRED = 'expired';
+    public const STATUS_EXPIRED   = 'expired';
 
     protected $fillable = [
         'user_id',
@@ -46,22 +47,25 @@ class Subscribe extends Model
         return $this->payments()->where('status', 'paid')->exists();
     }
 
-    public function user()
+    /** @return BelongsTo<User, $this> */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function plan()
+    public function plan(): BelongsTo
     {
         return $this->belongsTo(Plan::class);
     }
 
-    public function payments()
+    /** @return MorphMany<Payment, $this> */
+    public function payments(): MorphMany
     {
         return $this->morphMany(Payment::class, 'payable');
     }
 
-    public function payment()
+    /** @return MorphOne<Payment, $this> */
+    public function payment(): MorphOne
     {
         return $this->morphOne(Payment::class, 'payable')->latest();
     }

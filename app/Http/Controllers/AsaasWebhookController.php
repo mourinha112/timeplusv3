@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\{Appointment, Payment, Room, Subscribe};
-use App\Notifications\User\{PaymentApprovedNotification, SubscriptionActiveNotification};
+use App\Notifications\Company\{ExtraCreditsGrantedNotification, InvoiceOverdueNotification, InvoicePaidNotification};
+use App\Notifications\User\{PaymentApprovedNotification, SubscriptionActiveNotification, SubscriptionPaymentFailedNotification, SubscriptionRenewedNotification};
 use App\Services\JitsiService;
 use Illuminate\Http\{JsonResponse, Request};
 use Illuminate\Support\Facades\Log;
@@ -160,7 +161,7 @@ class AsaasWebhookController extends Controller
                 ]);
 
                 try {
-                    $subscribe->user->notify(new SubscriptionActiveNotification($subscribe, $payment));
+                    $subscribe->user->notify(new SubscriptionRenewedNotification($subscribe, $payment));
                 } catch (\Exception $e) {
                     Log::error('Webhook Asaas: erro ao notificar usuário sobre renovação', [
                         'error' => $e->getMessage(),
@@ -256,8 +257,8 @@ class AsaasWebhookController extends Controller
                 ? \App\Models\CompanyPlan::find($metadata['company_plan_id'])
                 : null;
 
-            $balance = app(\App\Services\Credit\CompanyCreditService::class)
-                ->grantExtra($company, $credits, $plan);
+            $creditService = app(\App\Services\Credit\CompanyCreditService::class);
+            $balance       = $creditService->grantExtra($company, $credits, $plan);
 
             Log::info('Webhook Asaas: créditos extras concedidos à empresa', [
                 'company_id'  => $company->id,
@@ -266,6 +267,20 @@ class AsaasWebhookController extends Controller
                 'balance_id'  => $balance->id,
                 'valid_until' => $balance->valid_until->toDateString(),
             ]);
+
+            try {
+                $company->notify(new ExtraCreditsGrantedNotification(
+                    $payment,
+                    $balance,
+                    $creditService->balance($company)
+                ));
+            } catch (\Exception $e) {
+                Log::error('Webhook Asaas: erro ao notificar empresa sobre créditos liberados', [
+                    'company_id' => $company->id,
+                    'payment_id' => $payment->id,
+                    'error'      => $e->getMessage(),
+                ]);
+            }
 
             return;
         }
@@ -276,6 +291,24 @@ class AsaasWebhookController extends Controller
                 'payment_id' => $payment->id,
                 'period'     => $metadata['period'] ?? null,
             ]);
+
+            $plan = isset($metadata['company_plan_id'])
+                ? \App\Models\CompanyPlan::find($metadata['company_plan_id'])
+                : null;
+
+            try {
+                $company->notify(new InvoicePaidNotification(
+                    $payment,
+                    $plan,
+                    app(\App\Services\Credit\CompanyCreditService::class)->balance($company)
+                ));
+            } catch (\Exception $e) {
+                Log::error('Webhook Asaas: erro ao notificar empresa sobre fatura paga', [
+                    'company_id' => $company->id,
+                    'payment_id' => $payment->id,
+                    'error'      => $e->getMessage(),
+                ]);
+            }
         }
     }
 
@@ -303,6 +336,35 @@ class AsaasWebhookController extends Controller
             'payment_id'       => $payment->id,
             'gateway_order_id' => $gatewayOrderId,
         ]);
+
+        /* Assinatura de usuário vencida: avisa para regularizar antes de perder o acesso */
+        if ($payment->payable instanceof Subscribe && $payment->payable->user) {
+            try {
+                $payment->payable->user->notify(
+                    new SubscriptionPaymentFailedNotification($payment->payable, $payment)
+                );
+            } catch (\Exception $e) {
+                Log::error('Webhook Asaas: erro ao notificar usuário sobre assinatura vencida', [
+                    'payment_id' => $payment->id,
+                    'error'      => $e->getMessage(),
+                ]);
+            }
+        }
+
+        /* Fatura de empresa vencida: avisa para regularizar antes de perder o plano */
+        if ($payment->payable_type === \App\Models\Company::class
+            && $payment->payable instanceof \App\Models\Company
+            && in_array($payment->metadata['type'] ?? null, ['company_monthly_billing', 'company_credit_purchase'], true)
+        ) {
+            try {
+                $payment->payable->notify(new InvoiceOverdueNotification($payment));
+            } catch (\Exception $e) {
+                Log::error('Webhook Asaas: erro ao notificar empresa sobre fatura vencida', [
+                    'payment_id' => $payment->id,
+                    'error'      => $e->getMessage(),
+                ]);
+            }
+        }
     }
 
     /**

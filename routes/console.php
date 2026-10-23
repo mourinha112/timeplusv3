@@ -16,3 +16,6 @@ Schedule::command('appointments:send-reminders')->everyFiveMinutes();
 
 /* Fatura mensal das empresas + renovação dos créditos mensais (dia 1º) */
 Schedule::command('company:monthly-billing')->monthlyOn(1, '06:00');
+
+/* Aviso de assinatura a vencer (7, 3 e 0 dias) */
+Schedule::command('subscriptions:notify-expiring')->dailyAt('09:00');

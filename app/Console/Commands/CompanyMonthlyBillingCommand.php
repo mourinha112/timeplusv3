@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\CompanyPlan;
+use App\Notifications\Company\MonthlyInvoiceGeneratedNotification;
 use App\Services\Billing\CompanyBillingService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -22,13 +23,33 @@ class CompanyMonthlyBillingCommand extends Command
             ->get();
 
         $generated = 0;
+        $notified  = 0;
 
         foreach ($plans as $plan) {
             try {
                 $payment = $billing->generateMonthlyCharge($plan);
 
-                if ($payment) {
-                    $generated++;
+                if (!$payment) {
+                    continue;
+                }
+
+                $generated++;
+
+                /* Só avisa quando a fatura foi realmente criada agora (o serviço é
+                   idempotente e devolve a fatura existente em reexecuções). */
+                if (!$payment->wasRecentlyCreated || !$plan->company) {
+                    continue;
+                }
+
+                try {
+                    $plan->company->notify(new MonthlyInvoiceGeneratedNotification($plan, $payment));
+                    $notified++;
+                } catch (\Exception $e) {
+                    Log::error('Falha ao enviar e-mail de fatura mensal da empresa', [
+                        'company_plan_id' => $plan->id,
+                        'payment_id'      => $payment->id,
+                        'message'         => $e->getMessage(),
+                    ]);
                 }
             } catch (\Exception $e) {
                 Log::error('Erro ao gerar fatura mensal da empresa', [
@@ -41,7 +62,7 @@ class CompanyMonthlyBillingCommand extends Command
             }
         }
 
-        $this->info("Faturas geradas/garantidas: {$generated} de {$plans->count()} plano(s) ativo(s).");
+        $this->info("Faturas geradas/garantidas: {$generated} de {$plans->count()} plano(s) ativo(s). E-mails enviados: {$notified}.");
 
         return self::SUCCESS;
     }

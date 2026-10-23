@@ -5,7 +5,7 @@ Seu pagamento foi confirmado e sua assinatura está ativa!
 
 **Detalhes da Assinatura:**
 - **Plano:** {{ $plan->name }}
-- **Valor:** R$ {{ number_format($payment->amount / 100, 2, ',', '.') }}
+- **Valor:** R$ {{ number_format((float) $payment->amount, 2, ',', '.') }}
 - **Início:** {{ \Carbon\Carbon::parse($subscribe->start_date)->format('d/m/Y') }}
 @if($subscribe->end_date)
 - **Término:** {{ \Carbon\Carbon::parse($subscribe->end_date)->format('d/m/Y') }}
